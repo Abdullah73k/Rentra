@@ -12,6 +12,6 @@ export default {
     'type-enum': [2, 'always', ['task', 'Task', 'bus', 'Bus']],
     'scope-empty': [2, 'never'],
     'subject-empty': [2, 'never'],
-    'header-max-length': [2, 'always', 200],
+    'header-max-length': [2, 'always', 400],
   },
 };
