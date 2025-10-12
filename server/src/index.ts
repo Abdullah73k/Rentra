@@ -3,7 +3,7 @@ import propertiesRouter from "./routes/properties.routes.js"
 
 const app: Express = express()
 
-app.use("/api", propertiesRouter)
+app.use("/api/properties", propertiesRouter)
 
 app.listen(3000, () => {
     console.log("server running on port 3000")

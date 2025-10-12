@@ -23,7 +23,7 @@ export const userProperties = (req: Request<{ userId: string }>, res: Response) 
             data: ["array of properties from db"]
         })
 
-        // if userId is in valid
+        // if userId is invalid
         // return res.status(StatusCodes.BAD_REQUEST).json({ error: true, message: "Invalid user Id" })
 
     } catch (error) {

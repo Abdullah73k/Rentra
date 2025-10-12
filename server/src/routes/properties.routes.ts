@@ -3,6 +3,6 @@ import { userProperties } from "../controllers/auth.controllers.js";
 
 const router: Router = Router()
 
-router.get("/properties/:userId", userProperties)
+router.get("/:userId", userProperties)
 
 export default router
