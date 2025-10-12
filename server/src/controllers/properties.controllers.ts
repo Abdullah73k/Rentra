@@ -43,7 +43,7 @@ export const getUserPropertyData = (
 	}
 };
 
-export const userProperties = (
+export const getUserProperties = (
 	req: Request<{ userId: string }>,
 	res: Response
 ) => {
