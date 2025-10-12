@@ -16,7 +16,7 @@ export const getUserPropertyData = (
 		if (!result.success) {
 			return res.status(StatusCodes.BAD_REQUEST).json({
 				error: true,
-				message: "Property ID should be a valid UUID",
+				message: "Invalid property Id",
 			});
 		}
 		// 2. Query DB to get all property info
@@ -43,33 +43,37 @@ export const getUserPropertyData = (
 	}
 };
 
-export const userProperties = (req: Request<{ userId: string }>, res: Response) => {
-    try {
-        const result = validateUUID(req.params.userId)
+export const userProperties = (
+	req: Request<{ userId: string }>,
+	res: Response
+) => {
+	try {
+		const result = validateUUID(req.params.userId);
 
-        // checking if userId is a valid UUID
-        if (!result.success) {
-            return res.status(StatusCodes.BAD_REQUEST).json({ error: true, message: "Invalid user Id" })
-        }
+		// checking if userId is a valid UUID
+		if (!result.success) {
+			return res
+				.status(StatusCodes.BAD_REQUEST)
+				.json({ error: true, message: "Invalid user Id" });
+		}
 
-        const userId = result.data
-        console.log(userId);
+		const userId = result.data;
+		console.log(userId);
 
-        // get user properties from db using userId
+		// get user properties from db using userId
 
-        // if Id in valid
-        return res.status(200).json({
-            error: false,
-            message: "successfuly fetched user properties",
-            data: ["array of properties from db"]
-        })
+		// if Id in valid
+		return res.status(200).json({
+			error: false,
+			message: "successfully fetched user properties",
+			data: ["array of properties from db"],
+		});
 
-        // if userId is invalid
-        // return res.status(StatusCodes.BAD_REQUEST).json({ error: true, message: "Invalid user Id" })
-
-    } catch (error) {
-        return res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: true, message: "internal server error" });
-    }
-}
+		// if userId is invalid
+		// return res.status(StatusCodes.BAD_REQUEST).json({ error: true, message: "Invalid user Id" })
+	} catch (error) {
+		return res
+			.status(StatusCodes.INTERNAL_SERVER_ERROR)
+			.json({ error: true, message: "internal server error" });
+	}
+};
