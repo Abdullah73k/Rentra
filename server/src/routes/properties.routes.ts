@@ -1,8 +1,10 @@
 import { Router } from "express";
-import { userProperties } from "../controllers/properties.controllers.js";
+import { getUserPropertyData } from "../controllers/properties.controllers.js";
+import { getUserProperties } from "../controllers/properties.controllers.js";
 
-const router: Router = Router()
+const router: Router = Router();
 
-router.get("/:userId", userProperties)
+router.get("/:userId", getUserProperties);
+router.get("/:propertyId", getUserPropertyData);
 
-export default router
+export default router;
