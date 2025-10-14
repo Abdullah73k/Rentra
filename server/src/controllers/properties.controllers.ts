@@ -186,11 +186,30 @@ export const patchPropertyInfo = (req: Request<{ propertyId: string }, {}, Patch
 
         const propertyId = propertyIdResult.data
         const validatedPropertyInfo = propertyInfoResult.data
-        
-        const {property, propertyInfo, loan, tenant, lease} = pruneUndefined(validatedPropertyInfo)
 
+        const cleanedData = pruneUndefined(validatedPropertyInfo)
 
+        // check if there is nothing
+        if (
+            !cleanedData.property && !cleanedData.propertyInfo &&
+            !cleanedData.loan && !cleanedData.tenant && !cleanedData.lease
+        ) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                error: true,
+                message: "No fields provided to update",
+            });
+        }
+
+        // use cleaned data to update db
+
+        return res.status(StatusCodes.CREATED).json({
+            error: false,
+            message: "Property updated",
+            data: cleanedData // data should not be cleaned data but the object returned by the data base
+        })
     } catch (error) {
-
+         return res
+            .status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .json({ error: true, message: "internal server error, could not update Property info" });
     }
 }
