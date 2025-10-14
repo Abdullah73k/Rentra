@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { StatusCodes } from "../constants/statusCodes.js";
-import { validateUUID, validatePropertyInfo, type PropertyInfo } from "../utils/validation.utils.js";
+import { validatePatchPropertyInfo, validateUUID, validatePropertyInfo, type PropertyInfo, type PatchPropertyInfo, pruneUndefined } from "../utils/validation.utils.js";
 import { type ZodIssue } from "zod";
 import { error } from "console";
 
@@ -80,7 +80,7 @@ export const getUserProperties = (
     }
 };
 
-export const postUserPropertyData = (req: Request<{}, {}, PropertyInfo>, res: Response) => {
+export const postPropertyInfo = (req: Request<{}, {}, PropertyInfo>, res: Response) => {
     try {
         const result = validatePropertyInfo(req.body)
 
@@ -116,45 +116,81 @@ export const postUserPropertyData = (req: Request<{}, {}, PropertyInfo>, res: Re
             .status(StatusCodes.INTERNAL_SERVER_ERROR)
             .json({ error: true, message: "internal server error, could not fetch user Properties" });
     }
-}
-export const deleteUserProperty = (
-	req: Request<{ propertyId: string }, {}, {}, {}>,
-	res: Response
-) => {
-	try {
-		// TODO: Validate user permission / authenticate user token
-
-		// 1. Validate property Id
-		const { propertyId } = req.params;
-		const result = validateUUID(propertyId);
-
-		if (!result.success) {
-			return res.status(StatusCodes.BAD_REQUEST).json({
-				error: true,
-				message: "Invalid property Id",
-			});
-		}
-
-		// 2. Query DB to delete property
-
-		// Placeholder for actual query logic
-		const query = true;
-		// 3. Respond based on if any rows were affect
-		if (query) {
-			return res.status(StatusCodes.SUCCESS).json({
-				error: false,
-				message: "Successfully deleted property",
-			});
-		}
-
-		return res.status(StatusCodes.NOT_FOUND).json({
-			error: true,
-			message: "Property doesn't exist",
-		});
-	} catch (error) {
-		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-			error: true,
-			message: "Internal server error, could not delete property",
-		});
-	}
 };
+
+export const deleteUserProperty = (
+    req: Request<{ propertyId: string }, {}, {}, {}>,
+    res: Response
+) => {
+    try {
+        // TODO: Validate user permission / authenticate user token
+
+        // 1. Validate property Id
+        const { propertyId } = req.params;
+        const result = validateUUID(propertyId);
+
+        if (!result.success) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                error: true,
+                message: "Invalid property Id",
+            });
+        }
+
+        // 2. Query DB to delete property
+
+        // Placeholder for actual query logic
+        const query = true;
+        // 3. Respond based on if any rows were affect
+        if (query) {
+            return res.status(StatusCodes.SUCCESS).json({
+                error: false,
+                message: "Successfully deleted property",
+            });
+        }
+
+        return res.status(StatusCodes.NOT_FOUND).json({
+            error: true,
+            message: "Property doesn't exist",
+        });
+    } catch (error) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            error: true,
+            message: "Internal server error, could not delete property",
+        });
+    }
+};
+
+export const patchPropertyInfo = (req: Request<{ propertyId: string }, {}, PatchPropertyInfo>, res: Response) => {
+    try {
+        const propertyInfoResult = validatePatchPropertyInfo(req.body)
+        const propertyIdResult = validateUUID(req.params.propertyId)
+
+        // validate property info data
+        if (!propertyInfoResult.success) {
+            const formattedErrors = propertyInfoResult.error.issues.map((issue: ZodIssue) => ({
+                feild: issue.path.join("."),  // e.g. "property.userId"
+                message: issue.message,      // e.g. "Invalid UUID"
+            }));
+            return res
+                .status(StatusCodes.BAD_REQUEST)
+                .json({
+                    error: true, message: "Validation failed", errors: formattedErrors
+                })
+        }
+        // validate property Id
+        if (!propertyIdResult.success) {
+            return res
+                .status(StatusCodes.BAD_REQUEST)
+                .json({ error: true, message: "Invalid property Id" });
+        }
+
+        const propertyId = propertyIdResult.data
+        const validatedPropertyInfo = propertyInfoResult.data
+        
+        const {property, propertyInfo, loan, tenant, lease} = pruneUndefined(validatedPropertyInfo)
+
+
+    } catch (error) {
+
+    }
+}

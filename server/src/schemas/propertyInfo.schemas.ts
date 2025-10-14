@@ -81,3 +81,12 @@ export const propertyInfoValidationSchema = z.object({
   tenant: tenantSchema.optional(),
   lease: leaseSchema.optional(),
 });
+
+export const optionalPropertyInfoValidationSchema = z
+  .object({
+    property: propertySchema.partial().optional(),
+    propertyInfo: propertyInfoSchema.partial().optional(),
+    loan: loanSchema.partial().optional(),
+    tenant: tenantSchema.partial().optional(),
+    lease: leaseSchema.partial().optional(),
+  })
