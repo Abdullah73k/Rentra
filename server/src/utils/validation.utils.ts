@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { propertyInfoValidationSchema } from "../schemas/propertyInfo.schemas.js"
 
-type PropertyInfo = z.infer<typeof propertyInfoValidationSchema>
+export type PropertyInfo = z.infer<typeof propertyInfoValidationSchema>
 
 export function validateUUID(userId: string) {
     const schema = z.uuid()

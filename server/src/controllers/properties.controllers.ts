@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { StatusCodes } from "../constants/statusCodes.js";
-import { validateUUID } from "../utils/validation.utils.js";
+import { validateUUID, validatePropertyInfo, type PropertyInfo } from "../utils/validation.utils.js";
+import { type ZodIssue } from "zod";
 
 export const getUserPropertyData = (
     req: Request<{ propertyId: string }, {}, {}, {}>,
@@ -78,8 +79,36 @@ export const getUserProperties = (
     }
 };
 
-export const postUserPropertyData = (req: Request, res: Response) => {
+export const postUserPropertyData = (req: Request<{}, {}, PropertyInfo>, res: Response) => {
     try {
+        const result = validatePropertyInfo(req.body)
+
+        if (!result.success) {
+            const formatted = result.error.issues.map((issue: ZodIssue) => ({
+                feild: issue.path.join("."),  // e.g. "property.userId"
+                message: issue.message,      // e.g. "Invalid UUID"
+            }));
+            return res
+                .status(StatusCodes.BAD_REQUEST)
+                .json({
+                    error: true, message: "Validation failed", errors: formatted
+                })
+        }
+
+        // input property data into DB
+
+        // if there are conflicting names in DB
+        // return res.status(StatusCodes.CONFLICT).json({
+        //     "error": true,
+        //     "message": "You already have a property with this name at the same address"
+        // })
+
+        return res.status(StatusCodes.SUCCESS).json({
+            error: false,
+            message: "Propery Created",
+            data: result.data
+        })
+
 
     } catch (error) {
         return res

@@ -67,7 +67,7 @@ const leaseSchema = z.object({
   tentantId: uuid,
   start: z.string(), // ISO date strings can also use z.string().datetime()
   end: z.string(),
-  rentAmount: z.string(), // string because your type said so, but consider z.number()
+  rentAmount: z.number(),
   currency: z.string(),
   freq: z.string(),
   paymentDay: z.string(),
