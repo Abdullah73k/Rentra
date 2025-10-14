@@ -7,6 +7,6 @@ router.get("/:userId", getUserProperties);
 router.get("/:propertyId", getUserPropertyData);
 router.delete("/:propertyId", deleteUserProperty);
 
-router.post("/", postUserPropertyData)
+router.post("/create", postUserPropertyData)
 
 export default router;
