@@ -15,11 +15,13 @@
   "license": "ISC",
   "packageManager": "pnpm@10.17.1",
   "dependencies": {
+    "@supabase/supabase-js": "^2.75.0",
     "@types/node": "^24.6.0",
     "axios": "^1.12.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
     "zod": "^4.1.12"
   },
   "devDependencies": {
