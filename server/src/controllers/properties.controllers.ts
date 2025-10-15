@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { StatusCodes } from "../constants/statusCodes.js";
-import { validatePatchPropertyInfo, validateUUID, validatePropertyInfo, type PropertyInfo, type PatchPropertyInfo, pruneUndefined } from "../utils/validation.utils.js";
+import { validateUUID, validatePropertyInfo, type PropertyInfo, type PatchPropertyInfo, pruneUndefined } from "../utils/validation.utils.js";
 import { type ZodIssue } from "zod";
 import { error } from "console";
 
@@ -157,21 +157,18 @@ export const deleteUserProperty = (
 
 export const patchPropertyInfo = (req: Request<{ propertyId: string }, {}, PatchPropertyInfo>, res: Response) => {
     try {
-        const propertyInfoResult = validatePatchPropertyInfo(req.body)
+        const propertyInfoResult = validatePropertyInfo(req.body, true)
         const propertyIdResult = validateUUID(req.params.propertyId)
 
         // validate property info data
         if (!propertyInfoResult.success) {
-            const formattedErrors = propertyInfoResult.error.issues.map((issue: ZodIssue) => ({
-                feild: issue.path.join("."),  // e.g. "property.userId"
-                message: issue.message,      // e.g. "Invalid UUID"
-            }));
             return res
                 .status(StatusCodes.BAD_REQUEST)
                 .json({
-                    error: true, message: "Validation failed", errors: formattedErrors
+                    error: true, message: "Validation failed", errors: propertyInfoResult.errors
                 })
         }
+
         // validate property Id
         if (!propertyIdResult.success) {
             return res
