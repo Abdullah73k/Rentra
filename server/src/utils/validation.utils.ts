@@ -1,5 +1,6 @@
-import { z } from "zod"
 import { propertyInfoValidationSchema, optionalPropertyInfoValidationSchema } from "../schemas/propertyInfo.schemas.js"
+import { success, z, type ZodIssue } from "zod"
+import { da } from "zod/locales"
 
 export type PropertyInfo = z.infer<typeof propertyInfoValidationSchema>
 export type PatchPropertyInfo = z.infer<typeof optionalPropertyInfoValidationSchema>
@@ -11,7 +12,20 @@ export function validateUUID(userId: string) {
 }
 export function validatePropertyInfo(data: PropertyInfo) {
     const result = propertyInfoValidationSchema.safeParse(data)
-    return result
+    if (!result.success) {
+        const formatted = result.error.issues.map((issue: ZodIssue) => ({
+            feild: issue.path.join("."),  // e.g. "property.userId"
+            message: issue.message,      // e.g. "Invalid UUID"
+        }));
+        const errorObj: {success: false, errors: typeof formatted} = {success: false, errors: formatted}
+        return errorObj
+    }
+    const validatedData: {success: true, data: PropertyInfo} = {
+        success: true,
+        data: result.data
+    }
+    return validatedData
+  }
 }
 export function validatePatchPropertyInfo(data: PatchPropertyInfo){
     const result = optionalPropertyInfoValidationSchema.safeParse(data)
@@ -56,3 +70,4 @@ export function pruneUndefined<T>(obj: T): Partial<T> {
   // Finally, cast the result back to Partial<T> because some keys were removed.
   ) as Partial<T>;
 }
+    

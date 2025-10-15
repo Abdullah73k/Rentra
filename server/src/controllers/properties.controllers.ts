@@ -83,16 +83,11 @@ export const getUserProperties = (
 export const postPropertyInfo = (req: Request<{}, {}, PropertyInfo>, res: Response) => {
     try {
         const result = validatePropertyInfo(req.body)
-
         if (!result.success) {
-            const formatted = result.error.issues.map((issue: ZodIssue) => ({
-                feild: issue.path.join("."),  // e.g. "property.userId"
-                message: issue.message,      // e.g. "Invalid UUID"
-            }));
             return res
                 .status(StatusCodes.BAD_REQUEST)
                 .json({
-                    error: true, message: "Validation failed", errors: formatted
+                    error: true, message: "Validation failed", errors: result.errors
                 })
         }
 
