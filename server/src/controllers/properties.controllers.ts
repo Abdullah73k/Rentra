@@ -113,43 +113,82 @@ export const postUserPropertyData = (req: Request<{}, {}, PropertyInfo>, res: Re
     }
 }
 export const deleteUserProperty = (
-	req: Request<{ propertyId: string }, {}, {}, {}>,
-	res: Response
+    req: Request<{ propertyId: string }, {}, {}, {}>,
+    res: Response
 ) => {
-	try {
-		// TODO: Validate user permission / authenticate user token
+    try {
+        // TODO: Validate user permission / authenticate user token
 
-		// 1. Validate property Id
-		const { propertyId } = req.params;
-		const result = validateUUID(propertyId);
+        // 1. Validate property Id
+        const { propertyId } = req.params;
+        const result = validateUUID(propertyId);
 
-		if (!result.success) {
-			return res.status(StatusCodes.BAD_REQUEST).json({
-				error: true,
-				message: "Invalid property Id",
-			});
-		}
+        if (!result.success) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                error: true,
+                message: "Invalid property Id",
+            });
+        }
 
-		// 2. Query DB to delete property
+        // 2. Query DB to delete property
 
-		// Placeholder for actual query logic
-		const query = true;
-		// 3. Respond based on if any rows were affect
-		if (query) {
-			return res.status(StatusCodes.SUCCESS).json({
-				error: false,
-				message: "Successfully deleted property",
-			});
-		}
+        // Placeholder for actual query logic
+        const query = true;
+        // 3. Respond based on if any rows were affect
+        if (query) {
+            return res.status(StatusCodes.SUCCESS).json({
+                error: false,
+                message: "Successfully deleted property",
+            });
+        }
 
-		return res.status(StatusCodes.NOT_FOUND).json({
-			error: true,
-			message: "Property doesn't exist",
-		});
-	} catch (error) {
-		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-			error: true,
-			message: "Internal server error, could not delete property",
-		});
-	}
+        return res.status(StatusCodes.NOT_FOUND).json({
+            error: true,
+            message: "Property doesn't exist",
+        });
+    } catch (error) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            error: true,
+            message: "Internal server error, could not delete property",
+        });
+    }
 };
+
+export const deleteTransaction = (req: Request<{ transactionId: string }>, res: Response) => {
+    try {
+        const result = validateUUID(req.params.transactionId);
+
+        // checking if transactionId is a valid UUID
+        if (!result.success) {
+            return res
+                .status(StatusCodes.BAD_REQUEST)
+                .json({ error: true, message: "Invalid user Id" });
+        }
+
+        const transactionId = result.data
+
+        // delete transaction using transaction Id
+
+        // Placeholder for actual query logic
+        const query = true;
+
+        // check if rows were affected and respond accordingly
+        if (query) {
+            return res.status(StatusCodes.SUCCESS).json({
+                "error": false,
+                "message": "successfuly deleted transaction",
+            })
+        }
+        return res.status(StatusCodes.NOT_FOUND).json({
+            error: true,
+            message: "Transaction doesn't exist",
+        });
+
+    } catch (error) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            error: true,
+            message: "Internal server error, could not delete transaction",
+        });
+    }
+
+}
