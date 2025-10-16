@@ -74,7 +74,7 @@ const leaseSchema = z.object({
   deposit: z.number().nonnegative(),
 });
 
-export const propertyInfoValidationSchema = z.object({
+export const postPropertyInfoValidationSchema = z.object({
   property: propertySchema,
   propertyInfo: propertyInfoSchema,
   loan: loanSchema.optional(),
@@ -82,7 +82,7 @@ export const propertyInfoValidationSchema = z.object({
   lease: leaseSchema.optional(),
 });
 
-export const optionalPropertyInfoValidationSchema = z
+export const patchPropertyInfoValidationSchema = z
   .object({
     property: propertySchema.partial().optional(),
     propertyInfo: propertyInfoSchema.partial().optional(),
