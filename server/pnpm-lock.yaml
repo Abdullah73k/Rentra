@@ -14,6 +14,9 @@ importers:
       '@types/node':
         specifier: ^24.6.0
         version: 24.6.0
+      '@zod/core':
+        specifier: ^0.11.6
+        version: 0.11.6
       axios:
         specifier: ^1.12.2
         version: 1.12.2
@@ -140,6 +143,9 @@ packages:
 
   '@types/ws@8.18.1':
     resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
+
+  '@zod/core@0.11.6':
+    resolution: {integrity: sha512-03Bv82fFSfjDAvMfdHHdGSS6SOJs0iCcJlWJv1kJHRtoTT02hZpyip/2Lk6oo4l4FtjuwTrsEQTwg/LD8I7dJA==}
 
   accepts@2.0.0:
     resolution: {integrity: sha512-5cvg6CtKwfgdmVqY1WIiXKc3Q1bkRqGLi+2W/6ao+6Y7gu/RCwRuAhGEzh5B4KlszSuTLgZYuqFqo5bImjNKng==}
@@ -776,6 +782,8 @@ snapshots:
   '@types/ws@8.18.1':
     dependencies:
       '@types/node': 24.6.0
+
+  '@zod/core@0.11.6': {}
 
   accepts@2.0.0:
     dependencies:

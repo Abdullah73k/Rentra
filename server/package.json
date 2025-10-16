@@ -17,6 +17,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.75.0",
     "@types/node": "^24.6.0",
+    "@zod/core": "^0.11.6",
     "axios": "^1.12.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
