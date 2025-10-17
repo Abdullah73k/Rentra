@@ -191,6 +191,7 @@ export const deleteTransaction = (req: Request<{ transactionId: string }>, res: 
             message: "Internal server error, could not delete transaction",
         });
     }
+}
 
 export const patchPropertyInfo = (req: Request<{ propertyId: string }, {}, PatchPropertyInfo>, res: Response) => {
     try {

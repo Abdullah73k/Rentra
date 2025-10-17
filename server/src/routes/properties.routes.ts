@@ -9,7 +9,7 @@ router.get("/:propertyId", getUserPropertyData);
 router.delete("/delete/:propertyId", deleteUserProperty);
 router.delete("/delete/transaction/:transactionId", deleteTransaction)
 
-router.post("/create", postUserPropertyData)
+router.post("/create", postPropertyInfo)
 
 router.patch("/update/:propertyId", patchPropertyInfo)
 
