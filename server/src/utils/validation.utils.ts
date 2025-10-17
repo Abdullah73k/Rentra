@@ -16,7 +16,7 @@ export function validatePropertyInfo<T extends PropertyInfo | PatchPropertyInfo>
 
   if (!result.success) {
     const formatted = result.error.issues.map((issue) => ({
-      feild: issue.path.join("."),  // e.g. "property.userId"
+      field: issue.path.join("."),  // e.g. "property.userId"
       message: issue.message,      // e.g. "Invalid UUID"
     }));
     const errorObj: { success: false, errors: typeof formatted } = { success: false, errors: formatted }
