@@ -50,7 +50,9 @@ export const getUserProperties = (
     res: Response
 ) => {
     try {
-        const result = validateUUID(req.params.userId);
+
+        const {userId} = req.params
+        const result = validateUUID(userId);
 
         // checking if userId is a valid UUID
         if (!result.success) {
@@ -59,7 +61,6 @@ export const getUserProperties = (
                 .json({ error: true, message: "Invalid user Id" });
         }
 
-        const userId = result.data;
         console.log(userId);
 
         // get user properties from db using userId
@@ -82,7 +83,9 @@ export const getUserProperties = (
 
 export const postPropertyInfo = (req: Request<{}, {}, PropertyInfo>, res: Response) => {
     try {
-        const result = validatePropertyInfo(req.body)
+        const propertyData = req.body
+
+        const result = validatePropertyInfo(propertyData)
         if (!result.success) {
             return res
                 .status(StatusCodes.BAD_REQUEST)
@@ -155,10 +158,54 @@ export const deleteUserProperty = (
     }
 };
 
+export const deleteTransaction = (req: Request<{ transactionId: string }>, res: Response) => {
+    try {
+
+        const {transactionId} = req.params
+        const result = validateUUID(transactionId);
+
+        // checking if transactionId is a valid UUID
+        if (!result.success) {
+            return res
+                .status(StatusCodes.BAD_REQUEST)
+                .json({ error: true, message: "Invalid user Id" });
+        }
+
+
+        // delete transaction using transaction Id
+
+        // Placeholder for actual query logic
+        const query = true;
+
+        // check if rows were affected and respond accordingly
+        if (query) {
+            return res.status(StatusCodes.SUCCESS).json({
+                "error": false,
+                "message": "successfuly deleted transaction",
+            })
+        }
+        return res.status(StatusCodes.NOT_FOUND).json({
+            error: true,
+            message: "Transaction doesn't exist",
+        });
+
+    } catch (error) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            error: true,
+            message: "Internal server error, could not delete transaction",
+        });
+    }
+}
+
 export const patchPropertyInfo = (req: Request<{ propertyId: string }, {}, PatchPropertyInfo>, res: Response) => {
     try {
-        const propertyInfoResult = validatePropertyInfo(req.body, true)
-        const propertyIdResult = validateUUID(req.params.propertyId)
+
+        const propertyInfo = req.body
+
+        const {propertyId} = req.params
+
+        const propertyInfoResult = validatePropertyInfo(propertyInfo, true)
+        const propertyIdResult = validateUUID(propertyId)
 
         // validate property info data
         if (!propertyInfoResult.success) {
@@ -176,7 +223,6 @@ export const patchPropertyInfo = (req: Request<{ propertyId: string }, {}, Patch
                 .json({ error: true, message: "Invalid property Id" });
         }
 
-        const propertyId = propertyIdResult.data
         const validatedPropertyInfo = propertyInfoResult.data
 
         const cleanedData = pruneUndefined(validatedPropertyInfo)
