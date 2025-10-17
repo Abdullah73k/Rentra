@@ -5,8 +5,8 @@ const router: Router = Router();
 
 router.get("/:userId", getUserProperties);
 router.get("/:propertyId", getUserPropertyData);
-router.delete("/:propertyId", deleteUserProperty);
+router.delete("/delete/:propertyId", deleteUserProperty);
 router.post("/create", postUserPropertyData)
-router.delete("/delete/transactionId")
+router.delete("/delete/transaction/:transactionId")
 
 export default router;
