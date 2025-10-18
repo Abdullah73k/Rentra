@@ -73,6 +73,25 @@ const leaseSchema = z.object({
 	deposit: z.number().nonnegative(),
 });
 
+export const postTransactionValidationSchema = z.object({
+	id: uuid,
+	propertyId: uuid,
+	leaseId: uuid,
+	type: z.enum(["income", "expense"]),
+	subcategory: z.string(),
+	amount: z.coerce.number().nonnegative(),
+	currency: z
+		.string()
+		.length(3)
+		.transform((val) => val.toUpperCase()),
+	taxRate: z.coerce.number().nonnegative().min(0).max(1),
+	taxAmount: z.coerce.number().nonnegative().min(0),
+	date: z.iso.date().transform((date) => new Date(date)), // Validate ISO Date string then transform to Date Type using Date object to store in DB
+	from: z.string().min(1),
+	to: z.string().min(1),
+	method: z.string().min(1),
+	notes: z.string().max(1000).optional(),
+});
 
 export const postPropertyInfoValidationSchema = z.object({
 	property: propertySchema,
