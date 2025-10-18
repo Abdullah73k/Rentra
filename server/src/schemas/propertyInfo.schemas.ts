@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export type Transaction = z.input<typeof postTransactionValidationSchema>;
+export type PostCreateTransaction = z.input<typeof postTransactionValidationSchema>;
 
 const uuid = z.uuid("Invalid UUID");
 
@@ -76,7 +76,6 @@ const leaseSchema = z.object({
 });
 
 export const postTransactionValidationSchema = z.object({
-	id: uuid,
 	propertyId: uuid,
 	leaseId: uuid,
 	type: z.enum(["income", "expense"]),
