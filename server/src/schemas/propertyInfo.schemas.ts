@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export type Transaction = z.input<typeof postTransactionValidationSchema>;
+
 const uuid = z.uuid("Invalid UUID");
 
 const propertySchema = z.object({
@@ -79,13 +81,13 @@ export const postTransactionValidationSchema = z.object({
 	leaseId: uuid,
 	type: z.enum(["income", "expense"]),
 	subcategory: z.string(),
-	amount: z.coerce.number().nonnegative(),
+	amount: z.coerce.number<string>().nonnegative(),
 	currency: z
 		.string()
 		.length(3)
 		.transform((val) => val.toUpperCase()),
-	taxRate: z.coerce.number().nonnegative().min(0).max(1),
-	taxAmount: z.coerce.number().nonnegative().min(0),
+	taxRate: z.coerce.number<string>().nonnegative().min(0).max(1),
+	taxAmount: z.coerce.number<string>().nonnegative().min(0),
 	date: z.iso.date().transform((date) => new Date(date)), // Validate ISO Date string then transform to Date Type using Date object to store in DB
 	from: z.string().min(1),
 	to: z.string().min(1),
