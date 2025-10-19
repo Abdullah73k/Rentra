@@ -1,7 +1,5 @@
 import { z } from "zod";
 
-export type PostCreateTransaction = z.input<typeof postTransactionValidationSchema>;
-
 const uuid = z.uuid("Invalid UUID");
 
 const propertySchema = z.object({

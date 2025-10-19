@@ -1,15 +1,14 @@
 import {
 	postPropertyInfoValidationSchema,
 	patchPropertyInfoValidationSchema,
-	type Transaction,
 	postTransactionValidationSchema,
 } from "../schemas/propertyInfo.schemas.js";
 import { z } from "zod";
-
-export type PropertyInfo = z.infer<typeof postPropertyInfoValidationSchema>;
-export type PatchPropertyInfo = z.infer<
-	typeof patchPropertyInfoValidationSchema
->;
+import type {
+	PatchPropertyInfo,
+	PostCreateTransaction,
+	PropertyInfo,
+} from "../types/index.types.js";
 
 export function validateUUID(userId: string) {
 	const schema = z.uuid();
@@ -42,7 +41,7 @@ export function validatePropertyInfo<
 	return validatedData;
 }
 
-export function validateTransactionDetails(transaction: Transaction) {
+export function validateTransactionDetails(transaction: PostCreateTransaction) {
 	const result = postTransactionValidationSchema.safeParse(transaction);
 	if (!result.success) {
 		const formatted = result.error.issues.map((issue) => ({

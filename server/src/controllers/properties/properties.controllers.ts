@@ -3,10 +3,12 @@ import { StatusCodes } from "../../constants/statusCodes.constants.js";
 import {
 	validateUUID,
 	validatePropertyInfo,
-	type PropertyInfo,
-	type PatchPropertyInfo,
 	pruneUndefined,
 } from "../../utils/validation.utils.js";
+import type {
+	PatchPropertyInfo,
+	PropertyInfo,
+} from "../../types/index.types.js";
 
 export const getUserPropertyData = (
 	req: Request<{ propertyId: string }, {}, {}, {}>,

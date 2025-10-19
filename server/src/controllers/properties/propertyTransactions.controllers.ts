@@ -4,7 +4,7 @@ import {
 	validateUUID,
 	validateTransactionDetails,
 } from "../../utils/validation.utils.js";
-import type { PostCreateTransaction } from "../../schemas/propertyInfo.schemas.js";
+import type { PostCreateTransaction } from "../../types/index.types.js";
 
 export const postCreateTransaction = (
 	req: Request<{}, {}, { transactionDetails: PostCreateTransaction }, {}>,
