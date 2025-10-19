@@ -55,71 +55,71 @@ export const getUserProperties = (
 	req: Request<{ userId: string }>,
 	res: Response
 ) => {
-	try {
-		const result = validateUUID(req.params.userId);
+    try {
 
-		// checking if userId is a valid UUID
-		if (!result.success) {
-			return res
-				.status(StatusCodes.BAD_REQUEST)
-				.json({ error: true, message: "Invalid user Id" });
-		}
+        const {userId} = req.params
+        const result = validateUUID(userId);
 
-		const userId = result.data;
-		console.log(userId);
+        // checking if userId is a valid UUID
+        if (!result.success) {
+            return res
+                .status(StatusCodes.BAD_REQUEST)
+                .json({ error: true, message: "Invalid user Id" });
+        }
 
-		// get user properties from db using userId
+        console.log(userId);
 
-		// if Id in valid
-		return res.status(StatusCodes.SUCCESS).json({
-			error: false,
-			message: "successfully fetched user properties",
-			data: ["array of properties from db"],
-		});
+        // get user properties from db using userId
 
-		// if userId is invalid
-		// return res.status(StatusCodes.BAD_REQUEST).json({ error: true, message: "Invalid user Id" })
-	} catch (error) {
-		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-			error: true,
-			message: "internal server error, could not fetch user Properties",
-		});
-	}
+        // if Id in valid
+        return res.status(StatusCodes.SUCCESS).json({
+            error: false,
+            message: "successfully fetched user properties",
+            data: ["array of properties from db"],
+        });
+
+        // if userId is invalid
+        // return res.status(StatusCodes.BAD_REQUEST).json({ error: true, message: "Invalid user Id" })
+    } catch (error) {
+        return res
+            .status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .json({ error: true, message: "internal server error, could not fetch user Properties" });
+    }
 };
 
-export const postPropertyInfo = (
-	req: Request<{}, {}, PropertyInfo>,
-	res: Response
-) => {
-	try {
-		const result = validatePropertyInfo(req.body);
-		if (!result.success) {
-			return res.status(StatusCodes.BAD_REQUEST).json({
-				error: true,
-				message: "Validation failed",
-				errors: result.errors,
-			});
-		}
+export const postPropertyInfo = (req: Request<{}, {}, PropertyInfo>, res: Response) => {
+    try {
+        const propertyData = req.body
 
-		// input property data into DB
+        const result = validatePropertyInfo(propertyData)
+        if (!result.success) {
+            return res
+                .status(StatusCodes.BAD_REQUEST)
+                .json({
+                    error: true, message: "Validation failed", errors: result.errors
+                })
+        }
 
-		// if there are conflicting names in DB
-		// return res.status(StatusCodes.CONFLICT).json({
-		//     "error": true,
-		//     "message": "You already have a property with this name at the same address"
-		// })
+        // input property data into DB
 
-		return res.status(StatusCodes.SUCCESS).json({
-			error: false,
-			message: "Propery Created",
-			data: result.data,
-		});
-	} catch (error) {
-		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-			error: true,
-			message: "internal server error, could not fetch user Properties",
-		});
-	}
+        // if there are conflicting names in DB
+        // return res.status(StatusCodes.CONFLICT).json({
+        //     "error": true,
+        //     "message": "You already have a property with this name at the same address"
+        // })
+
+        return res.status(StatusCodes.SUCCESS).json({
+            error: false,
+            message: "Propery Created",
+            data: result.data
+        })
+
+
+    } catch (error) {
+        return res
+            .status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .json({ error: true, message: "internal server error, could not fetch user Properties" });
+    }
 };
 
 export const deleteUserProperty = (
@@ -164,63 +164,7 @@ export const deleteUserProperty = (
 	}
 };
 
-export const patchPropertyInfo = (
-	req: Request<{ propertyId: string }, {}, PatchPropertyInfo>,
-	res: Response
-) => {
-	try {
-		const propertyInfoResult = validatePropertyInfo(req.body, true);
-		const propertyIdResult = validateUUID(req.params.propertyId);
 
-		// validate property info data
-		if (!propertyInfoResult.success) {
-			return res.status(StatusCodes.BAD_REQUEST).json({
-				error: true,
-				message: "Validation failed",
-				errors: propertyInfoResult.errors,
-			});
-		}
-
-		// validate property Id
-		if (!propertyIdResult.success) {
-			return res
-				.status(StatusCodes.BAD_REQUEST)
-				.json({ error: true, message: "Invalid property Id" });
-		}
-
-		const propertyId = propertyIdResult.data;
-		const validatedPropertyInfo = propertyInfoResult.data;
-
-		const cleanedData = pruneUndefined(validatedPropertyInfo);
-
-		// check if there is nothing
-		if (
-			!cleanedData.property &&
-			!cleanedData.propertyInfo &&
-			!cleanedData.loan &&
-			!cleanedData.tenant &&
-			!cleanedData.lease
-		) {
-			return res.status(StatusCodes.BAD_REQUEST).json({
-				error: true,
-				message: "No fields provided to update",
-			});
-		}
-
-		// use cleaned data to update db
-
-		return res.status(StatusCodes.CREATED).json({
-			error: false,
-			message: "Property updated",
-			data: cleanedData, // data should not be cleaned data but the object returned by the data base
-		});
-	} catch (error) {
-		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-			error: true,
-			message: "internal server error, could not update Property info",
-		});
-	}
-};
 
 export const postCreateTransaction = (
 	req: Request<{}, {}, { transactionDetails: PostCreateTransaction }, {}>,
@@ -270,3 +214,96 @@ export const postCreateTransaction = (
 		});
 	}
 };
+export const deleteTransaction = (req: Request<{ transactionId: string }>, res: Response) => {
+    try {
+
+        const {transactionId} = req.params
+        const result = validateUUID(transactionId);
+
+        // checking if transactionId is a valid UUID
+        if (!result.success) {
+            return res
+                .status(StatusCodes.BAD_REQUEST)
+                .json({ error: true, message: "Invalid user Id" });
+        }
+
+
+        // delete transaction using transaction Id
+
+        // Placeholder for actual query logic
+        const query = true;
+
+        // check if rows were affected and respond accordingly
+        if (query) {
+            return res.status(StatusCodes.SUCCESS).json({
+                "error": false,
+                "message": "successfuly deleted transaction",
+            })
+        }
+        return res.status(StatusCodes.NOT_FOUND).json({
+            error: true,
+            message: "Transaction doesn't exist",
+        });
+
+    } catch (error) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            error: true,
+            message: "Internal server error, could not delete transaction",
+        });
+    }
+}
+
+export const patchPropertyInfo = (req: Request<{ propertyId: string }, {}, PatchPropertyInfo>, res: Response) => {
+    try {
+
+        const propertyInfo = req.body
+
+        const {propertyId} = req.params
+
+        const propertyInfoResult = validatePropertyInfo(propertyInfo, true)
+        const propertyIdResult = validateUUID(propertyId)
+
+        // validate property info data
+        if (!propertyInfoResult.success) {
+            return res
+                .status(StatusCodes.BAD_REQUEST)
+                .json({
+                    error: true, message: "Validation failed", errors: propertyInfoResult.errors
+                })
+        }
+
+        // validate property Id
+        if (!propertyIdResult.success) {
+            return res
+                .status(StatusCodes.BAD_REQUEST)
+                .json({ error: true, message: "Invalid property Id" });
+        }
+
+        const validatedPropertyInfo = propertyInfoResult.data
+
+        const cleanedData = pruneUndefined(validatedPropertyInfo)
+
+        // check if there is nothing
+        if (
+            !cleanedData.property && !cleanedData.propertyInfo &&
+            !cleanedData.loan && !cleanedData.tenant && !cleanedData.lease
+        ) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                error: true,
+                message: "No fields provided to update",
+            });
+        }
+
+        // use cleaned data to update db
+
+        return res.status(StatusCodes.CREATED).json({
+            error: false,
+            message: "Property updated",
+            data: cleanedData // data should not be cleaned data but the object returned by the data base
+        })
+    } catch (error) {
+         return res
+            .status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .json({ error: true, message: "internal server error, could not update Property info" });
+    }
+}
