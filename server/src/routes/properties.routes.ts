@@ -6,8 +6,8 @@ import {
 	deleteUserProperty,
 	patchPropertyInfo,
 	postCreateTransaction,
+	deleteTransaction,
 } from "../controllers/properties.controllers.js";
-import { getUserPropertyData, getUserProperties, postPropertyInfo, deleteUserProperty, patchPropertyInfo, deleteTransaction } from "../controllers/properties.controllers.js";
 
 const router: Router = Router();
 
@@ -20,7 +20,6 @@ router.post("/create", postPropertyInfo);
 router.post("/create/transaction", postCreateTransaction);
 
 router.delete("/delete/:propertyId", deleteUserProperty);
-router.delete("/delete/transaction/:transactionId", deleteTransaction)
-
+router.delete("/delete/transaction/:transactionId", deleteTransaction);
 
 export default router;
