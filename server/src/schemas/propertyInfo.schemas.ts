@@ -39,13 +39,13 @@ const propertyInfoSchema = z.object({
 });
 
 const loanSchema = z.object({
-  id: uuid,
-  propertyId: uuid,
-  lender: z.string().min(1),
-  monthlyMortgage: z.number().nonnegative(),
-  totalMortgageAmount: z.number().optional(),
-  monthlyMortgageValue: z.number().optional(),
-  interestRate: z.number().min(0).max(100).optional(),
+	id: uuid,
+	propertyId: uuid,
+	lender: z.string().min(1),
+	monthlyMortgage: z.number().nonnegative(),
+	totalMortgageAmount: z.number().optional(),
+	monthlyMortgageValue: z.number().optional(),
+	interestRate: z.number().min(0).max(100).optional(),
 });
 
 const tenantSchema = z.object({
@@ -91,6 +91,8 @@ export const postTransactionValidationSchema = z.object({
 	method: z.string().min(1),
 	notes: z.string().max(1000).optional(),
 });
+
+export const patchTransactionValidationSchema = postTransactionValidationSchema.partial()
 
 export const postPropertyInfoValidationSchema = z.object({
 	property: propertySchema,

@@ -4,7 +4,7 @@ import {
 	validateUUID,
 	validateTransactionDetails,
 } from "../../utils/validation.utils.js";
-import type { PostCreateTransaction } from "../../types/index.types.js";
+import type { PostCreateTransaction, PatchTransaction } from "../../types/index.types.js";
 
 export const postCreateTransaction = (
 	req: Request<{}, {}, { transactionDetails: PostCreateTransaction }, {}>,
@@ -92,22 +92,48 @@ export const deleteTransaction = (
 		});
 	}
 };
+export const patchTransaction = (req: Request<{ transactionId: string }, {}, PatchTransaction>, res: Response) => {
+	try {
+		const transactionData = req.body
+		const { transactionId } = req.params
 
-export const patchTransaction = (req: Request<{ transactionId: string }, {}, {}>, res: Response) => {
-    try {
+		const transactionIdResult = validateUUID(transactionId)
+		const transactionDataResult = validateTransactionDetails(transactionData)
 
-        const { transactionId } = req.params
 
-        const transactionIdResult = validateUUID(transactionId)
+		// checking if Id is valid
+		if (!transactionIdResult.success) {
+			return res.status(StatusCodes.BAD_REQUEST).json({
+				error: true,
+				message: "Invalid transaction Id",
+			});
+		}
 
-        if (!transactionIdResult.success) {
-            return res.status(StatusCodes.BAD_REQUEST).json({
-                error: true,
-                message: "Invalid transaction Id",
-            });
-        }
+		// checking if transaction data is valid
+		if (!transactionDataResult.success) {
+			return res.status(StatusCodes.BAD_REQUEST).json({
+				error: true,
+				message: "Validation failed",
+				errors: transactionDataResult.errors,
+			});
+		}
 
-    } catch (error) {
 
-    }
+		const validatedTransactionData = transactionDataResult.data
+
+		// use validated data to query db
+
+		res.status(StatusCodes.CREATED).json({
+			error: false,
+			message: "Transaction updated",
+			data: validatedTransactionData
+		})
+
+
+	} catch (error) {
+		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+			error: true,
+			message: "Internal server error, could not update transaction",
+		});
+	}
 }
