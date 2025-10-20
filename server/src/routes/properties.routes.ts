@@ -1,13 +1,15 @@
 import { Router } from "express";
 import {
-	getUserPropertyData,
-	getUserProperties,
-	postPropertyInfo,
 	deleteUserProperty,
+	getUserProperties,
+	getUserPropertyData,
 	patchPropertyInfo,
-	postCreateTransaction,
+	postPropertyInfo,
+} from "../controllers/properties/properties.controllers.js";
+import {
 	deleteTransaction,
-} from "../controllers/properties.controllers.js";
+	postCreateTransaction,
+} from "../controllers/properties/propertyTransactions.controllers.js";
 
 const router: Router = Router();
 
