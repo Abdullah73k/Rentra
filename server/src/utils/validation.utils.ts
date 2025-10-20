@@ -30,11 +30,11 @@ export function validatePropertyInfo<
       field: issue.path.join("."),  // e.g. "property.userId"
       message: issue.message,      // e.g. "Invalid UUID"
     }));
-    const errorObj: { success: false, errors: typeof formatted } = { success: false, errors: formatted }
+    const errorObj = { success: false as const, errors: formatted }
     return errorObj
   }
-  const validatedData: { success: true, data: T } = {
-    success: true,
+  const validatedData = {
+    success: true as const,
     data: result.data as T
   }
   return validatedData
@@ -56,7 +56,7 @@ export function validateTransactionDetails<T extends PostCreateTransaction | Pat
     return errorObj;
   }
 
-  const validatedData = { success: true as const, data: result.data };
+  const validatedData = { success: true as const, data: result.data as T };
   return validatedData;
 }
 

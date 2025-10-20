@@ -4,7 +4,7 @@ import {
 	validateUUID,
 	validateTransactionDetails,
 } from "../../utils/validation.utils.js";
-import type { PostCreateTransaction, PatchTransaction } from "../../types/index.types.js";
+import type { PatchTransaction, PostCreateTransaction } from "../../types/index.types.js";
 
 export const postCreateTransaction = (
 	req: Request<{}, {}, { transactionDetails: PostCreateTransaction }, {}>,
@@ -92,22 +92,14 @@ export const deleteTransaction = (
 		});
 	}
 };
-export const patchTransaction = (req: Request<{ transactionId: string }, {}, PatchTransaction>, res: Response) => {
+export const patchTransaction = (req: Request<{ transactionId: string }, {}, PostCreateTransaction>, res: Response) => {
 	try {
 		const transactionData = req.body
 		const { transactionId } = req.params
 
-		const transactionIdResult = validateUUID(transactionId)
-		const transactionDataResult = validateTransactionDetails(transactionData)
+		const combinedTransactionData: PatchTransaction = {transactionId, ...transactionData}
 
-
-		// checking if Id is valid
-		if (!transactionIdResult.success) {
-			return res.status(StatusCodes.BAD_REQUEST).json({
-				error: true,
-				message: "Invalid transaction Id",
-			});
-		}
+		const transactionDataResult = validateTransactionDetails<PatchTransaction>(combinedTransactionData, true)
 
 		// checking if transaction data is valid
 		if (!transactionDataResult.success) {
@@ -123,7 +115,7 @@ export const patchTransaction = (req: Request<{ transactionId: string }, {}, Pat
 
 		// use validated data to query db
 
-		res.status(StatusCodes.CREATED).json({
+		res.status(StatusCodes.SUCCESS).json({
 			error: false,
 			message: "Transaction updated",
 			data: validatedTransactionData
