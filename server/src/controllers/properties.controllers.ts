@@ -51,7 +51,7 @@ export const getUserProperties = (
 ) => {
     try {
 
-        const {userId} = req.params
+        const { userId } = req.params
         const result = validateUUID(userId);
 
         // checking if userId is a valid UUID
@@ -104,7 +104,7 @@ export const postPropertyInfo = (req: Request<{}, {}, PropertyInfo>, res: Respon
 
         return res.status(StatusCodes.SUCCESS).json({
             error: false,
-            message: "Propery Created",
+            message: "Property Created",
             data: result.data
         })
 
@@ -161,7 +161,7 @@ export const deleteUserProperty = (
 export const deleteTransaction = (req: Request<{ transactionId: string }>, res: Response) => {
     try {
 
-        const {transactionId} = req.params
+        const { transactionId } = req.params
         const result = validateUUID(transactionId);
 
         // checking if transactionId is a valid UUID
@@ -181,7 +181,7 @@ export const deleteTransaction = (req: Request<{ transactionId: string }>, res: 
         if (query) {
             return res.status(StatusCodes.SUCCESS).json({
                 "error": false,
-                "message": "successfuly deleted transaction",
+                "message": "successfully deleted transaction",
             })
         }
         return res.status(StatusCodes.NOT_FOUND).json({
@@ -202,7 +202,7 @@ export const patchPropertyInfo = (req: Request<{ propertyId: string }, {}, Patch
 
         const propertyInfo = req.body
 
-        const {propertyId} = req.params
+        const { propertyId } = req.params
 
         const propertyInfoResult = validatePropertyInfo(propertyInfo, true)
         const propertyIdResult = validateUUID(propertyId)
@@ -246,8 +246,27 @@ export const patchPropertyInfo = (req: Request<{ propertyId: string }, {}, Patch
             data: cleanedData // data should not be cleaned data but the object returned by the data base
         })
     } catch (error) {
-         return res
+        return res
             .status(StatusCodes.INTERNAL_SERVER_ERROR)
             .json({ error: true, message: "internal server error, could not update Property info" });
+    }
+}
+
+export const patchTransaction = (req: Request<{ transactionId: string }, {}, {}>, res: Response) => {
+    try {
+
+        const { transactionId } = req.params
+
+        const transactionIdResult = validateUUID(transactionId)
+
+        if (!transactionIdResult.success) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                error: true,
+                message: "Invalid transaction Id",
+            });
+        }
+
+    } catch (error) {
+
     }
 }

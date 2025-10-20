@@ -43,9 +43,9 @@ const loanSchema = z.object({
   id: uuid,
   propertyId: uuid,
   lender: z.string().min(1),
-  monthlyMorgage: z.number().nonnegative(),
-  totalMorgageAmount: z.number().optional(),
-  monthlyMorgageValue: z.number().optional(),
+  monthlyMortgage: z.number().nonnegative(),
+  totalMortgageAmount: z.number().optional(),
+  monthlyMortgageValue: z.number().optional(),
   interestRate: z.number().min(0).max(100).optional(),
 });
 
@@ -64,7 +64,7 @@ const tenantSchema = z.object({
 const leaseSchema = z.object({
   id: uuid,
   propertyId: uuid,
-  tentantId: uuid,
+  tenantId: uuid,
   start: z.string(), // ISO date strings can also use z.string().datetime()
   end: z.string(),
   rentAmount: z.number(),

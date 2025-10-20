@@ -12,5 +12,6 @@ router.delete("/delete/transaction/:transactionId", deleteTransaction)
 router.post("/create", postPropertyInfo)
 
 router.patch("/update/:propertyId", patchPropertyInfo)
+router.patch("/update/transaction/:transactionId")
 
 export default router;
