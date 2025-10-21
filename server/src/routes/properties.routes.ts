@@ -14,7 +14,7 @@ import {
 
 const router: Router = Router();
 
-router.get("/:userId", getUserProperties);
+router.get("/all/:userId", getUserProperties);
 router.get("/:propertyId", getUserPropertyData);
 
 

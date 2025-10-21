@@ -97,7 +97,7 @@ export const patchTransaction = (req: Request<{ transactionId: string }, {}, Pos
 		const transactionData = req.body
 		const { transactionId } = req.params
 
-		const combinedTransactionData: PatchTransaction = {transactionId, ...transactionData}
+		const combinedTransactionData: PatchTransaction = {id: transactionId, ...transactionData}
 
 		const transactionDataResult = validateTransactionDetails<PatchTransaction>(combinedTransactionData, true)
 

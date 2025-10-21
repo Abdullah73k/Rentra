@@ -93,7 +93,7 @@ export const postTransactionValidationSchema = z.object({
 });
 
 export const patchTransactionValidationSchema = postTransactionValidationSchema.extend({
-	transactionId: uuid
+	id: uuid
 })
 
 export const postPropertyInfoValidationSchema = z.object({
