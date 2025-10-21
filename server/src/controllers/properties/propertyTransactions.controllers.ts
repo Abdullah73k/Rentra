@@ -4,7 +4,7 @@ import {
 	validateUUID,
 	validateTransactionDetails,
 } from "../../utils/validation.utils.js";
-import type { PostCreateTransaction } from "../../types/index.types.js";
+import type { PatchTransaction, PostCreateTransaction } from "../../types/index.types.js";
 
 export const postCreateTransaction = (
 	req: Request<{}, {}, { transactionDetails: PostCreateTransaction }, {}>,
@@ -92,3 +92,40 @@ export const deleteTransaction = (
 		});
 	}
 };
+export const patchTransaction = (req: Request<{ transactionId: string }, {}, PostCreateTransaction>, res: Response) => {
+	try {
+		const transactionData = req.body
+		const { transactionId } = req.params
+
+		const combinedTransactionData: PatchTransaction = {id: transactionId, ...transactionData}
+
+		const transactionDataResult = validateTransactionDetails<PatchTransaction>(combinedTransactionData, true)
+
+		// checking if transaction data is valid
+		if (!transactionDataResult.success) {
+			return res.status(StatusCodes.BAD_REQUEST).json({
+				error: true,
+				message: "Validation failed",
+				errors: transactionDataResult.errors,
+			});
+		}
+
+
+		const validatedTransactionData = transactionDataResult.data
+
+		// use validated data to query db
+
+		res.status(StatusCodes.SUCCESS).json({
+			error: false,
+			message: "Transaction updated",
+			data: validatedTransactionData
+		})
+
+
+	} catch (error) {
+		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+			error: true,
+			message: "Internal server error, could not update transaction",
+		});
+	}
+}

@@ -92,6 +92,10 @@ export const postTransactionValidationSchema = z.object({
 	notes: z.string().max(1000).optional(),
 });
 
+export const patchTransactionValidationSchema = postTransactionValidationSchema.extend({
+	id: uuid
+})
+
 export const postPropertyInfoValidationSchema = z.object({
 	property: propertySchema,
 	propertyInfo: propertyInfoSchema,
