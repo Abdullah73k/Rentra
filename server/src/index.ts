@@ -2,6 +2,9 @@ import express, { type Express } from "express";
 import cors from "cors";
 import propertiesRouter from "./routes/properties.routes.js";
 import { rateLimit } from "express-rate-limit";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app: Express = express();
 

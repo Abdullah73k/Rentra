@@ -1,9 +1,6 @@
-import { config } from "dotenv";
-
 import { Pool } from "pg";
-
-config();
+import { SUPABASE_CONNECTION_STRING } from "../constants/supabase.constants.js";
 
 export const pool = new Pool({
-	connectionString: process.env.SUPABASE_CONNECTION_STRING,
+	connectionString: SUPABASE_CONNECTION_STRING,
 });
