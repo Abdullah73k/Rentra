@@ -6,10 +6,18 @@ import express, { type Express } from "express";
 import cors from "cors";
 import propertiesRouter from "./routes/properties.routes.js";
 import { rateLimit } from "express-rate-limit";
+import { fromNodeHeaders, toNodeHandler } from "better-auth/node";
+import { auth } from "./utils/auth.js";
 
 const app: Express = express();
 
-app.use(cors());
+app.all("/api/auth/{*any}", toNodeHandler(auth))
+
+app.use(cors({
+	origin: "http://localhost:5173",
+	methods: ["GET", "POST", "PATCH", "DELETE"],
+	credentials: true
+}));
 app.use(express.json({ limit: "2mb" }));
 
 const rateLimiter = rateLimit({
@@ -19,6 +27,12 @@ const rateLimiter = rateLimit({
 
 app.use(rateLimiter);
 
+app.get("/api/me", async (req, res) => {
+ 	const session = await auth.api.getSession({
+      headers: fromNodeHeaders(req.headers),
+    });
+	return res.json(session);
+});
 app.use("/api/properties", propertiesRouter);
 
 app.listen(3000, () => {
