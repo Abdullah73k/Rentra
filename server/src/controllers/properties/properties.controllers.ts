@@ -72,7 +72,7 @@ export const getUserProperties = async (
 	try {
 		// get user properties from db using userId
 		const query = await pool.query<Property>({
-			text: "SELECT * FROM Property WHERE userId = $1",
+			text: `SELECT * FROM "Property" WHERE userId = $1`,
 			values: [zodUserId],
 		});
 
