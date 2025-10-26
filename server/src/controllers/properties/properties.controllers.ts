@@ -9,6 +9,8 @@ import type {
 	PatchPropertyInfo,
 	PropertyInfo,
 } from "../../types/index.types.js";
+import { pool } from "../../config/pg.config.js";
+import type { Property } from "../../types/db.types.js";
 
 export const getUserPropertyData = (
 	req: Request<{ propertyId: string }, {}, {}, {}>,
@@ -51,34 +53,37 @@ export const getUserPropertyData = (
 	}
 };
 
-export const getUserProperties = (
+export const getUserProperties = async (
 	req: Request<{ userId: string }>,
 	res: Response
 ) => {
+	const { userId } = req.params;
+	const result = validateUUID(userId);
+
+	// checking if userId is a valid UUID
+	if (!result.success) {
+		return res
+			.status(StatusCodes.BAD_REQUEST)
+			.json({ error: true, message: "Invalid user Id" });
+	}
+
+	const zodUserId = result.data;
+
 	try {
-		const { userId } = req.params;
-		const result = validateUUID(userId);
-
-		// checking if userId is a valid UUID
-		if (!result.success) {
-			return res
-				.status(StatusCodes.BAD_REQUEST)
-				.json({ error: true, message: "Invalid user Id" });
-		}
-
-		console.log(userId);
-
 		// get user properties from db using userId
-
-		// if Id in valid
-		return res.status(StatusCodes.SUCCESS).json({
-			error: false,
-			message: "successfully fetched user properties",
-			data: ["array of properties from db"],
+		const query = await pool.query<Property>({
+			text: "SELECT * FROM Property WHERE userId = $1",
+			values: [zodUserId],
 		});
 
-		// if userId is invalid
-		// return res.status(StatusCodes.BAD_REQUEST).json({ error: true, message: "Invalid user Id" })
+		return res.status(StatusCodes.SUCCESS).json({
+			error: false,
+			message:
+				query.rows.length === 0
+					? "User has no properties"
+					: "Successfully fetched all user properties",
+			data: query.rows.length === 0 ? [] : query.rows,
+		});
 	} catch (error) {
 		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
 			error: true,
