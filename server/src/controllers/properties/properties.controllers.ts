@@ -76,13 +76,13 @@ export const getUserProperties = async (
 			values: [zodUserId],
 		});
 
+		const queryHasNoData = query.rows.length === 0;
 		return res.status(StatusCodes.SUCCESS).json({
 			error: false,
-			message:
-				query.rows.length === 0
-					? "User has no properties"
-					: "Successfully fetched all user properties",
-			data: query.rows.length === 0 ? [] : query.rows,
+			message: queryHasNoData
+				? "User has no properties"
+				: "Successfully fetched all user properties",
+			data: queryHasNoData ? [] : query.rows,
 		});
 	} catch (error) {
 		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
