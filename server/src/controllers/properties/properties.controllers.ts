@@ -79,9 +79,7 @@ export const getUserProperties = async (
 		const queryHasNoData = query.rows.length === 0;
 		return res.status(StatusCodes.SUCCESS).json({
 			error: false,
-			message: queryHasNoData
-				? "User has no properties"
-				: "Successfully fetched all user properties",
+			message: "Successfully fetched user properties",
 			data: queryHasNoData ? [] : query.rows,
 		});
 	} catch (error) {
