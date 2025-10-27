@@ -1,12 +1,19 @@
 import { betterAuth } from "better-auth";
 import { pool } from "../config/pg.config.js";
 import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from "../constants/auth.constants.js";
+import { sendEmail } from "./auth.utils.js";
 
 export const auth = betterAuth({
 	database: pool,
 	advanced: {
 		database: {
 			generateId: () => crypto.randomUUID()
+		}
+	},
+	session: {
+		cookieCache: {
+			enabled: true,
+			maxAge: 60 * 5 // 5 minutes
 		}
 	},
 	user: {
@@ -45,6 +52,8 @@ export const auth = betterAuth({
 		},
 	},
 	emailVerification: {
+		autoSignInAfterVerification: true,
+		sendOnSignUp: true,
 		sendVerificationEmail: async ({ user, url, token }, request) => {
 			// send the email with following properties
 		}
