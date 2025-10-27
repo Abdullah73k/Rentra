@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const uuid = z.uuid("Invalid UUID");
 
-const propertySchema = z.object({
+export const propertySchema = z.object({
 	id: uuid,
 	userId: uuid,
 	name: z.string().min(1),
