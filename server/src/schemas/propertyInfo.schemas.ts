@@ -1,27 +1,32 @@
 import { z } from "zod";
 
 const uuid = z.uuid("Invalid UUID");
+const decimal = z.coerce.number<string>().min(0).max(9999999999.99);
+const date = z.iso.date().transform((date) => new Date(date));
 
 export const propertySchema = z.object({
 	id: uuid,
 	userId: uuid,
-	name: z.string().min(1),
-	type: z.string().min(1),
+	purpose: z.enum(["personal", "investment"]),
+	type: z.enum([
+		"house",
+		"apartment",
+		"villa",
+		"penthouse",
+		"townhouse",
+		"duplex",
+		"triplex",
+		"studio",
+	]),
 	address: z.string().min(1),
 	country: z.string().min(1),
-	currency: z.string().min(1),
-	purchasePrice: z.number().nonnegative(),
-	closingCosts: z.number().nonnegative().optional(),
-	acquisitionDate: z.string().optional(),
-	currentValue: z.number().optional(),
-	photos: z.url().optional(),
-	ownershipDocs: z.string().optional(),
-	closingDocs: z.string().optional(),
-	purchaseContract: z.string().optional(),
-	tacDoc: z.string().optional(),
-	insuranceDoc: z.string().optional(),
-	otherDocs: z.string().optional(),
-	sold: z.boolean().optional(),
+	currency: z.string().length(3).uppercase(),
+	purchasePrice: decimal,
+	closingCosts: decimal,
+	acquisitionDate: date,
+	currentValue: decimal,
+	photos: z.array(z.string()),
+	sold: z.coerce.boolean<"true" | "false">(),
 });
 
 const propertyInfoSchema = z.object({
@@ -54,10 +59,6 @@ const tenantSchema = z.object({
 	name: z.string().min(1),
 	phone: z.number().optional(),
 	email: z.email().optional(),
-	idDoc: z.string().optional(),
-	draftCheck: z.string().optional(),
-	tenancyContract: z.string().optional(),
-	otherDocs: z.string().optional(),
 });
 
 const leaseSchema = z.object({
@@ -85,16 +86,17 @@ export const postTransactionValidationSchema = z.object({
 		.transform((val) => val.toUpperCase()),
 	taxRate: z.coerce.number<string>().nonnegative().min(0).max(1),
 	taxAmount: z.coerce.number<string>().nonnegative().min(0),
-	date: z.iso.date().transform((date) => new Date(date)), // Validate ISO Date string then transform to Date Type using Date object to store in DB
+	date: date, // Validate ISO Date string then transform to Date Type using Date object to store in DB
 	from: z.string().min(1),
 	to: z.string().min(1),
 	method: z.string().min(1),
 	notes: z.string().max(1000).optional(),
 });
 
-export const patchTransactionValidationSchema = postTransactionValidationSchema.extend({
-	id: uuid
-})
+export const patchTransactionValidationSchema =
+	postTransactionValidationSchema.extend({
+		id: uuid,
+	});
 
 export const postPropertyInfoValidationSchema = z.object({
 	property: propertySchema,
