@@ -76,11 +76,10 @@ export const getUserProperties = async (
 			values: [zodUserId],
 		});
 
-		const queryHasNoData = query.rows.length === 0;
 		return res.status(StatusCodes.SUCCESS).json({
 			error: false,
 			message: "Successfully fetched user properties",
-			data: queryHasNoData ? [] : query.rows,
+			data: query.rows as Property[] | [],
 		});
 	} catch (error) {
 		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
