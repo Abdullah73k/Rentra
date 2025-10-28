@@ -24,7 +24,7 @@ export const propertySchema = z.object({
 	]),
 	address: z.string().min(1),
 	country: z.string().min(1),
-	currency: z.string().length(3).uppercase(),
+	currency: currency,
 	purchasePrice: decimal,
 	closingCosts: decimal,
 	acquisitionDate: date,
