@@ -19,7 +19,7 @@
     "@types/node": "^24.6.0",
     "@zod/core": "^0.11.6",
     "axios": "^1.12.2",
-    "better-auth": "^1.3.29",
+    "better-auth": "^1.3.33",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",

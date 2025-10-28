@@ -50,7 +50,7 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 		},
 		deleteUser: {
 			enabled: true,
-			sendDeleteAccountVerification: async ({user, url}) => {
+			sendDeleteAccountVerification: async ({ user, url }) => {
 				await sendEmail({
 					to: user.email,
 					subject: "Property Management App account deletion",
@@ -68,7 +68,6 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 				subject: "Reset your password",
 				text: `Click the link to reset your password: ${url}`,
 			});
-			// logic for sending email
 		},
 		onPasswordReset: async ({ user }, request) => {
 
@@ -102,12 +101,18 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 		}
 	},
 	hooks: {
+		// sending email to user after singing up to welcome them
 		after: createAuthMiddleware(async ctx => {
+			// check if the request is for sign-up to ensure the email is only sent for new users
+
 			if (ctx.path.startsWith("/sign-up")) {
+				// Retrieve user information from the new session if available;
+				// otherwise, use details from the request body as a fallback.
 				const user = ctx.context.newSession?.user ?? {
 					name: ctx.body.name,
 					email: ctx.body.email
 				}
+				// Proceed only if user details are available to avoid errors.
 				if (user != null) {
 					await sendEmail({
 						to: user.email,

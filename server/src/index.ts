@@ -11,7 +11,7 @@ import { auth } from "./utils/auth.js";
 
 const app: Express = express();
 
-app.all("/api/auth/{*any}", toNodeHandler(auth))
+app.all("/api/auth/*splat", toNodeHandler(auth))
 
 app.use(cors({
 	origin: "http://localhost:5173",
