@@ -3,7 +3,7 @@ import { z } from "zod";
 const uuid = z.uuid("Invalid UUID");
 const decimal = z.coerce.number<string>().min(0).max(9999999999.99);
 const date = z.iso.date().transform((date) => new Date(date));
-const positiveInt2 = z.coerce.number<string>().min(0).max(32767);
+const positiveInt2 = z.coerce.number<string>().int().min(0).max(32767);
 const stringArray = z.array(z.string());
 const optionalString = z.string().optional();
 const currency = z.string().length(3).uppercase();
