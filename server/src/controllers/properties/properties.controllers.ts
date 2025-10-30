@@ -10,7 +10,7 @@ import type {
 	PropertyInfo,
 } from "../../types/index.types.js";
 import { pool } from "../../config/pg.config.js";
-import type { Property } from "../../types/db.types.js";
+import type { Property, ZodPostPropertyInfo } from "../../types/db.types.js";
 
 export const getUserPropertyData = (
 	req: Request<{ propertyId: string }, {}, {}, {}>,
@@ -89,22 +89,27 @@ export const getUserProperties = async (
 	}
 };
 
-export const postPropertyInfo = (
+export const postPropertyInfo = async (
 	req: Request<{}, {}, PropertyInfo>,
 	res: Response
 ) => {
+	const propertyData = req.body;
+
+	const result = validatePropertyInfo<PropertyInfo, ZodPostPropertyInfo>(
+		propertyData
+	);
+	if (!result.success) {
+		return res.status(StatusCodes.BAD_REQUEST).json({
+			error: true,
+			message: "Validation failed",
+			errors: result.errors,
+		});
+	}
+
+	const zodPropertyData = result.data;
+
+	const client = await pool.connect();
 	try {
-		const propertyData = req.body;
-
-		const result = validatePropertyInfo(propertyData);
-		if (!result.success) {
-			return res.status(StatusCodes.BAD_REQUEST).json({
-				error: true,
-				message: "Validation failed",
-				errors: result.errors,
-			});
-		}
-
 		// input property data into DB
 
 		// if there are conflicting names in DB
@@ -113,16 +118,23 @@ export const postPropertyInfo = (
 		//     "message": "You already have a property with this name at the same address"
 		// })
 
+		await client.query("BEGIN");
+
+		await client.query("COMMIT");
+
 		return res.status(StatusCodes.SUCCESS).json({
 			error: false,
 			message: "Property Created",
 			data: result.data,
 		});
 	} catch (error) {
+		await client.query("ROLLBACK");
 		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
 			error: true,
 			message: "internal server error, could not fetch user Properties",
 		});
+	} finally {
+		client.release();
 	}
 };
 

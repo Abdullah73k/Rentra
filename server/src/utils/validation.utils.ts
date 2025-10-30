@@ -11,6 +11,10 @@ import type {
 	PropertyInfo,
 	PatchTransaction,
 } from "../types/index.types.js";
+import type {
+	ZodPatchPropertyInfo,
+	ZodPostPropertyInfo,
+} from "../types/db.types.js";
 
 export function validateUUID(userId: string) {
 	const schema = z.uuid();
@@ -18,7 +22,8 @@ export function validateUUID(userId: string) {
 	return result;
 }
 export function validatePropertyInfo<
-	T extends PropertyInfo | PatchPropertyInfo
+	T extends PropertyInfo | PatchPropertyInfo,
+	U extends ZodPostPropertyInfo | ZodPatchPropertyInfo
 >(data: T, patch: boolean = false) {
 	const schema = patch
 		? patchPropertyInfoValidationSchema
@@ -35,7 +40,7 @@ export function validatePropertyInfo<
 	}
 	const validatedData = {
 		success: true as const,
-		data: result.data as T,
+		data: result.data as U,
 	};
 	return validatedData;
 }

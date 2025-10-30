@@ -9,7 +9,6 @@ const optionalString = z.string().optional();
 const currency = z.string().length(3).uppercase();
 
 export const propertySchema = z.object({
-	id: uuid,
 	userId: uuid,
 	purpose: z.enum(["personal", "investment"]),
 	type: z.enum([
@@ -33,8 +32,11 @@ export const propertySchema = z.object({
 	sold: z.coerce.boolean<"true" | "false">(),
 });
 
-const propertyInfoSchema = z.object({
+const patchPropertySchema = propertySchema.extend({
 	id: uuid,
+});
+
+const propertyInfoSchema = z.object({
 	propertyId: uuid,
 	propertyNumber: z.string().min(1),
 	bedrooms: positiveInt2,
@@ -53,6 +55,10 @@ const propertyInfoSchema = z.object({
 	notes: optionalString,
 });
 
+const patchPropertyInfoSchema = propertyInfoSchema.extend({
+	id: uuid,
+});
+
 const documentSchema = z.object({
 	id: uuid,
 	propertyId: uuid,
@@ -62,7 +68,6 @@ const documentSchema = z.object({
 });
 
 const loanSchema = z.object({
-	id: uuid,
 	propertyId: uuid,
 	lender: z.string().min(1),
 	termMonths: positiveInt2,
@@ -71,12 +76,19 @@ const loanSchema = z.object({
 	interestRate: decimal,
 });
 
-const tenantSchema = z.object({
+const patchLoanSchema = loanSchema.extend({
 	id: uuid,
+});
+
+const tenantSchema = z.object({
 	propertyId: uuid,
 	name: z.string().min(1),
 	phone: z.number().optional(),
 	email: z.email(),
+});
+
+const patchTenantSchema = tenantSchema.extend({
+	id: uuid,
 });
 
 const leaseSchema = z.object({
@@ -98,6 +110,10 @@ const leaseSchema = z.object({
 	]),
 	paymentDay: positiveInt2,
 	deposit: decimal,
+});
+
+const patchLeaseSchema = leaseSchema.extend({
+	id: uuid,
 });
 
 export const postTransactionValidationSchema = z.object({
@@ -137,9 +153,9 @@ export const postPropertyInfoValidationSchema = z.object({
 });
 
 export const patchPropertyInfoValidationSchema = z.object({
-	property: propertySchema.partial().optional(),
-	propertyInfo: propertyInfoSchema.partial().optional(),
-	loan: loanSchema.partial().optional(),
-	tenant: tenantSchema.partial().optional(),
-	lease: leaseSchema.partial().optional(),
+	property: patchPropertySchema,
+	propertyInfo: patchPropertyInfoSchema,
+	loan: patchLoanSchema,
+	tenant: patchTenantSchema,
+	lease: patchLeaseSchema,
 });
