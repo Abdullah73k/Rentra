@@ -6,8 +6,9 @@ import {
 	pruneUndefined,
 } from "../../utils/validation.utils.js";
 import type {
-	PatchPropertyInfo,
-	PropertyInfo,
+	PatchPropertyData,
+	PropertyData,
+	PropertyDataZod,
 } from "../../types/index.types.js";
 import { pool } from "../../config/pg.config.js";
 import type { Property, ZodPostPropertyInfo } from "../../types/db.types.js";
@@ -89,13 +90,13 @@ export const getUserProperties = async (
 	}
 };
 
-export const postPropertyInfo = async (
-	req: Request<{}, {}, PropertyInfo>,
+export const postPropertyData = async (
+	req: Request<{}, {}, PropertyData>,
 	res: Response
 ) => {
 	const propertyData = req.body;
 
-	const result = validatePropertyInfo<PropertyInfo, ZodPostPropertyInfo>(
+	const result = validatePropertyInfo<PropertyData, ZodPostPropertyInfo>(
 		propertyData
 	);
 	if (!result.success) {
@@ -106,7 +107,7 @@ export const postPropertyInfo = async (
 		});
 	}
 
-	const zodPropertyData = result.data;
+	const zodPropertyData: PropertyDataZod = result.data;
 
 	const client = await pool.connect();
 	try {
@@ -181,7 +182,7 @@ export const deleteUserProperty = (
 };
 
 export const patchPropertyInfo = (
-	req: Request<{ propertyId: string }, {}, PatchPropertyInfo>,
+	req: Request<{ propertyId: string }, {}, PatchPropertyData>,
 	res: Response
 ) => {
 	try {

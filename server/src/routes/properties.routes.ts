@@ -4,7 +4,7 @@ import {
 	getUserProperties,
 	getUserPropertyData,
 	patchPropertyInfo,
-	postPropertyInfo,
+	postPropertyData,
 } from "../controllers/properties/properties.controllers.js";
 import {
 	deleteTransaction,
@@ -18,7 +18,7 @@ router.get("/all/:userId", getUserProperties);
 router.get("/:propertyId", getUserPropertyData);
 
 
-router.post("/create", postPropertyInfo);
+router.post("/create", postPropertyData);
 router.post("/create/transaction", postCreateTransaction);
 
 
