@@ -1,14 +1,12 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Root from "../pages/Root";
-import Login from "../pages/Login";
-import Signup from "../pages/Signup";
-import UserSettings from "../pages/UserSettings";
+import Login from "../pages/auth/Login";
+import Signup from "../pages/auth/Signup";
+import UserSettings from "../pages/auth/UserSettings";
 import Home from "../pages/Home";
-import PropertiesList from "../pages/PropertiesList";
-import PropertyForm from "../pages/PropertyForm";
-import Property from "../pages/Property";
-import TransactionForm from "../pages/TransactionForm";
-import PropertiesDashboard from "../pages/PropertiesDashboard";
+import PropertiesList from "../pages/properties/PropertiesList";
+import Property from "../pages/properties/Property";
+import PropertiesDashboard from "../pages/properties/PropertiesDashboard";
 
 const auth = {
     path: "/auth",
@@ -25,7 +23,7 @@ const auth = {
         },
         {    // protected
             path: "settings",
-            element: <UserSettings />
+            element: <UserSettings /> 
         }
     ]
 }
@@ -45,17 +43,9 @@ const properties = {
             path: "properties/:PropertyId",
             element: <Property />
         },
-        {
-            path: "properties/create",
-            element: <PropertyForm />
-        },
-        {
+        {   // protected
             path: "properties/dashboard",
             element: <PropertiesDashboard />
-        },
-        {
-            path: "transaction/create",
-            element: <TransactionForm />
         },
         
     ]
