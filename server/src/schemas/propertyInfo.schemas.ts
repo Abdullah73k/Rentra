@@ -59,12 +59,15 @@ const patchPropertyInfoSchema = propertyInfoSchema.extend({
 	id: uuid,
 });
 
-const documentSchema = z.object({
-	id: uuid,
+export const postDocumentSchema = z.object({
 	propertyId: uuid,
 	tenantId: uuid.optional(),
 	name: z.string(),
 	path: z.string(),
+});
+
+export const documentSchema = postDocumentSchema.extend({
+	id: uuid,
 });
 
 const loanSchema = z.object({
@@ -152,10 +155,12 @@ export const postPropertyInfoValidationSchema = z.object({
 	lease: leaseSchema.optional(),
 });
 
-export const patchPropertyInfoValidationSchema = z.object({
-	property: patchPropertySchema,
-	propertyInfo: patchPropertyInfoSchema,
-	loan: patchLoanSchema,
-	tenant: patchTenantSchema,
-	lease: patchLeaseSchema,
-}).partial();
+export const patchPropertyInfoValidationSchema = z
+	.object({
+		property: patchPropertySchema,
+		propertyInfo: patchPropertyInfoSchema,
+		loan: patchLoanSchema,
+		tenant: patchTenantSchema,
+		lease: patchLeaseSchema,
+	})
+	.partial();

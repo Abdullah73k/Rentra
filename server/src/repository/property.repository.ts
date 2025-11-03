@@ -4,6 +4,10 @@ import {
 	insertIntoTable,
 } from "../utils/repository.utils.js";
 
+/**
+ * This is a object which provides functions that handle DB insert
+ * functionality.
+ */
 export const PropertyRepository = {
 	async createProperty(property: DB.Property) {
 		const { columns, values, queryPlaceholders } =
@@ -70,6 +74,30 @@ export const PropertyRepository = {
 
 		return query;
 	},
-	async createTransaction() {},
-	async createDocument() {},
+	async createTransaction(transaction: DB.Transaction) {
+		const { values, queryPlaceholders, columns } =
+			generateCreateQueryColsAndValues<DB.Transaction>(transaction);
+
+		const query = insertIntoTable<DB.Transaction>({
+			table: "Transaction",
+			columns,
+			queryPlaceholders,
+			values,
+		});
+
+		return query;
+	},
+	async createDocument(document: DB.Document) {
+		const { values, queryPlaceholders, columns } =
+			generateCreateQueryColsAndValues<DB.Document>(document);
+
+		const query = insertIntoTable<DB.Document>({
+			table: "Documents",
+			columns,
+			queryPlaceholders,
+			values,
+		});
+
+		return query;
+	},
 };

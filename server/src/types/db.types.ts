@@ -1,10 +1,20 @@
 import type z from "zod";
 import {
+	documentSchema,
 	patchPropertyInfoValidationSchema,
+	patchTransactionValidationSchema,
 	postPropertyInfoValidationSchema,
 } from "../schemas/propertyInfo.schemas.js";
 
-export type TableObjects = Lease | Loan | PropertyInfo | Property | Tenant;
+export type TableObjects =
+	| Lease
+	| Loan
+	| PropertyInfo
+	| Property
+	| Tenant
+	| Transaction
+	| Document;
+
 export type DatabaseTables =
 	| "Property"
 	| "PropertyInfo"
@@ -29,3 +39,5 @@ export type PropertyInfo = NonNullable<PATCHPropertyData["propertyInfo"]>;
 export type Loan = NonNullable<PATCHPropertyData["loan"]>;
 export type Tenant = NonNullable<PATCHPropertyData["tenant"]>;
 export type Lease = NonNullable<PATCHPropertyData["lease"]>;
+export type Transaction = z.output<typeof patchTransactionValidationSchema>;
+export type Document = z.output<typeof documentSchema>;
