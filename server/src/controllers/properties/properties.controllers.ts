@@ -6,7 +6,7 @@ import {
 	pruneUndefined,
 } from "../../utils/validation.utils.js";
 import * as API from "../../types/api.types.js";
-import { pool } from "../../config/pg.config.js";
+import { pool } from "../../configs/pg.config.js";
 import * as DB from "../../types/db.types.js";
 
 export const getUserPropertyData = (

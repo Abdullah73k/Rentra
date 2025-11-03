@@ -1,4 +1,4 @@
-import { pool } from "../config/pg.config.js";
+import { pool } from "../configs/pg.config.js";
 import type { DatabaseTables, TableObjects } from "../types/db.types.js";
 
 type InsertIntoTable = {
@@ -8,7 +8,9 @@ type InsertIntoTable = {
 	values: any[];
 };
 
-export function generateCreateQueryColsAndValues<T extends TableObjects>(object: T) {
+export function generateCreateQueryColsAndValues<T extends TableObjects>(
+	object: T
+) {
 	const keys = Object.keys(object);
 	const columns = keys.join(", ");
 	const values = Object.values(object);
