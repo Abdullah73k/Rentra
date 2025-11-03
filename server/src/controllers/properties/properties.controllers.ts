@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import { StatusCodes } from "../../constants/statusCodes.constants.js";
 import {
 	validateUUID,
-	validatePropertyInfo,
+	validatePropertyData,
 	pruneUndefined,
 } from "../../utils/validation.utils.js";
 import * as API from "../../types/api.types.js";
@@ -68,15 +68,15 @@ export const getUserProperties = async (
 
 	try {
 		// get user properties from db using userId
-		const query = await pool.query<Property>({
-			text: `SELECT * FROM "Property" WHERE userId = $1`,
-			values: [zodUserId],
-		});
+		// const query = await pool.query<Property>({
+		// 	text: `SELECT * FROM "Property" WHERE userId = $1`,
+		// 	values: [zodUserId],
+		// });
 
 		return res.status(StatusCodes.SUCCESS).json({
 			error: false,
 			message: "Successfully fetched user properties",
-			data: query.rows as Property[] | [],
+			data: [],
 		});
 	} catch (error) {
 		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
@@ -92,7 +92,7 @@ export const postPropertyData = async (
 ) => {
 	const propertyData = req.body;
 
-	const result = validatePropertyInfo<API.POSTPropertyData, DB.POSTPropertyData>(
+	const result = validatePropertyData<API.POSTPropertyData, DB.POSTPropertyData>(
 		propertyData
 	);
 	if (!result.success) {
@@ -186,7 +186,7 @@ export const patchPropertyData = (
 
 		const { propertyId } = req.params;
 
-		const propertyInfoResult = validatePropertyInfo(propertyInfo, true);
+		const propertyInfoResult = validatePropertyData(propertyInfo, true);
 		const propertyIdResult = validateUUID(propertyId);
 
 		// validate property info data

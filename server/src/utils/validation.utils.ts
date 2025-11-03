@@ -5,25 +5,17 @@ import {
 	patchTransactionValidationSchema,
 } from "../schemas/propertyInfo.schemas.js";
 import { z } from "zod";
-import type {
-	PatchPropertyInfo,
-	PostCreateTransaction,
-	PropertyInfo,
-	PatchTransaction,
-} from "../types/api.types.js";
-import type {
-	ZodPatchPropertyInfo,
-	ZodPostPropertyInfo,
-} from "../types/db.types.js";
+import * as API from "../types/api.types.js";
+import * as DB from "../types/db.types.js";
 
 export function validateUUID(userId: string) {
 	const schema = z.uuid();
 	const result = schema.safeParse(userId);
 	return result;
 }
-export function validatePropertyInfo<
-	T extends PropertyInfo | PatchPropertyInfo,
-	U extends ZodPostPropertyInfo | ZodPatchPropertyInfo
+export function validatePropertyData<
+	T extends API.POSTPropertyData | API.PATCHPropertyData,
+	U extends DB.POSTPropertyData | DB.PATCHPropertyData
 >(data: T, patch: boolean = false) {
 	const schema = patch
 		? patchPropertyInfoValidationSchema
@@ -46,7 +38,7 @@ export function validatePropertyInfo<
 }
 
 export function validateTransactionDetails<
-	T extends PostCreateTransaction | PatchTransaction
+	T extends API.POSTTransaction | API.PATCHTransaction
 >(transaction: T, patch: boolean = false) {
 	const schema = patch
 		? patchTransactionValidationSchema

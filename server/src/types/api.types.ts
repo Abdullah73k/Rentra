@@ -11,12 +11,16 @@ import type {
  * Types are made for data being send over HTTP through REST. 
  */
 
-export type PostCreateTransaction = z.input<
+
+// Transactions
+export type POSTTransaction = z.input<
 	typeof postTransactionValidationSchema
 >;
-export type APIPatchTransaction = z.input<typeof patchTransactionValidationSchema>;
+export type PATCHTransaction = z.input<typeof patchTransactionValidationSchema>;
+
+
+// Property
 export type PATCHPropertyData = z.input<
 	typeof patchPropertyInfoValidationSchema
 >;
-
 export type POSTPropertyData = z.input<typeof postPropertyInfoValidationSchema>;

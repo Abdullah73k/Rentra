@@ -4,10 +4,10 @@ import {
 	validateUUID,
 	validateTransactionDetails,
 } from "../../utils/validation.utils.js";
-import type { PatchTransaction, PostCreateTransaction } from "../../types/api.types.js";
+import * as API from "../../types/api.types.js";
 
 export const postCreateTransaction = (
-	req: Request<{}, {}, { transactionDetails: PostCreateTransaction }, {}>,
+	req: Request<{}, {}, { transactionDetails: API.POSTTransaction }, {}>,
 	res: Response
 ) => {
 	try {
@@ -92,14 +92,23 @@ export const deleteTransaction = (
 		});
 	}
 };
-export const patchTransaction = (req: Request<{ transactionId: string }, {}, PostCreateTransaction>, res: Response) => {
+export const patchTransaction = (
+	req: Request<{ transactionId: string }, {}, API.POSTTransaction>,
+	res: Response
+) => {
 	try {
-		const transactionData = req.body
-		const { transactionId } = req.params
+		const transactionData = req.body;
+		const { transactionId } = req.params;
 
-		const combinedTransactionData: PatchTransaction = {id: transactionId, ...transactionData}
+		const combinedTransactionData: API.PATCHTransaction = {
+			id: transactionId,
+			...transactionData,
+		};
 
-		const transactionDataResult = validateTransactionDetails<PatchTransaction>(combinedTransactionData, true)
+		const transactionDataResult = validateTransactionDetails<API.PATCHTransaction>(
+			combinedTransactionData,
+			true
+		);
 
 		// checking if transaction data is valid
 		if (!transactionDataResult.success) {
@@ -110,22 +119,19 @@ export const patchTransaction = (req: Request<{ transactionId: string }, {}, Pos
 			});
 		}
 
-
-		const validatedTransactionData = transactionDataResult.data
+		const validatedTransactionData = transactionDataResult.data;
 
 		// use validated data to query db
 
 		res.status(StatusCodes.SUCCESS).json({
 			error: false,
 			message: "Transaction updated",
-			data: validatedTransactionData
-		})
-
-
+			data: validatedTransactionData,
+		});
 	} catch (error) {
 		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
 			error: true,
 			message: "Internal server error, could not update transaction",
 		});
 	}
-}
+};

@@ -1,21 +1,15 @@
-import type {
-	Lease,
-	Loan,
-	Property,
-	PropertyInfo,
-	Tenant,
-} from "../types/db.types.js";
+import * as DB from "../types/db.types.js";
 import {
 	generateCreateQueryColsAndValues,
 	insertIntoTable,
 } from "../utils/repository.utils.js";
 
 export const PropertyRepository = {
-	async createProperty(property: Property) {
+	async createProperty(property: DB.Property) {
 		const { columns, values, queryPlaceholders } =
-			generateCreateQueryColsAndValues<Property>(property);
+			generateCreateQueryColsAndValues<DB.Property>(property);
 
-		const query = await insertIntoTable<Property>({
+		const query = await insertIntoTable<DB.Property>({
 			table: "Property",
 			columns,
 			queryPlaceholders,
@@ -24,11 +18,11 @@ export const PropertyRepository = {
 
 		return query;
 	},
-	async createPropertyInfo(propertyInfo: PropertyInfo) {
+	async createPropertyInfo(propertyInfo: DB.PropertyInfo) {
 		const { values, queryPlaceholders, columns } =
-			generateCreateQueryColsAndValues<PropertyInfo>(propertyInfo);
+			generateCreateQueryColsAndValues<DB.PropertyInfo>(propertyInfo);
 
-		const query = await insertIntoTable<PropertyInfo>({
+		const query = await insertIntoTable<DB.PropertyInfo>({
 			table: "PropertyInfo",
 			columns,
 			queryPlaceholders,
@@ -37,11 +31,11 @@ export const PropertyRepository = {
 
 		return query;
 	},
-	async createLoan(loan: Loan) {
+	async createLoan(loan: DB.Loan) {
 		const { values, queryPlaceholders, columns } =
-			generateCreateQueryColsAndValues<Loan>(loan);
+			generateCreateQueryColsAndValues<DB.Loan>(loan);
 
-		const query = insertIntoTable<Loan>({
+		const query = insertIntoTable<DB.Loan>({
 			table: "Loan",
 			columns,
 			queryPlaceholders,
@@ -50,11 +44,11 @@ export const PropertyRepository = {
 
 		return query;
 	},
-	async createTenant(tenant: Tenant) {
+	async createTenant(tenant: DB.Tenant) {
 		const { values, queryPlaceholders, columns } =
-			generateCreateQueryColsAndValues<Tenant>(tenant);
+			generateCreateQueryColsAndValues<DB.Tenant>(tenant);
 
-		const query = insertIntoTable<Tenant>({
+		const query = insertIntoTable<DB.Tenant>({
 			table: "Tenant",
 			columns,
 			queryPlaceholders,
@@ -63,11 +57,11 @@ export const PropertyRepository = {
 
 		return query;
 	},
-	async createLease(lease: Lease) {
+	async createLease(lease: DB.Lease) {
 		const { values, queryPlaceholders, columns } =
-			generateCreateQueryColsAndValues<Lease>(lease);
+			generateCreateQueryColsAndValues<DB.Lease>(lease);
 
-		const query = insertIntoTable<Loan>({
+		const query = insertIntoTable<DB.Loan>({
 			table: "Lease",
 			columns,
 			queryPlaceholders,
