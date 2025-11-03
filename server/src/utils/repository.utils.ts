@@ -8,7 +8,7 @@ type InsertIntoTable = {
 	values: any[];
 };
 
-export function generateCreateQueryColsAndValues<T extends object>(object: T) {
+export function generateCreateQueryColsAndValues<T extends TableObjects>(object: T) {
 	const keys = Object.keys(object);
 	const columns = keys.join(", ");
 	const values = Object.values(object);
