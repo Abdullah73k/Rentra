@@ -158,4 +158,4 @@ export const patchPropertyInfoValidationSchema = z.object({
 	loan: patchLoanSchema,
 	tenant: patchTenantSchema,
 	lease: patchLeaseSchema,
-});
+}).partial();

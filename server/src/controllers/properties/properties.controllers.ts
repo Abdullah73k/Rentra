@@ -5,13 +5,9 @@ import {
 	validatePropertyInfo,
 	pruneUndefined,
 } from "../../utils/validation.utils.js";
-import type {
-	PatchPropertyData,
-	PropertyData,
-	PropertyDataZod,
-} from "../../types/index.types.js";
+import * as API from "../../types/api.types.js";
 import { pool } from "../../config/pg.config.js";
-import type { Property, ZodPostPropertyInfo } from "../../types/db.types.js";
+import * as DB from "../../types/db.types.js";
 
 export const getUserPropertyData = (
 	req: Request<{ propertyId: string }, {}, {}, {}>,
@@ -91,12 +87,12 @@ export const getUserProperties = async (
 };
 
 export const postPropertyData = async (
-	req: Request<{}, {}, PropertyData>,
+	req: Request<{}, {}, API.POSTPropertyData>,
 	res: Response
 ) => {
 	const propertyData = req.body;
 
-	const result = validatePropertyInfo<PropertyData, ZodPostPropertyInfo>(
+	const result = validatePropertyInfo<API.POSTPropertyData, DB.POSTPropertyData>(
 		propertyData
 	);
 	if (!result.success) {
@@ -107,7 +103,7 @@ export const postPropertyData = async (
 		});
 	}
 
-	const zodPropertyData: PropertyDataZod = result.data;
+	const zodPropertyData = result.data;
 
 	const client = await pool.connect();
 	try {
@@ -181,8 +177,8 @@ export const deleteUserProperty = (
 	}
 };
 
-export const patchPropertyInfo = (
-	req: Request<{ propertyId: string }, {}, PatchPropertyData>,
+export const patchPropertyData = (
+	req: Request<{ propertyId: string }, {}, API.PATCHPropertyData>,
 	res: Response
 ) => {
 	try {

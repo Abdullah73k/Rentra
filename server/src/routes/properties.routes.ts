@@ -3,7 +3,7 @@ import {
 	deleteUserProperty,
 	getUserProperties,
 	getUserPropertyData,
-	patchPropertyInfo,
+	patchPropertyData,
 	postPropertyData,
 } from "../controllers/properties/properties.controllers.js";
 import {
@@ -26,7 +26,7 @@ router.delete("/delete/:propertyId", deleteUserProperty);
 router.delete("/delete/transaction/:transactionId", deleteTransaction)
 
 
-router.patch("/update/:propertyId", patchPropertyInfo)
+router.patch("/update/:propertyId", patchPropertyData)
 router.patch("/update/transaction/:transactionId", patchTransaction)
 
 

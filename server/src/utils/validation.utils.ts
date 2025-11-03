@@ -10,7 +10,7 @@ import type {
 	PostCreateTransaction,
 	PropertyInfo,
 	PatchTransaction,
-} from "../types/index.types.js";
+} from "../types/api.types.js";
 import type {
 	ZodPatchPropertyInfo,
 	ZodPostPropertyInfo,
