@@ -34,10 +34,10 @@ export type PATCHPropertyData = z.output<
 >;
 
 // transformed from http req into proper format to be stored in DB (transformed by zod)
-export type Property = NonNullable<PATCHPropertyData["property"]>;
-export type PropertyInfo = NonNullable<PATCHPropertyData["propertyInfo"]>;
-export type Loan = NonNullable<PATCHPropertyData["loan"]>;
-export type Tenant = NonNullable<PATCHPropertyData["tenant"]>;
-export type Lease = NonNullable<PATCHPropertyData["lease"]>;
+export type Property = POSTPropertyData["property"];
+export type PropertyInfo = POSTPropertyData["propertyInfo"];
+export type Loan = NonNullable<POSTPropertyData["loan"]>;
+export type Tenant = NonNullable<POSTPropertyData["tenant"]>;
+export type Lease = NonNullable<POSTPropertyData["lease"]>;
 export type Transaction = z.output<typeof patchTransactionValidationSchema>;
 export type Document = z.output<typeof documentSchema>;
