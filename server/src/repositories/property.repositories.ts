@@ -5,9 +5,9 @@ import {
 } from "../utils/repository.utils.js";
 
 export const PropertyRepository = {
-	async createProperty(property: DB.Property) {
+	async createProperty(property: DB.CreateProperty) {
 		const { columns, values, queryPlaceholders } =
-			generateCreateQueryColsAndValues<DB.Property>(property);
+			generateCreateQueryColsAndValues(property);
 
 		const query = await insertIntoTable<DB.Property>({
 			table: "Property",

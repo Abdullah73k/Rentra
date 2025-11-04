@@ -5,9 +5,9 @@ import {
 } from "../utils/repository.utils.js";
 
 export const TransactionRepository = {
-	async createTransaction(transaction: DB.Transaction) {
+	async createTransaction(transaction: DB.CreateTransaction) {
 		const { values, queryPlaceholders, columns } =
-			generateCreateQueryColsAndValues<DB.Transaction>(transaction);
+			generateCreateQueryColsAndValues(transaction);
 
 		const query = insertIntoTable<DB.Transaction>({
 			table: "Transaction",

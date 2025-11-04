@@ -5,9 +5,9 @@ import {
 import * as DB from "../types/db.types.js";
 
 export const PropertyInfoRepository = {
-	async createPropertyInfo(propertyInfo: DB.PropertyInfo) {
+	async createPropertyInfo(propertyInfo: DB.CreatePropertyInfo) {
 		const { values, queryPlaceholders, columns } =
-			generateCreateQueryColsAndValues<DB.PropertyInfo>(propertyInfo);
+			generateCreateQueryColsAndValues(propertyInfo);
 
 		const query = await insertIntoTable<DB.PropertyInfo>({
 			table: "PropertyInfo",

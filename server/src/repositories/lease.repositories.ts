@@ -5,11 +5,11 @@ import {
 } from "../utils/repository.utils.js";
 
 export const LeaseRepository = {
-	async createLease(lease: DB.Lease) {
+	async createLease(lease: DB.CreateLease) {
 		const { values, queryPlaceholders, columns } =
-			generateCreateQueryColsAndValues<DB.Lease>(lease);
+			generateCreateQueryColsAndValues(lease);
 
-		const query = insertIntoTable<DB.Loan>({
+		const query = insertIntoTable<DB.Lease>({
 			table: "Lease",
 			columns,
 			queryPlaceholders,
