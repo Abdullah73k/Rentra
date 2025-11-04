@@ -22,10 +22,13 @@ const loanSchema = POST.loanSchema.extend({
 
 const tenantSchema = POST.tenantSchema.extend({
 	id: ReusableTypes.uuid,
+	propertyId: ReusableTypes.uuid,
 });
 
 const leaseSchema = POST.leaseSchema.extend({
 	id: ReusableTypes.uuid,
+	propertyId: ReusableTypes.uuid,
+	tenantId: ReusableTypes.uuid,
 });
 
 export const transactionSchema = POST.transactionSchema.extend({

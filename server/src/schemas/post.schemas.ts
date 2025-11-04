@@ -59,15 +59,12 @@ export const loanSchema = z.object({
 });
 
 export const tenantSchema = z.object({
-	propertyId: ReusableTypes.uuid,
 	name: z.string().min(1),
 	phone: z.number().optional(),
 	email: z.email(),
 });
 
 export const leaseSchema = z.object({
-	propertyId: ReusableTypes.uuid,
-	tenantId: ReusableTypes.uuid,
 	start: ReusableTypes.date,
 	end: ReusableTypes.date,
 	rentAmount: ReusableTypes.decimal,
