@@ -116,40 +116,34 @@ export const postPropertyData = async (
 	}
 };
 
-export const deleteUserProperty = (
+export const deleteUserProperty = async (
 	req: Request<{ propertyId: string }, {}, {}, {}>,
 	res: Response
 ) => {
+	// 1. Validate property Id
+	const { propertyId } = req.params;
+	const result = validateUUID(propertyId);
+
+	if (!result.success) {
+		return res.status(StatusCodes.BAD_REQUEST).json({
+			error: true,
+			message: "Invalid property Id",
+		});
+	}
 	try {
-		// TODO: Validate user permission / authenticate user token
-
-		// 1. Validate property Id
-		const { propertyId } = req.params;
-		const result = validateUUID(propertyId);
-
-		if (!result.success) {
-			return res.status(StatusCodes.BAD_REQUEST).json({
-				error: true,
-				message: "Invalid property Id",
-			});
-		}
-
 		// 2. Query DB to delete property
+		await PropertyService.delete(propertyId);
 
-		// Placeholder for actual query logic
-		const query = true;
-		// 3. Respond based on if any rows were affect
-		if (query) {
-			return res.status(StatusCodes.SUCCESS).json({
+		return res.status(StatusCodes.SUCCESS).json({
 				error: false,
 				message: "Successfully deleted property",
 			});
-		}
-
-		return res.status(StatusCodes.NOT_FOUND).json({
-			error: true,
-			message: "Property doesn't exist",
-		});
+		
+		// I need to handle this with error middleware
+		// return res.status(StatusCodes.NOT_FOUND).json({
+		// 	error: true,
+		// 	message: "Property doesn't exist",
+		// });
 	} catch (error) {
 		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
 			error: true,

@@ -1,5 +1,6 @@
 import * as DB from "../types/db.types.js";
 import {
+	deleteRowFromTableWithId,
 	generateCreateQueryColsAndValues,
 	getRowsFromTableWithId,
 	insertIntoTable,
@@ -19,6 +20,7 @@ export const PropertyRepository = {
 
 		return query;
 	},
+	// TODO: must add validation in repo for table and idName cuz sql injection
 	async getProperties(userId: string) {
 		const query = await getRowsFromTableWithId<DB.Property>({
 			table: "Property",
@@ -27,5 +29,13 @@ export const PropertyRepository = {
 		});
 
 		return query;
+	},
+	// TODO: must add validation in repo for table and idName cuz sql injection
+	async deleteProperty(propertyId: string) {
+		await deleteRowFromTableWithId({
+			table: "Property",
+			id: propertyId,
+			idName: "id",
+		});
 	},
 };
