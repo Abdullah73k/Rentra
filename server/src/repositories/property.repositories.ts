@@ -1,6 +1,7 @@
 import * as DB from "../types/db.types.js";
 import {
 	generateCreateQueryColsAndValues,
+	getRowsFromTableWithId,
 	insertIntoTable,
 } from "../utils/repository.utils.js";
 
@@ -14,6 +15,15 @@ export const PropertyRepository = {
 			columns,
 			queryPlaceholders,
 			values,
+		});
+
+		return query;
+	},
+	async getProperties(userId: string) {
+		const query = await getRowsFromTableWithId<DB.Property>({
+			table: "Property",
+			id: userId,
+			idName: "userId",
 		});
 
 		return query;
