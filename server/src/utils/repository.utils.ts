@@ -8,6 +8,12 @@ type InsertIntoTable = {
 	values: any[];
 };
 
+type QueryConfig = {
+	table: DB.DatabaseTables;
+	id: string;
+	idName: DB.Ids;
+};
+
 export function generateCreateQueryColsAndValues<T extends DB.TableObjects>(
 	object: T
 ) {
@@ -54,15 +60,22 @@ export async function getRowsFromTableWithId<T extends DB.TableObjects>({
 	table,
 	id,
 	idName,
-}: {
-	table: DB.DatabaseTables;
-	id: string;
-	idName: DB.Ids;
-}) {
+}: QueryConfig) {
 	const query = await pool.query<T>({
 		text: `SELECT * FROM $1 WHERE $2 = $3`,
 		values: [table, idName, id],
 	});
 
 	return query.rows;
+}
+
+export async function deleteRowFromTableWithId({
+	table,
+	id,
+	idName,
+}: QueryConfig) {
+	await pool.query({
+		text: `DELETE FROM $1 WHERE $2 = $3`,
+		values: [table, idName, id],
+	});
 }

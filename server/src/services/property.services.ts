@@ -41,4 +41,7 @@ export const PropertyService = {
 		const properties = await PropertyRepository.getProperties(userId);
 		return properties;
 	},
+	async delete(propertyId: string) {
+		await PropertyRepository.deleteProperty(propertyId);
+	},
 };
