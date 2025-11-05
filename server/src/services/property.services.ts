@@ -37,4 +37,8 @@ export const PropertyService = {
 
 		return query;
 	},
+	async getAll(userId: string) {
+		const properties = await PropertyRepository.getProperties(userId);
+		return properties;
+	},
 };

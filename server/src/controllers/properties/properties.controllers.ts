@@ -64,19 +64,13 @@ export const getUserProperties = async (
 			.json({ error: true, message: "Invalid user Id" });
 	}
 
-	const zodUserId = result.data;
-
 	try {
-		// get user properties from db using userId
-		// const query = await pool.query<Property>({
-		// 	text: `SELECT * FROM "Property" WHERE userId = $1`,
-		// 	values: [zodUserId],
-		// });
+		const properties = await PropertyService.getAll(userId);
 
 		return res.status(StatusCodes.SUCCESS).json({
 			error: false,
 			message: "Successfully fetched user properties",
-			data: [],
+			data: properties,
 		});
 	} catch (error) {
 		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({

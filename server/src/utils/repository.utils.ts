@@ -1,14 +1,14 @@
 import { pool } from "../configs/pg.config.js";
-import type { DatabaseTables, TableObjects } from "../types/db.types.js";
+import * as DB from "../types/db.types.js";
 
 type InsertIntoTable = {
-	table: DatabaseTables;
+	table: DB.DatabaseTables;
 	columns: string;
 	queryPlaceholders: string;
 	values: any[];
 };
 
-export function generateCreateQueryColsAndValues<T extends TableObjects>(
+export function generateCreateQueryColsAndValues<T extends DB.TableObjects>(
 	object: T
 ) {
 	const keys = Object.keys(object);
@@ -32,7 +32,7 @@ function generateQueryPlaceholders(length: number) {
 	return queryPlaceholders;
 }
 
-export async function insertIntoTable<T extends TableObjects>({
+export async function insertIntoTable<T extends DB.TableObjects>({
 	table,
 	columns,
 	queryPlaceholders,
@@ -48,4 +48,21 @@ export async function insertIntoTable<T extends TableObjects>({
 	});
 
 	return query.rows[0];
+}
+
+export async function getRowsFromTableWithId<T extends DB.TableObjects>({
+	table,
+	id,
+	idName,
+}: {
+	table: DB.DatabaseTables;
+	id: string;
+	idName: DB.Ids;
+}) {
+	const query = await pool.query<T>(`
+		SELECT * FROM ${table}
+		WHERE ${idName} = ${id}
+		`);
+
+	return query.rows;
 }
