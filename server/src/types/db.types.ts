@@ -19,7 +19,7 @@ export type TableObjects =
 	| Transaction
 	| Document
 	| CreateProperty
-	| CreateLease 
+	| CreateLease
 	| CreateDocument
 	| CreateLoan
 	| CreatePropertyInfo
@@ -35,17 +35,12 @@ export type DatabaseTables =
 	| "Transaction"
 	| "Lease";
 
-export type Ids = "userId" | "propertyId" | "tenantId" | "leaseId"
+export type Ids = "userId" | "propertyId" | "tenantId" | "leaseId";
 
 // export type Property = z.output<typeof propertySchema>;
 
-
-export type POSTPropertyData = z.output<
-	typeof POST.propertyDataSchema
->;
-export type PATCHPropertyData = z.output<
-	typeof PATCH.propertyDataSchema
->;
+export type POSTPropertyData = z.output<typeof POST.propertyDataSchema>;
+export type PATCHPropertyData = z.output<typeof PATCH.propertyDataSchema>;
 
 // transformed from http req into proper format to be stored in DB (transformed by zod)
 export type Property = NonNullable<PATCHPropertyData["property"]>;
@@ -61,7 +56,5 @@ export type CreatePropertyInfo = POSTPropertyData["propertyInfo"];
 export type CreateLoan = NonNullable<POSTPropertyData["loan"]>;
 export type CreateTenant = NonNullable<POSTPropertyData["tenant"]>;
 export type CreateLease = NonNullable<POSTPropertyData["lease"]>;
-export type CreateTransaction = z.output<
-	typeof POST.transactionSchema
->;
+export type CreateTransaction = z.output<typeof POST.transactionSchema>;
 export type CreateDocument = z.output<typeof POST.documentSchema>;
