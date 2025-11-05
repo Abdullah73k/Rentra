@@ -60,8 +60,8 @@ export async function getRowsFromTableWithId<T extends DB.TableObjects>({
 	idName: DB.Ids;
 }) {
 	const query = await pool.query<T>({
-		text: `SELECT * FROM ${table} WHERE ${idName} = $1`,
-		values: [id],
+		text: `SELECT * FROM $1 WHERE $2 = $3`,
+		values: [table, idName, id],
 	});
 
 	return query.rows;
