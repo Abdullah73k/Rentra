@@ -2,15 +2,12 @@ import type { Request, Response } from "express";
 import { StatusCodes } from "../../constants/statusCodes.constants.js";
 import {
 	validateUUID,
-	validatePropertyInfo,
+	validatePropertyData,
 	pruneUndefined,
 } from "../../utils/validation.utils.js";
-import type {
-	PatchPropertyInfo,
-	PropertyInfo,
-} from "../../types/index.types.js";
-import { pool } from "../../config/pg.config.js";
-import type { Property } from "../../types/db.types.js";
+import * as API from "../../types/api.types.js";
+import * as DB from "../../types/db.types.js";
+import { PropertyService } from "../../services/property.services.js";
 
 export const getUserPropertyData = (
 	req: Request<{ propertyId: string }, {}, {}, {}>,
@@ -71,15 +68,15 @@ export const getUserProperties = async (
 
 	try {
 		// get user properties from db using userId
-		const query = await pool.query<Property>({
-			text: `SELECT * FROM "Property" WHERE userId = $1`,
-			values: [zodUserId],
-		});
+		// const query = await pool.query<Property>({
+		// 	text: `SELECT * FROM "Property" WHERE userId = $1`,
+		// 	values: [zodUserId],
+		// });
 
 		return res.status(StatusCodes.SUCCESS).json({
 			error: false,
 			message: "Successfully fetched user properties",
-			data: query.rows as Property[] | [],
+			data: [],
 		});
 	} catch (error) {
 		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
@@ -89,34 +86,33 @@ export const getUserProperties = async (
 	}
 };
 
-export const postPropertyInfo = (
-	req: Request<{}, {}, PropertyInfo>,
+export const postPropertyData = async (
+	req: Request<{}, {}, API.POSTPropertyData>,
 	res: Response
 ) => {
+	const propertyData = req.body;
+
+	const result = validatePropertyData<
+		API.POSTPropertyData,
+		DB.POSTPropertyData
+	>(propertyData);
+
+	if (!result.success) {
+		return res.status(StatusCodes.BAD_REQUEST).json({
+			error: true,
+			message: "Validation failed",
+			errors: result.errors,
+		});
+	}
+	const zodPropertyData = result.data;
+
 	try {
-		const propertyData = req.body;
-
-		const result = validatePropertyInfo(propertyData);
-		if (!result.success) {
-			return res.status(StatusCodes.BAD_REQUEST).json({
-				error: true,
-				message: "Validation failed",
-				errors: result.errors,
-			});
-		}
-
-		// input property data into DB
-
-		// if there are conflicting names in DB
-		// return res.status(StatusCodes.CONFLICT).json({
-		//     "error": true,
-		//     "message": "You already have a property with this name at the same address"
-		// })
+		const result = await PropertyService.create(zodPropertyData);
 
 		return res.status(StatusCodes.SUCCESS).json({
 			error: false,
 			message: "Property Created",
-			data: result.data,
+			data: result,
 		});
 	} catch (error) {
 		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
@@ -168,8 +164,8 @@ export const deleteUserProperty = (
 	}
 };
 
-export const patchPropertyInfo = (
-	req: Request<{ propertyId: string }, {}, PatchPropertyInfo>,
+export const patchPropertyData = (
+	req: Request<{ propertyId: string }, {}, API.PATCHPropertyData>,
 	res: Response
 ) => {
 	try {
@@ -177,7 +173,7 @@ export const patchPropertyInfo = (
 
 		const { propertyId } = req.params;
 
-		const propertyInfoResult = validatePropertyInfo(propertyInfo, true);
+		const propertyInfoResult = validatePropertyData(propertyInfo, true);
 		const propertyIdResult = validateUUID(propertyId);
 
 		// validate property info data

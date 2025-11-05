@@ -1,6 +1,13 @@
-import { betterAuth, type BetterAuthPlugin, type Auth } from "better-auth";
-import { pool } from "../config/pg.config.js";
-import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from "../constants/auth.constants.js";
+import { betterAuth, type BetterAuthPlugin } from "better-auth";
+import { pool } from "../configs/pg.config.js";
+import {
+	GOOGLE_CLIENT_ID,
+	GOOGLE_CLIENT_SECRET,
+	DISCORD_CLIENT_ID,
+	DISCORD_CLIENT_SECRET,
+	GITHUB_CLIENT_ID,
+	GITHUB_CLIENT_SECRET,
+} from "../constants/auth.constants.js";
 import { sendEmail } from "./auth.utils.js";
 import { createAuthMiddleware } from "better-auth/api";
 import { passkey } from "better-auth/plugins/passkey";
@@ -11,14 +18,14 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 	database: pool,
 	advanced: {
 		database: {
-			generateId: () => crypto.randomUUID()
-		}
+			generateId: () => crypto.randomUUID(),
+		},
 	},
 	session: {
 		cookieCache: {
 			enabled: true,
-			maxAge: 60 * 5 // 5 minutes
-		}
+			maxAge: 60 * 5, // 5 minutes
+		},
 	},
 	user: {
 		changeEmail: {
@@ -27,26 +34,26 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 				await sendEmail({
 					to: user.email,
 					subject: "Verify your email",
-					text: `Click this link to verify your email ${url}`
-				})
-			}
+					text: `Click this link to verify your email ${url}`,
+				});
+			},
 		},
 		additionalFields: {
 			country: {
 				type: "string",
 				required: true,
-				input: true
+				input: true,
 			},
 			currency: {
 				type: "string",
 				required: true,
-				input: true
+				input: true,
 			},
 			vatProfile: {
 				type: "number",
 				required: true,
-				input: true
-			}
+				input: true,
+			},
 		},
 		deleteUser: {
 			enabled: true,
@@ -54,10 +61,10 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 				await sendEmail({
 					to: user.email,
 					subject: "Property Management App account deletion",
-					text: `click this link: ${url} to delete your account permanently`
-				})
-			}
-		}
+					text: `click this link: ${url} to delete your account permanently`,
+				});
+			},
+		},
 	},
 	emailAndPassword: {
 		enabled: true,
@@ -70,7 +77,6 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 			});
 		},
 		onPasswordReset: async ({ user }, request) => {
-
 			console.log(`Password for user ${user.email} has been reset.`);
 		},
 	},
@@ -82,27 +88,27 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 			await sendEmail({
 				to: user.email,
 				subject: "Verify your email",
-				text: `Click this link to verify your email ${url}`
-			})
-		}
+				text: `Click this link to verify your email ${url}`,
+			});
+		},
 	},
 	socialProviders: {
 		google: {
 			clientId: GOOGLE_CLIENT_ID,
-			clientSecret: GOOGLE_CLIENT_SECRET
+			clientSecret: GOOGLE_CLIENT_SECRET,
 		},
 		discord: {
 			clientId: DISCORD_CLIENT_ID,
-			clientSecret: DISCORD_CLIENT_SECRET
+			clientSecret: DISCORD_CLIENT_SECRET,
 		},
 		github: {
 			clientId: GITHUB_CLIENT_ID,
-			clientSecret: GITHUB_CLIENT_SECRET
-		}
+			clientSecret: GITHUB_CLIENT_SECRET,
+		},
 	},
 	hooks: {
 		// sending email to user after singing up to welcome them
-		after: createAuthMiddleware(async ctx => {
+		after: createAuthMiddleware(async (ctx) => {
 			// check if the request is for sign-up to ensure the email is only sent for new users
 
 			if (ctx.path.startsWith("/sign-up")) {
@@ -110,18 +116,18 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 				// otherwise, use details from the request body as a fallback.
 				const user = ctx.context.newSession?.user ?? {
 					name: ctx.body.name,
-					email: ctx.body.email
-				}
+					email: ctx.body.email,
+				};
 				// Proceed only if user details are available to avoid errors.
 				if (user != null) {
 					await sendEmail({
 						to: user.email,
 						subject: `Thanks for signing up`,
-						text: `Hello ${user.name} we are pleased to have you on board our app`
-					})
+						text: `Hello ${user.name} we are pleased to have you on board our app`,
+					});
 				}
 			}
-		})
+		}),
 	},
-	plugins: [passkey(), twoFactor() as BetterAuthPlugin]
+	plugins: [passkey(), twoFactor() as BetterAuthPlugin],
 });
