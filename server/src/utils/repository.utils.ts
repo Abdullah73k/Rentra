@@ -56,26 +56,27 @@ export async function insertIntoTable<T extends DB.TableObjects>({
 	return query.rows[0];
 }
 
+// TODO: must add validation in repo for table and idName cuz sql injection
 export async function getRowsFromTableWithId<T extends DB.TableObjects>({
 	table,
 	id,
 	idName,
 }: QueryConfig) {
 	const query = await pool.query<T>({
-		text: `SELECT * FROM $1 WHERE $2 = $3`,
-		values: [table, idName, id],
+		text: `SELECT * FROM ${table} WHERE ${idName} = $1`,
+		values: [id],
 	});
 
 	return query.rows;
 }
-
+// TODO: must add validation in repo for table and idName cuz sql injection
 export async function deleteRowFromTableWithId({
 	table,
 	id,
 	idName,
 }: QueryConfig) {
 	await pool.query({
-		text: `DELETE FROM $1 WHERE $2 = $3`,
-		values: [table, idName, id],
+		text: `DELETE FROM ${table} WHERE ${idName} = $1`,
+		values: [id],
 	});
 }
