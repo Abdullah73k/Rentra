@@ -26,7 +26,7 @@ export function generateCreateQueryColsAndValues<T extends TableObjects>(
 
 function generateQueryPlaceholders(length: number) {
 	let placeholder = [];
-	for (let i = 1; i < length; i++) placeholder.push(i);
+	for (let i = 1; i <= length; i++) placeholder.push(i);
 	const queryPlaceholders = placeholder.join(", ");
 
 	return queryPlaceholders;

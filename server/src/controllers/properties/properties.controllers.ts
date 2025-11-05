@@ -6,7 +6,6 @@ import {
 	pruneUndefined,
 } from "../../utils/validation.utils.js";
 import * as API from "../../types/api.types.js";
-import { pool } from "../../configs/pg.config.js";
 import * as DB from "../../types/db.types.js";
 import { PropertyService } from "../../services/property.services.js";
 
@@ -108,7 +107,7 @@ export const postPropertyData = async (
 	const zodPropertyData = result.data;
 
 	try {
-		const result = PropertyService.create(zodPropertyData);
+		const result = await PropertyService.create(zodPropertyData);
 
 		return res.status(StatusCodes.SUCCESS).json({
 			error: false,
