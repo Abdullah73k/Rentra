@@ -5,7 +5,7 @@ import {
 	validateTransactionDetails,
 } from "../../utils/validation.utils.js";
 import * as API from "../../types/api.types.js";
-import { PropertyService } from "../../services/property.services.js";
+import { TransactionService } from "../../services/transaction.services.js";
 
 export const postCreateTransaction = (
 	req: Request<{}, {}, { transactionDetails: API.POSTTransaction }, {}>,
@@ -66,12 +66,12 @@ export const deleteTransaction = async (
 	if (!result.success) {
 		return res
 			.status(StatusCodes.BAD_REQUEST)
-			.json({ error: true, message: "Invalid user Id" });
+			.json({ error: true, message: "Invalid transaction Id" });
 	}
 	try {
 		// delete transaction using transaction Id
 
-		await PropertyService.deleteTransaction(transactionId);
+		await TransactionService.delete(transactionId);
 
 		// check if rows were affected and respond accordingly
 

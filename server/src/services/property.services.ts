@@ -3,7 +3,6 @@ import { LoanRepository } from "../repositories/loan.repositories.js";
 import { PropertyRepository } from "../repositories/property.repositories.js";
 import { PropertyInfoRepository } from "../repositories/propertyInfo.repositories.js";
 import { TenantRepository } from "../repositories/tenant.repositories.js";
-import { TransactionRepository } from "../repositories/transaction.repositories.js";
 import * as DB from "../types/db.types.js";
 import { queryInTransaction } from "../utils/service.utils.js";
 
@@ -44,8 +43,5 @@ export const PropertyService = {
 	},
 	async delete(propertyId: string) {
 		await PropertyRepository.deleteProperty(propertyId);
-	},
-	async deleteTransaction(transactionId: string) {
-		await TransactionRepository.delete(transactionId);
 	},
 };
