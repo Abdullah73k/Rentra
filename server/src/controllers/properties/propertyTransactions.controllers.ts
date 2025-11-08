@@ -5,6 +5,7 @@ import {
 	validateTransactionDetails,
 } from "../../utils/validation.utils.js";
 import * as API from "../../types/api.types.js";
+import { TransactionService } from "../../services/transaction.services.js";
 
 export const postCreateTransaction = (
 	req: Request<{}, {}, { transactionDetails: API.POSTTransaction }, {}>,
@@ -54,37 +55,36 @@ export const postCreateTransaction = (
 		});
 	}
 };
-export const deleteTransaction = (
+export const deleteTransaction = async (
 	req: Request<{ transactionId: string }>,
 	res: Response
 ) => {
+	const { transactionId } = req.params;
+	const result = validateUUID(transactionId);
+
+	// checking if transactionId is a valid UUID
+	if (!result.success) {
+		return res
+			.status(StatusCodes.BAD_REQUEST)
+			.json({ error: true, message: "Invalid transaction Id" });
+	}
 	try {
-		const { transactionId } = req.params;
-		const result = validateUUID(transactionId);
-
-		// checking if transactionId is a valid UUID
-		if (!result.success) {
-			return res
-				.status(StatusCodes.BAD_REQUEST)
-				.json({ error: true, message: "Invalid user Id" });
-		}
-
 		// delete transaction using transaction Id
 
-		// Placeholder for actual query logic
-		const query = true;
+		const result = await TransactionService.delete(transactionId);
 
 		// check if rows were affected and respond accordingly
-		if (query) {
-			return res.status(StatusCodes.SUCCESS).json({
-				error: false,
-				message: "successfully deleted transaction",
-			});
-		}
-		return res.status(StatusCodes.NOT_FOUND).json({
-			error: true,
-			message: "Transaction doesn't exist",
+
+		return res.status(StatusCodes.SUCCESS).json({
+			error: false,
+			message: "successfully deleted transaction",
 		});
+
+		// TODO: Will handle later with error middleware
+		// return res.status(StatusCodes.NOT_FOUND).json({
+		// 	error: true,
+		// 	message: "Transaction doesn't exist",
+		// });
 	} catch (error) {
 		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
 			error: true,
@@ -105,10 +105,11 @@ export const patchTransaction = (
 			...transactionData,
 		};
 
-		const transactionDataResult = validateTransactionDetails<API.PATCHTransaction>(
-			combinedTransactionData,
-			true
-		);
+		const transactionDataResult =
+			validateTransactionDetails<API.PATCHTransaction>(
+				combinedTransactionData,
+				true
+			);
 
 		// checking if transaction data is valid
 		if (!transactionDataResult.success) {

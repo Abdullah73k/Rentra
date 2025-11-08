@@ -1,5 +1,6 @@
 import * as DB from "../types/db.types.js";
 import {
+	deleteRowFromTableWithId,
 	generateCreateQueryColsAndValues,
 	insertIntoTable,
 } from "../utils/repository.utils.js";
@@ -17,5 +18,12 @@ export const TransactionRepository = {
 		});
 
 		return query;
+	},
+	async delete(transactionId: string) {
+		await deleteRowFromTableWithId({
+			table: "Transaction",
+			idName: "id",
+			id: transactionId,
+		});
 	},
 };
