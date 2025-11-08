@@ -75,8 +75,10 @@ export async function deleteRowFromTableWithId({
 	id,
 	idName,
 }: QueryConfig) {
-	await pool.query({
+	const query = await pool.query({
 		text: `DELETE FROM ${table} WHERE ${idName} = $1`,
 		values: [id],
 	});
+
+	return query
 }

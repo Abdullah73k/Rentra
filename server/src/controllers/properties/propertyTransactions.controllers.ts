@@ -71,7 +71,7 @@ export const deleteTransaction = async (
 	try {
 		// delete transaction using transaction Id
 
-		await TransactionService.delete(transactionId);
+		const result = await TransactionService.delete(transactionId);
 
 		// check if rows were affected and respond accordingly
 

@@ -2,6 +2,7 @@ import { TransactionRepository } from "../repositories/transaction.repositories.
 
 export const TransactionService = {
 	async delete(transactionId: string) {
-		await TransactionRepository.delete(transactionId);
+		const result = await TransactionRepository.delete(transactionId);
+        return result
 	},
 };
