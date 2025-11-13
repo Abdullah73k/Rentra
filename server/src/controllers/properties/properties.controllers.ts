@@ -1,4 +1,4 @@
-import type { Request, Response } from "express";
+import type { Request, RequestHandler, Response } from "express";
 import { StatusCodes } from "../../constants/statusCodes.constants.js";
 import {
 	validateUUID,
