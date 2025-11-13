@@ -1,3 +1,4 @@
+import { DatabaseError } from "pg";
 import { pool } from "../configs/pg.config.js";
 import * as DB from "../types/db.types.js";
 

@@ -1,4 +1,6 @@
 import * as DB from "../types/db.types.js";
+import { DatabaseError } from "pg"
+
 import {
 	deleteRowFromTableWithId,
 	generateCreateQueryColsAndValues,
