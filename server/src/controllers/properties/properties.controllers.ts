@@ -11,7 +11,7 @@ import { PropertyService } from "../../services/property.services.js";
 
 export const getUserPropertyData = (
 	req: Request<{ propertyId: string }, {}, {}, {}>,
-	res: Response
+	res: Response,
 ) => {
 	try {
 		// TODO: Must add auth validation once we integrate BetterAuth
