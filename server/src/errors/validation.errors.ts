@@ -5,10 +5,9 @@ type ValidationIssue = { field: string; message: string };
 
 export class ValidationError extends AppError {
 	public readonly statusCode = StatusCodes.BAD_REQUEST;
-	public readonly errors: ValidationIssue[];
 
-	constructor(message: string, errors: ValidationIssue[]) {
+	constructor(message: string, public readonly errors?: ValidationIssue[]) {
 		super(message);
-		this.errors = errors;
+		this.name = "ValidationError"
 	}
 }
