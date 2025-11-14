@@ -10,6 +10,7 @@ import * as DB from "../../types/db.types.js";
 import { PropertyService } from "../../services/property.services.js";
 import { ValidationError } from "../../errors/validation.errors.js";
 
+// TODO: 
 export const getUserPropertyData = (
 	req: Request<{ propertyId: string }, {}, {}, {}>,
 	res: Response
@@ -26,7 +27,6 @@ export const getUserPropertyData = (
 		error: false,
 		message: "Successfully fetched user property and all associated info",
 		data: {
-			property: {},
 			propertyInfo: {},
 			loan: {},
 			tenant: {},

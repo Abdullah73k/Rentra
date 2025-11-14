@@ -13,35 +13,33 @@ export const postCreateTransaction = async (
 	res: Response
 ) => {
 	const { transactionDetails } = req.body;
-	// 1. Validate tx data
 	const result = validateTransactionDetails(transactionDetails);
-	// 2. If data invalid return 400
 	if (!result.success)
 		throw new ValidationError("Transaction validation failed", result.errors);
-	// 3. Query DB to insert data
-	const query = true;
-	// Unique restriction will be set on a database lvl amount, date, vendor, and leaseID
+	const zodResult = result.data;
+
+	const response = await TransactionService.create(zodResult);
 	// 4. If DB unique constrain error occurs return 409, duplicate record
-	if (query) {
-		return res.status(StatusCodes.CONFLICT).json({
-			error: true,
-			message:
-				"Duplicate transaction detected (same amount, date, vendor, and lease)",
-		});
-	}
+	// if (response) {
+	// 	return res.status(StatusCodes.CONFLICT).json({
+	// 		error: true,
+	// 		message:
+	// 			"Duplicate transaction detected (same amount, date, vendor, and lease)",
+	// 	});
+	// }
 	// 5. If any foreign keys not found such as lease or propertyID then DB will return error and endpoint will return 404
-	if (query) {
-		return res.status(StatusCodes.NOT_FOUND).json({
-			error: true,
-			message: "Related record not found (property/unit/lease)",
-		});
-	}
+	// if (response) {
+	// 	return res.status(StatusCodes.NOT_FOUND).json({
+	// 		error: true,
+	// 		message: "Related record not found (property/unit/lease)",
+	// 	});
+	// }
 
 	// 6. Otherwise data was successfully inserted, return 201
 	return res.status(StatusCodes.CREATED).json({
 		error: false,
 		message: "Transaction created",
-		data: {}, // transaction data that was inserted will be returned and sent back to frontend.
+		data: response,
 	});
 };
 export const deleteTransaction = async (
@@ -50,10 +48,8 @@ export const deleteTransaction = async (
 ) => {
 	const { transactionId } = req.params;
 	const result = validateUUID(transactionId);
-	// checking if transactionId is a valid UUID
 	if (!result.success) throw new ValidationError("Invalid transaction Id");
 
-	// delete transaction using transaction Id
 	await TransactionService.delete(transactionId);
 
 	// check if rows were affected and respond accordingly
@@ -87,7 +83,6 @@ export const patchTransaction = async (
 			true
 		);
 
-	// checking if transaction data is valid
 	if (!transactionDataResult.success)
 		throw new ValidationError(
 			"Transaction validation failed",
