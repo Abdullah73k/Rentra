@@ -1,12 +1,4 @@
 import type z from "zod";
-// import {
-// 	documentSchema,
-// 	patchPropertyInfoValidationSchema,
-// 	patchTransactionValidationSchema,
-// 	postDocumentSchema,
-// 	postPropertyInfoValidationSchema,
-// 	postTransactionValidationSchema,
-// } from "../schemas/reusable.schemas.js";
 import * as POST from "../schemas/post.schemas.js";
 import * as PATCH from "../schemas/patch.schemas.js";
 
