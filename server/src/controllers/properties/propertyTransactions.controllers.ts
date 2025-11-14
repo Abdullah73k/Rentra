@@ -7,6 +7,7 @@ import {
 import * as API from "../../types/api.types.js";
 import { TransactionService } from "../../services/transaction.services.js";
 import { ValidationError } from "../../errors/validation.errors.js";
+import * as DB from "../../types/db.types.js";
 
 export const postCreateTransaction = async (
 	req: Request<{}, {}, { transactionDetails: API.POSTTransaction }, {}>,
@@ -77,11 +78,10 @@ export const patchTransaction = async (
 		...transactionData,
 	};
 
-	const transactionDataResult =
-		validateTransactionDetails<API.PATCHTransaction>(
-			combinedTransactionData,
-			true
-		);
+	const transactionDataResult = validateTransactionDetails<
+		API.PATCHTransaction,
+		DB.Transaction
+	>(combinedTransactionData, true);
 
 	if (!transactionDataResult.success)
 		throw new ValidationError(
@@ -91,11 +91,11 @@ export const patchTransaction = async (
 
 	const validatedTransactionData = transactionDataResult.data;
 
-	// use validated data to query db
+	const response = await TransactionService.update(validatedTransactionData);
 
 	res.status(StatusCodes.SUCCESS).json({
 		error: false,
 		message: "Transaction updated",
-		data: validatedTransactionData,
+		data: response,
 	});
 };

@@ -14,3 +14,7 @@ export const failedDbGetMessage = (table: DB.DatabaseTables) => {
 export const failedDbDeleteMessage = (table: DB.DatabaseTables) => {
 	return `Failed to delete data from ${table}`;
 };
+
+export const failedDbUpdateMessage = (table: DB.DatabaseTables) => {
+	return `Failed to update ${table} table data`;
+};

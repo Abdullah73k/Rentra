@@ -27,7 +27,7 @@ export type DatabaseTables =
 	| "Transaction"
 	| "Lease";
 
-export type Ids = "userId" | "propertyId" | "tenantId" | "leaseId" | "id";
+export type Ids = "userId" | "propertyId" | "tenantId" | "leaseId" | "id" | "transactionId";
 
 // export type Property = z.output<typeof propertySchema>;
 

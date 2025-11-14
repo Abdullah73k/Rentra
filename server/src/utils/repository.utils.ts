@@ -18,6 +18,14 @@ type QueryConfig = {
 	idName: DB.Ids;
 };
 
+type UpdateQuery = {
+	table: DB.DatabaseTables;
+	columnsAndPlaceholders: string;
+	values: any[];
+	id: string;
+	idName: DB.Ids;
+};
+
 export async function executeDataBaseOperation<T>(
 	dataBaseFn: () => T,
 	statusCode: StatusCodes,
@@ -55,6 +63,19 @@ function generateQueryPlaceholders(length: number) {
 	return queryPlaceholders;
 }
 
+export function buildUpdateSet(table: Record<string, any>) {
+	const keys = Object.keys(table);
+
+	// SET:  column1 = $2, column2 = $3, ...
+	const setString = keys
+		.map((key, index) => `${key} = $${index + 2}`)
+		.join(", ");
+
+	const values = keys.map((key) => table[key]);
+
+	return { setString, values };
+}
+
 export async function insertIntoTable<T extends DB.TableObjects>({
 	table,
 	columns,
@@ -67,7 +88,7 @@ export async function insertIntoTable<T extends DB.TableObjects>({
                 VALUES (${queryPlaceholders})
                 RETURNING *
                 `,
-		values: values,
+		values,
 	});
 
 	return query.rows[0];
@@ -95,6 +116,26 @@ export async function deleteRowFromTableWithId({
 	const query = await pool.query({
 		text: `DELETE FROM ${table} WHERE ${idName} = $1`,
 		values: [id],
+	});
+
+	return query;
+}
+
+export async function updateRowFromTableWithId<T extends DB.TableObjects>({
+	table,
+	columnsAndPlaceholders,
+	values,
+	id,
+	idName,
+}: UpdateQuery) {
+	const query = await pool.query<T>({
+		text: `
+		UPDATE ${table}
+		SET ${columnsAndPlaceholders}
+		WHERE ${idName} = $1
+		RETURNING *
+		`,
+		values: [id, ...values],
 	});
 
 	return query;

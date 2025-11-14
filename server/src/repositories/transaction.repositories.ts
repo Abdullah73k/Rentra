@@ -4,13 +4,16 @@ import {
 	failedDbDeleteMessage,
 	failedDbGetMessage,
 	failedDbInsertMessage,
+	failedDbUpdateMessage,
 } from "../utils/failed-db-messages.utils.js";
 import {
+	buildUpdateSet,
 	deleteRowFromTableWithId,
 	executeDataBaseOperation,
 	generateCreateQueryColsAndValues,
 	getRowsFromTableWithId,
 	insertIntoTable,
+	updateRowFromTableWithId,
 } from "../utils/repository.utils.js";
 
 export const TransactionRepository = {
@@ -54,6 +57,28 @@ export const TransactionRepository = {
 				}),
 			StatusCodes.BAD_REQUEST,
 			failedDbGetMessage("Transaction")
+		);
+
+		return query;
+	},
+	async updateTransaction(transaction: DB.Transaction) {
+		const dbFn = async (transaction: DB.Transaction) => {
+			const { setString, values } = buildUpdateSet(transaction);
+			const query = await updateRowFromTableWithId<DB.Transaction>({
+				table: "Transaction",
+				columnsAndPlaceholders: setString,
+				values,
+				id: transaction.id,
+				idName: "transactionId",
+			});
+
+			return query;
+		};
+
+		const query = await executeDataBaseOperation(
+			() => dbFn(transaction),
+			StatusCodes.BAD_REQUEST,
+			failedDbUpdateMessage("Transaction")
 		);
 
 		return query;

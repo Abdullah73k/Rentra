@@ -10,4 +10,8 @@ export const TransactionService = {
 		const result = await TransactionRepository.delete(transactionId);
 		return result;
 	},
+	async update(transaction: DB.Transaction) {
+		const result = await TransactionRepository.updateTransaction(transaction);
+		return result;
+	},
 };

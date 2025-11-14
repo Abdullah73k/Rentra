@@ -32,7 +32,8 @@ export function validatePropertyData<
 }
 
 export function validateTransactionDetails<
-	T extends API.POSTTransaction | API.PATCHTransaction
+	T extends API.POSTTransaction | API.PATCHTransaction,
+	U extends DB.CreateTransaction | DB.Transaction
 >(transaction: T, patch: boolean = false) {
 	const schema = patch ? PATCH.transactionSchema : POST.transactionSchema;
 
@@ -49,7 +50,7 @@ export function validateTransactionDetails<
 		return errorObj;
 	}
 
-	const validatedData = { success: true as const, data: result.data };
+	const validatedData = { success: true as const, data: result.data as U };
 	return validatedData;
 }
 
