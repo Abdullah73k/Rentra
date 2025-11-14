@@ -3,6 +3,7 @@ import { LoanRepository } from "../repositories/loan.repositories.js";
 import { PropertyRepository } from "../repositories/property.repositories.js";
 import { PropertyInfoRepository } from "../repositories/propertyInfo.repositories.js";
 import { TenantRepository } from "../repositories/tenant.repositories.js";
+import { TransactionRepository } from "../repositories/transaction.repositories.js";
 import * as DB from "../types/db.types.js";
 import { queryInTransaction } from "../utils/service.utils.js";
 
@@ -47,5 +48,29 @@ export const PropertyService = {
 	},
 	async delete(propertyId: string) {
 		await PropertyRepository.deleteProperty(propertyId);
+	},
+	async getAllData(propertyId: string) {
+		const queryFn = async (propertyId: string) => {
+			const propertyInfo = await PropertyInfoRepository.getPropertyInfo(
+				propertyId
+			);
+			const loan = await LoanRepository.getLoan(propertyId);
+			const tenant = await TenantRepository.getTenant(propertyId);
+			const lease = await LeaseRepository.getLease(propertyId);
+			const transaction = await TransactionRepository.getTransaction(
+				propertyId
+			);
+
+			return {
+				propertyInfo,
+				loan,
+				tenant,
+				lease,
+				transaction,
+			};
+		};
+
+		const result = await queryInTransaction(queryFn, propertyId, "Could not fetch all property data")
+		return result
 	},
 };

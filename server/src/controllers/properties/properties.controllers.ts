@@ -10,8 +10,8 @@ import * as DB from "../../types/db.types.js";
 import { PropertyService } from "../../services/property.services.js";
 import { ValidationError } from "../../errors/validation.errors.js";
 
-// TODO: 
-export const getUserPropertyData = (
+// TODO:
+export const getUserPropertyData = async (
 	req: Request<{ propertyId: string }, {}, {}, {}>,
 	res: Response
 ) => {
@@ -21,18 +21,13 @@ export const getUserPropertyData = (
 	if (!result.success) throw new ValidationError("Invalid property Id");
 	// 2. Query DB to get all property info
 
+	const response = await PropertyService.getAllData(propertyId);
 	// 3. Send response based on property info stored in DB
 
 	return res.status(StatusCodes.SUCCESS).json({
 		error: false,
 		message: "Successfully fetched user property and all associated info",
-		data: {
-			propertyInfo: {},
-			loan: {},
-			tenant: {},
-			lease: {},
-			transaction: {},
-		},
+		data: response,
 	});
 };
 
