@@ -10,28 +10,27 @@ export const errorHandler: ErrorRequestHandler = (
 	res,
 	next
 ) => {
-	if (error instanceof AppError) {
-		if (error instanceof ValidationError) {
-			res.status(error.statusCode).json({
-				error: error.name,
-				message: error.message,
-				errors: error?.errors,
-			});
-		}
+	if (error instanceof ValidationError) {
+		res.status(error.statusCode).json({
+			error: error.name,
+			message: error.message,
+			errors: error?.errors,
+		});
+	}
 
-		if (error instanceof DBError) {
-			res.status(error.statusCode).json({
-				error: error.name,
-				message: error.message,
-			});
+	if (error instanceof DBError) {
+		res.status(error.statusCode).json({
+			error: error.name,
+			message: error.message,
+		});
 
-			console.error("Unexpected DB Error", {
-				cause: error.cause,
-			});
-		}
+		console.error("Unexpected DB Error", {
+			cause: error.cause,
+		});
 	}
 
 	res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
 		message: "Unexpected error, please try again later or contact our team",
 	});
+	console.error("Unknown error", error);
 };

@@ -1,6 +1,8 @@
 import { DatabaseError } from "pg";
 import { pool } from "../configs/pg.config.js";
 import * as DB from "../types/db.types.js";
+import { DBError } from "../errors/db.errors.js";
+import { StatusCodes } from "../constants/statusCodes.constants.js";
 
 type InsertIntoTable = {
 	table: DB.DatabaseTables;
@@ -14,6 +16,19 @@ type QueryConfig = {
 	id: string;
 	idName: DB.Ids;
 };
+
+export function executeDataBaseOperation<T>(
+	dataBaseFn: () => T,
+	statusCode: StatusCodes,
+	message: string
+) {
+	try {
+		const query = dataBaseFn();
+		return query;
+	} catch (error) {
+		throw new DBError(statusCode, message, error);
+	}
+}
 
 export function generateCreateQueryColsAndValues<T extends DB.TableObjects>(
 	object: T
@@ -81,5 +96,5 @@ export async function deleteRowFromTableWithId({
 		values: [id],
 	});
 
-	return query
+	return query;
 }
