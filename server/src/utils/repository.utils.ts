@@ -1,4 +1,3 @@
-import { DatabaseError } from "pg";
 import { pool } from "../configs/pg.config.js";
 import * as DB from "../types/db.types.js";
 import { DBError } from "../errors/db.errors.js";
@@ -17,13 +16,13 @@ type QueryConfig = {
 	idName: DB.Ids;
 };
 
-export function executeDataBaseOperation<T>(
+export async function executeDataBaseOperation<T>(
 	dataBaseFn: () => T,
 	statusCode: StatusCodes,
 	message: string
 ) {
 	try {
-		const query = dataBaseFn();
+		const query = await dataBaseFn();
 		return query;
 	} catch (error) {
 		throw new DBError(statusCode, message, error);

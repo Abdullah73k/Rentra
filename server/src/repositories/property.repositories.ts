@@ -1,8 +1,14 @@
+import { StatusCodes } from "../constants/statusCodes.constants.js";
 import * as DB from "../types/db.types.js";
-import { DatabaseError } from "pg"
+import {
+	failedDbDeleteMessage,
+	failedDbGetMessage,
+	failedDbInsertMessage,
+} from "../utils/failed-db-messages.utils.js";
 
 import {
 	deleteRowFromTableWithId,
+	executeDataBaseOperation,
 	generateCreateQueryColsAndValues,
 	getRowsFromTableWithId,
 	insertIntoTable,
@@ -13,31 +19,46 @@ export const PropertyRepository = {
 		const { columns, values, queryPlaceholders } =
 			generateCreateQueryColsAndValues(property);
 
-		const query = await insertIntoTable<DB.Property>({
-			table: "Property",
-			columns,
-			queryPlaceholders,
-			values,
-		});
+		const query = await executeDataBaseOperation(
+			() =>
+				insertIntoTable<DB.Property>({
+					table: "Property",
+					columns,
+					queryPlaceholders,
+					values,
+				}),
+			StatusCodes.BAD_REQUEST,
+			failedDbInsertMessage(columns, "Property")
+		);
 
 		return query;
 	},
 	// TODO: must add validation in repo for table and idName cuz sql injection
 	async getProperties(userId: string) {
-		const query = await getRowsFromTableWithId<DB.Property>({
-			table: "Property",
-			id: userId,
-			idName: "userId",
-		});
+		const query = await executeDataBaseOperation(
+			() =>
+				getRowsFromTableWithId<DB.Property>({
+					table: "Property",
+					id: userId,
+					idName: "userId",
+				}),
+			StatusCodes.BAD_REQUEST,
+			failedDbGetMessage("Property")
+		);
 
 		return query;
 	},
 	// TODO: must add validation in repo for table and idName cuz sql injection
 	async deleteProperty(propertyId: string) {
-		await deleteRowFromTableWithId({
-			table: "Property",
-			id: propertyId,
-			idName: "id",
-		});
+		await executeDataBaseOperation(
+			() =>
+				deleteRowFromTableWithId({
+					table: "Property",
+					id: propertyId,
+					idName: "id",
+				}),
+			StatusCodes.BAD_REQUEST,
+			failedDbDeleteMessage("Property")
+		);
 	},
 };
