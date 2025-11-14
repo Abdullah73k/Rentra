@@ -4,14 +4,17 @@ import {
 	failedDbDeleteMessage,
 	failedDbGetMessage,
 	failedDbInsertMessage,
+	failedDbUpdateMessage,
 } from "../utils/failed-db-messages.utils.js";
 
 import {
+	buildUpdateSet,
 	deleteRowFromTableWithId,
 	executeDataBaseOperation,
 	generateCreateQueryColsAndValues,
 	getRowsFromTableWithId,
 	insertIntoTable,
+	updateRowFromTableWithId,
 } from "../utils/repository.utils.js";
 
 export const PropertyRepository = {
@@ -60,5 +63,27 @@ export const PropertyRepository = {
 			StatusCodes.BAD_REQUEST,
 			failedDbDeleteMessage("Property")
 		);
+	},
+	async updateProperty(property: DB.Property) {
+		const dbFn = async (property: DB.Property) => {
+			const { setString, values } = buildUpdateSet(property);
+			const query = await updateRowFromTableWithId<DB.Property>({
+				table: "Property",
+				columnsAndPlaceholders: setString,
+				values,
+				id: property.id,
+				idName: "id",
+			});
+
+			return query;
+		};
+
+		const query = await executeDataBaseOperation(
+			() => dbFn(property),
+			StatusCodes.BAD_REQUEST,
+			failedDbUpdateMessage("Property")
+		);
+
+		return query;
 	},
 };

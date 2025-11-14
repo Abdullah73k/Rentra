@@ -3,12 +3,15 @@ import * as DB from "../types/db.types.js";
 import {
 	failedDbGetMessage,
 	failedDbInsertMessage,
+	failedDbUpdateMessage,
 } from "../utils/failed-db-messages.utils.js";
 import {
+	buildUpdateSet,
 	executeDataBaseOperation,
 	generateCreateQueryColsAndValues,
 	getRowsFromTableWithId,
 	insertIntoTable,
+	updateRowFromTableWithId,
 } from "../utils/repository.utils.js";
 
 export const TenantRepository = {
@@ -40,6 +43,28 @@ export const TenantRepository = {
 				}),
 			StatusCodes.BAD_REQUEST,
 			failedDbGetMessage("Tenant")
+		);
+
+		return query;
+	},
+	async updateTenant(tenant: DB.Tenant) {
+		const dbFn = async (tenant: DB.Tenant) => {
+			const { setString, values } = buildUpdateSet(tenant);
+			const query = await updateRowFromTableWithId<DB.Tenant>({
+				table: "Tenant",
+				columnsAndPlaceholders: setString,
+				values,
+				id: tenant.id,
+				idName: "id",
+			});
+
+			return query;
+		};
+
+		const query = await executeDataBaseOperation(
+			() => dbFn(tenant),
+			StatusCodes.BAD_REQUEST,
+			failedDbUpdateMessage("Tenant")
 		);
 
 		return query;

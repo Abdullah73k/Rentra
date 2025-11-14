@@ -1,14 +1,17 @@
 import {
+	buildUpdateSet,
 	executeDataBaseOperation,
 	generateCreateQueryColsAndValues,
 	getRowsFromTableWithId,
 	insertIntoTable,
+	updateRowFromTableWithId,
 } from "../utils/repository.utils.js";
 import * as DB from "../types/db.types.js";
 import { StatusCodes } from "../constants/statusCodes.constants.js";
 import {
 	failedDbGetMessage,
 	failedDbInsertMessage,
+	failedDbUpdateMessage,
 } from "../utils/failed-db-messages.utils.js";
 
 export const PropertyInfoRepository = {
@@ -40,6 +43,28 @@ export const PropertyInfoRepository = {
 				}),
 			StatusCodes.BAD_REQUEST,
 			failedDbGetMessage("PropertyInfo")
+		);
+
+		return query;
+	},
+	async updatePropertyInfo(propertyInfo: DB.PropertyInfo) {
+		const dbFn = async (propertyInfo: DB.PropertyInfo) => {
+			const { setString, values } = buildUpdateSet(propertyInfo);
+			const query = await updateRowFromTableWithId<DB.PropertyInfo>({
+				table: "Transaction",
+				columnsAndPlaceholders: setString,
+				values,
+				id: propertyInfo.id,
+				idName: "id",
+			});
+
+			return query;
+		};
+
+		const query = await executeDataBaseOperation(
+			() => dbFn(propertyInfo),
+			StatusCodes.BAD_REQUEST,
+			failedDbUpdateMessage("PropertyInfo")
 		);
 
 		return query;

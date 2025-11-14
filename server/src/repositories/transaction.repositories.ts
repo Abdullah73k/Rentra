@@ -69,7 +69,7 @@ export const TransactionRepository = {
 				columnsAndPlaceholders: setString,
 				values,
 				id: transaction.id,
-				idName: "transactionId",
+				idName: "id",
 			});
 
 			return query;
