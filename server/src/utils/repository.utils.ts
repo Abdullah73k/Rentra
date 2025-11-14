@@ -3,6 +3,8 @@ import * as DB from "../types/db.types.js";
 import { DBError } from "../errors/db.errors.js";
 import { StatusCodes } from "../constants/statusCodes.constants.js";
 
+// TODO: Add undefined type union for get db operation
+
 type InsertIntoTable = {
 	table: DB.DatabaseTables;
 	columns: string;

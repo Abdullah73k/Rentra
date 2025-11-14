@@ -2,12 +2,14 @@ import { StatusCodes } from "../constants/statusCodes.constants.js";
 import * as DB from "../types/db.types.js";
 import {
 	failedDbDeleteMessage,
+	failedDbGetMessage,
 	failedDbInsertMessage,
 } from "../utils/failed-db-messages.utils.js";
 import {
 	deleteRowFromTableWithId,
 	executeDataBaseOperation,
 	generateCreateQueryColsAndValues,
+	getRowsFromTableWithId,
 	insertIntoTable,
 } from "../utils/repository.utils.js";
 
@@ -41,5 +43,19 @@ export const TransactionRepository = {
 			StatusCodes.BAD_REQUEST,
 			failedDbDeleteMessage("Transaction")
 		);
+	},
+	async getTransaction(propertyId: string) {
+		const query = await executeDataBaseOperation(
+			() =>
+				getRowsFromTableWithId<DB.Transaction>({
+					table: "Transaction",
+					id: propertyId,
+					idName: "propertyId",
+				}),
+			StatusCodes.BAD_REQUEST,
+			failedDbGetMessage("Transaction")
+		);
+
+		return query;
 	},
 };
