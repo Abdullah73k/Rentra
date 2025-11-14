@@ -33,7 +33,11 @@ export const PropertyService = {
 			};
 		};
 
-		const query = await queryInTransaction(queryFn, data);
+		const query = await queryInTransaction(
+			queryFn,
+			data,
+			"Insert property data failed transaction"
+		);
 
 		return query;
 	},
