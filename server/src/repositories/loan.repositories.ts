@@ -1,17 +1,71 @@
+import { StatusCodes } from "../constants/statusCodes.constants.js";
 import * as DB from "../types/db.types.js";
-import { generateCreateQueryColsAndValues, insertIntoTable } from "../utils/repository.utils.js";
+import {
+	failedDbGetMessage,
+	failedDbInsertMessage,
+	failedDbUpdateMessage,
+} from "../utils/failed-db-messages.utils.js";
+import {
+	buildUpdateSet,
+	executeDataBaseOperation,
+	generateCreateQueryColsAndValues,
+	getRowsFromTableWithId,
+	insertIntoTable,
+	updateRowFromTableWithId,
+} from "../utils/repository.utils.js";
 
 export const LoanRepository = {
 	async createLoan(loan: DB.CreateLoan) {
 		const { values, queryPlaceholders, columns } =
 			generateCreateQueryColsAndValues(loan);
 
-		const query = insertIntoTable<DB.Loan>({
-			table: "Loan",
-			columns,
-			queryPlaceholders,
-			values,
-		});
+		const query = await executeDataBaseOperation(
+			() =>
+				insertIntoTable<DB.Loan>({
+					table: "Loan",
+					columns,
+					queryPlaceholders,
+					values,
+				}),
+			StatusCodes.BAD_REQUEST,
+			failedDbInsertMessage(columns, "Loan")
+		);
+
+		return query;
+	},
+	async getLoan(propertyId: string) {
+		const query = await executeDataBaseOperation(
+			() =>
+				getRowsFromTableWithId<DB.Loan>({
+					table: "Loan",
+					id: propertyId,
+					idName: "propertyId",
+				}),
+			StatusCodes.BAD_REQUEST,
+			failedDbGetMessage("Loan")
+		);
+
+		return query;
+	},
+	async updateLoan(loan: DB.Loan) {
+		const dbFn = async (loan: DB.Loan) => {
+			const { setString, values } = buildUpdateSet(loan);
+			const query = await updateRowFromTableWithId<DB.Loan>({
+				table: "Loan",
+				columnsAndPlaceholders: setString,
+				values,
+				id: loan.id,
+				idName: "id",
+			});
+
+			return query;
+		};
+
+		const query = await executeDataBaseOperation(
+			() => dbFn(loan),
+			StatusCodes.BAD_REQUEST,
+			failedDbUpdateMessage("Loan")
+		);
 
 		return query;
 	},

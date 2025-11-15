@@ -6,54 +6,42 @@ import {
 } from "../../utils/validation.utils.js";
 import * as API from "../../types/api.types.js";
 import { TransactionService } from "../../services/transaction.services.js";
+import { ValidationError } from "../../errors/validation.errors.js";
+import * as DB from "../../types/db.types.js";
 
-export const postCreateTransaction = (
+export const postCreateTransaction = async (
 	req: Request<{}, {}, { transactionDetails: API.POSTTransaction }, {}>,
 	res: Response
 ) => {
-	try {
-		const { transactionDetails } = req.body;
-		// 1. Validate tx data
-		const result = validateTransactionDetails(transactionDetails);
-		// 2. If data invalid return 400
-		if (!result.success) {
-			return res.status(StatusCodes.BAD_REQUEST).json({
-				error: true,
-				message: "Validation failed",
-				errors: result.errors,
-			});
-		}
-		// 3. Query DB to insert data
-		const query = true;
-		// Unique restriction will be set on a database lvl amount, date, vendor, and leaseID
-		// 4. If DB unique constrain error occurs return 409, duplicate record
-		if (query) {
-			return res.status(StatusCodes.CONFLICT).json({
-				error: true,
-				message:
-					"Duplicate transaction detected (same amount, date, vendor, and lease)",
-			});
-		}
-		// 5. If any foreign keys not found such as lease or propertyID then DB will return error and endpoint will return 404
-		if (query) {
-			return res.status(StatusCodes.NOT_FOUND).json({
-				error: true,
-				message: "Related record not found (property/unit/lease)",
-			});
-		}
+	const { transactionDetails } = req.body;
+	const result = validateTransactionDetails(transactionDetails);
+	if (!result.success)
+		throw new ValidationError("Transaction validation failed", result.errors);
+	const zodResult = result.data;
 
-		// 6. Otherwise data was successfully inserted, return 201
-		return res.status(StatusCodes.CREATED).json({
-			error: false,
-			message: "Transaction created",
-			data: {}, // transaction data that was inserted will be returned and sent back to frontend.
-		});
-	} catch (error) {
-		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-			error: true,
-			message: "Internal server error, could not create transaction record",
-		});
-	}
+	const response = await TransactionService.create(zodResult);
+	// 4. If DB unique constrain error occurs return 409, duplicate record
+	// if (response) {
+	// 	return res.status(StatusCodes.CONFLICT).json({
+	// 		error: true,
+	// 		message:
+	// 			"Duplicate transaction detected (same amount, date, vendor, and lease)",
+	// 	});
+	// }
+	// 5. If any foreign keys not found such as lease or propertyID then DB will return error and endpoint will return 404
+	// if (response) {
+	// 	return res.status(StatusCodes.NOT_FOUND).json({
+	// 		error: true,
+	// 		message: "Related record not found (property/unit/lease)",
+	// 	});
+	// }
+
+	// 6. Otherwise data was successfully inserted, return 201
+	return res.status(StatusCodes.CREATED).json({
+		error: false,
+		message: "Transaction created",
+		data: response,
+	});
 };
 export const deleteTransaction = async (
 	req: Request<{ transactionId: string }>,
@@ -61,78 +49,53 @@ export const deleteTransaction = async (
 ) => {
 	const { transactionId } = req.params;
 	const result = validateUUID(transactionId);
+	if (!result.success) throw new ValidationError("Invalid transaction Id");
 
-	// checking if transactionId is a valid UUID
-	if (!result.success) {
-		return res
-			.status(StatusCodes.BAD_REQUEST)
-			.json({ error: true, message: "Invalid transaction Id" });
-	}
-	try {
-		// delete transaction using transaction Id
+	await TransactionService.delete(transactionId);
 
-		const result = await TransactionService.delete(transactionId);
+	// check if rows were affected and respond accordingly
 
-		// check if rows were affected and respond accordingly
+	return res.status(StatusCodes.SUCCESS).json({
+		error: false,
+		message: "successfully deleted transaction",
+	});
 
-		return res.status(StatusCodes.SUCCESS).json({
-			error: false,
-			message: "successfully deleted transaction",
-		});
-
-		// TODO: Will handle later with error middleware
-		// return res.status(StatusCodes.NOT_FOUND).json({
-		// 	error: true,
-		// 	message: "Transaction doesn't exist",
-		// });
-	} catch (error) {
-		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-			error: true,
-			message: "Internal server error, could not delete transaction",
-		});
-	}
+	// TODO: Will handle later with error middleware
+	// return res.status(StatusCodes.NOT_FOUND).json({
+	// 	error: true,
+	// 	message: "Transaction doesn't exist",
+	// });
 };
-export const patchTransaction = (
+export const patchTransaction = async (
 	req: Request<{ transactionId: string }, {}, API.POSTTransaction>,
 	res: Response
 ) => {
-	try {
-		const transactionData = req.body;
-		const { transactionId } = req.params;
+	const transactionData = req.body;
+	const { transactionId } = req.params;
 
-		const combinedTransactionData: API.PATCHTransaction = {
-			id: transactionId,
-			...transactionData,
-		};
+	const combinedTransactionData: API.PATCHTransaction = {
+		id: transactionId,
+		...transactionData,
+	};
 
-		const transactionDataResult =
-			validateTransactionDetails<API.PATCHTransaction>(
-				combinedTransactionData,
-				true
-			);
+	const transactionDataResult = validateTransactionDetails<
+		API.PATCHTransaction,
+		DB.Transaction
+	>(combinedTransactionData, true);
 
-		// checking if transaction data is valid
-		if (!transactionDataResult.success) {
-			return res.status(StatusCodes.BAD_REQUEST).json({
-				error: true,
-				message: "Validation failed",
-				errors: transactionDataResult.errors,
-			});
-		}
+	if (!transactionDataResult.success)
+		throw new ValidationError(
+			"Transaction validation failed",
+			transactionDataResult.errors
+		);
 
-		const validatedTransactionData = transactionDataResult.data;
+	const validatedTransactionData = transactionDataResult.data;
 
-		// use validated data to query db
+	const response = await TransactionService.update(validatedTransactionData);
 
-		res.status(StatusCodes.SUCCESS).json({
-			error: false,
-			message: "Transaction updated",
-			data: validatedTransactionData,
-		});
-	} catch (error) {
-		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-			error: true,
-			message: "Internal server error, could not update transaction",
-		});
-	}
+	return res.status(StatusCodes.SUCCESS).json({
+		error: false,
+		message: "Transaction updated",
+		data: response,
+	});
 };

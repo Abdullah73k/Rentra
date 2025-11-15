@@ -1,12 +1,4 @@
 import type z from "zod";
-// import {
-// 	documentSchema,
-// 	patchPropertyInfoValidationSchema,
-// 	patchTransactionValidationSchema,
-// 	postDocumentSchema,
-// 	postPropertyInfoValidationSchema,
-// 	postTransactionValidationSchema,
-// } from "../schemas/reusable.schemas.js";
 import * as POST from "../schemas/post.schemas.js";
 import * as PATCH from "../schemas/patch.schemas.js";
 
@@ -35,7 +27,7 @@ export type DatabaseTables =
 	| "Transaction"
 	| "Lease";
 
-export type Ids = "userId" | "propertyId" | "tenantId" | "leaseId" | "id";
+export type Ids = "userId" | "propertyId" | "tenantId" | "leaseId" | "id" | "transactionId";
 
 // export type Property = z.output<typeof propertySchema>;
 
