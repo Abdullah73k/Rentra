@@ -29,7 +29,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
       <CardContent className="p-4">
         {/* Address */}
         <div className="flex gap-2 mb-3">
-          <MapPin className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+          <MapPin className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
           <div>
             <p className="font-semibold text-foreground">{property.address}</p>
             <p className="text-sm text-muted-foreground">{property.country}</p>

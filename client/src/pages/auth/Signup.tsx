@@ -17,26 +17,11 @@ const SignUpPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#f8f8f8]">
-      <header className="flex items-center justify-between p-6">
-        <div className="flex space-x-2">
-          <div className="h-2 w-2 rounded-full bg-black" />
-          <div className="h-2 w-2 rounded-full bg-black" />
-        </div>
-        <div className="flex items-center space-x-6">
-          <button className="text-sm">EN</button>
-          <Link to="/contact" className="text-sm hover:underline">
-            CONTACT US
-          </Link>
-          <button className="flex flex-col space-y-1">
-            <span className="h-0.5 w-6 bg-black" />
-            <span className="h-0.5 w-6 bg-black" />
-          </button>
-        </div>
-      </header>
+      
 
       <main className="relative flex min-h-[calc(100vh-88px)] items-center justify-center px-6">
         <div
-          className="absolute right-[10%] top-[20%] h-[300px] w-[300px] animate-pulse rounded-full bg-gradient-to-br from-pink-400 via-orange-300 to-yellow-200 opacity-70 blur-3xl"
+          className="absolute right-[10%] top-[20%] h-[300px] w-[300px] animate-pulse rounded-full bg-linear-to-br from-pink-400 via-orange-300 to-yellow-200 opacity-70 blur-3xl"
           aria-hidden="true"
         />
 

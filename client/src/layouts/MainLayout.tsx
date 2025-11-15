@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom'
 import HeaderNavigation from '../components/HeaderNavigation'
 
-const Root = () => {
+const MainLayout = () => {
   return (
     <>
         <HeaderNavigation />
@@ -12,4 +12,4 @@ const Root = () => {
   )
 }
 
-export default Root
+export default MainLayout

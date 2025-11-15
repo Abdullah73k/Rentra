@@ -1,27 +1,70 @@
-import { NavLink } from "react-router-dom"
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@radix-ui/react-navigation-menu";
+import { Link, NavLink } from "react-router-dom";
+import { navigationMenuTriggerStyle } from "./ui/navigation-menu";
 
 const HeaderNavigation = () => {
-  return (
-    <header>
-        <nav>
-            <ul>
-                {/* <li>
-                    <NavLink to="/" >Home</NavLink>
-                </li> */}
-                <li>
-                    <NavLink to="/auth/login" >Login</NavLink>
-                </li>
-                <li>
-                    <NavLink to="/auth/Signup" >Sign up</NavLink>
-                </li>
-                <li>
-                    {/* need to add logic to display this only when user is logged in */}
-                    <NavLink to="/auth/settings" >Profile</NavLink>
-                </li>
-            </ul>
-        </nav>
-    </header>
-  )
-}
+  const navButtonClass = "text-md hover:underline p-2 py-0.5";
 
-export default HeaderNavigation
+  return (
+    <header className=" bg-[#f8f8f8] flex items-center justify-between p-6">
+      {/* <nav>
+        <ul className="flex space-x-2">
+          <li>
+            <NavLink to="/">Home</NavLink>
+          </li>
+          <li>
+            <NavLink className={navButtonClass} to="/auth/login">
+              Login
+            </NavLink>
+          </li>
+          <li>
+            <NavLink className={navButtonClass} to="/auth/Signup">
+              Sign up
+            </NavLink>
+          </li>
+          <li>
+            
+            <NavLink className={navButtonClass} to="/auth/settings">
+              Profile
+            </NavLink>
+          </li>
+        </ul>
+      </nav> */}
+      <div className="flex space-x-2">
+        <div className="h-2 w-2 rounded-full bg-black" />
+        <div className="h-2 w-2 rounded-full bg-black" />
+      </div>
+      <div className="flex items-center space-x-6">
+
+        <NavigationMenu>
+          <NavigationMenuList className="flex flex-row px-2" >
+              <NavigationMenuItem className={navButtonClass}>
+                <NavigationMenuLink asChild className={navigationMenuTriggerStyle()} >
+                  <NavLink to="/auth/Signup">
+                    Sign up
+                  </NavLink>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem className={navButtonClass} >
+                <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+                  <NavLink to="/auth/login">
+                    Login
+                  </NavLink>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+          
+          </NavigationMenuList>
+        </NavigationMenu>
+      </div>
+    </header>
+  );
+};
+
+export default HeaderNavigation;

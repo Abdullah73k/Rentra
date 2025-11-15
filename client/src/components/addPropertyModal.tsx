@@ -25,7 +25,7 @@ const PROPERTY_TYPES = ["apartment", "house", "condo", "office", "retail", "land
 const PROPERTY_STATUS = ["available", "rented", "sold", "under_construction"] as const
 const FURNISHING_TYPES = ["unfurnished", "semi_furnished", "fully_furnished"] as const
 const LEASE_FREQUENCIES = ["monthly", "quarterly", "semi_annual", "annual"] as const
-const TRANSACTION_TYPES = ["income", "expense", "repair", "upgrade", "management"] as const // currently unused but kept
+// const TRANSACTION_TYPES = ["income", "expense", "repair", "upgrade", "management"] as const // currently unused but kept
 
 interface AddPropertyModalProps {
   isOpen: boolean
