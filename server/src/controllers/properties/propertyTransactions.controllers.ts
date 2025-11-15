@@ -93,7 +93,7 @@ export const patchTransaction = async (
 
 	const response = await TransactionService.update(validatedTransactionData);
 
-	res.status(StatusCodes.SUCCESS).json({
+	return res.status(StatusCodes.SUCCESS).json({
 		error: false,
 		message: "Transaction updated",
 		data: response,

@@ -95,7 +95,7 @@ export const deleteUserProperty = async (
 };
 
 // TODO: decide on how to update
-export const patchPropertyData = (
+export const patchPropertyData = async (
 	req: Request<{ propertyId: string }, {}, API.PATCHPropertyData>,
 	res: Response
 ) => {
