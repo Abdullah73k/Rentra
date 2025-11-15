@@ -10,19 +10,15 @@ import * as DB from "../../types/db.types.js";
 import { PropertyService } from "../../services/property.services.js";
 import { ValidationError } from "../../errors/validation.errors.js";
 
-// TODO:
 export const getUserPropertyData = async (
 	req: Request<{ propertyId: string }, {}, {}, {}>,
 	res: Response
 ) => {
-	// 1. Validate propertyId as valid UUID
 	const { propertyId } = req.params;
 	const result = validateUUID(propertyId);
 	if (!result.success) throw new ValidationError("Invalid property Id");
-	// 2. Query DB to get all property info
 
 	const response = await PropertyService.getAllData(propertyId);
-	// 3. Send response based on property info stored in DB
 
 	return res.status(StatusCodes.SUCCESS).json({
 		error: false,
@@ -98,6 +94,7 @@ export const deleteUserProperty = async (
 	// });
 };
 
+// TODO: decide on how to update
 export const patchPropertyData = (
 	req: Request<{ propertyId: string }, {}, API.PATCHPropertyData>,
 	res: Response
@@ -122,27 +119,12 @@ export const patchPropertyData = (
 
 	const validatedPropertyInfo = propertyInfoResult.data;
 
-	const cleanedData = pruneUndefined(validatedPropertyInfo);
-
-	// check if there is nothing
-	if (
-		!cleanedData.property &&
-		!cleanedData.propertyInfo &&
-		!cleanedData.loan &&
-		!cleanedData.tenant &&
-		!cleanedData.lease
-	) {
-		return res.status(StatusCodes.BAD_REQUEST).json({
-			error: true,
-			message: "No fields provided to update",
-		});
-	}
 
 	// use cleaned data to update db
 
 	return res.status(StatusCodes.CREATED).json({
 		error: false,
 		message: "Property updated",
-		data: cleanedData, // data should not be cleaned data but the object returned by the data base
+		data: [], // data should not be cleaned data but the object returned by the data base
 	});
 };
