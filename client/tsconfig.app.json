@@ -22,7 +22,11 @@
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+    "baseUrl": ".",              // ⬅️ important
+    "paths": {
+      "@/*": ["src/*"]           // ⬅️ this is the alias you're using
+    }
   },
   "include": ["src"]
 }
