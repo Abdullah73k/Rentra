@@ -70,8 +70,12 @@ export const PropertyService = {
 			};
 		};
 
-		const result = await queryInTransaction(queryFn, propertyId, "Could not fetch all property data")
-		return result
+		const result = await queryInTransaction(
+			queryFn,
+			propertyId,
+			"Could not fetch all property data"
+		);
+		return result;
 	},
-	async update() {}
+	async update() {},
 };

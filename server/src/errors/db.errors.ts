@@ -9,6 +9,6 @@ export class DBError extends AppError {
 		super(message);
 		this.statusCode = statusCode;
 		this.cause = cause;
-		this.name = 'DBError'
+		this.name = "DBError";
 	}
 }

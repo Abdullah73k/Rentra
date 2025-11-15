@@ -1,5 +1,4 @@
 import type { ErrorRequestHandler } from "express";
-import { AppError } from "../errors/app.errors.js";
 import { ValidationError } from "../errors/validation.errors.js";
 import { DBError } from "../errors/db.errors.js";
 import { StatusCodes } from "../constants/statusCodes.constants.js";
@@ -11,7 +10,7 @@ export const errorHandler: ErrorRequestHandler = (
 	next
 ) => {
 	if (error instanceof ValidationError) {
-		res.status(error.statusCode).json({
+		return res.status(error.statusCode).json({
 			error: error.name,
 			message: error.message,
 			errors: error?.errors,
@@ -19,18 +18,17 @@ export const errorHandler: ErrorRequestHandler = (
 	}
 
 	if (error instanceof DBError) {
-		res.status(error.statusCode).json({
-			error: error.name,
-			message: error.message,
-		});
-
 		console.error("Unexpected DB Error", {
 			cause: error.cause,
 		});
+		return res.status(error.statusCode).json({
+			error: error.name,
+			message: error.message,
+		});
 	}
 
-	res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+	console.error("Unknown error", error);
+	return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
 		message: "Unexpected error, please try again later or contact our team",
 	});
-	console.error("Unknown error", error);
 };

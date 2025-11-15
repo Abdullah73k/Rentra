@@ -15,12 +15,12 @@ export async function queryInTransaction<T, U>(
 
 		return query;
 	} catch (error) {
+		await client.query("ROLLBACK");
+		console.log("DB transaction error: ", error);
 		if (error instanceof DBError) {
 			console.error(error.message, error);
 			throw new DBError(error.statusCode, errMsg, error);
 		}
-		await client.query("ROLLBACK");
-		console.log("DB transaction error: ", error);
 	} finally {
 		client.release();
 	}

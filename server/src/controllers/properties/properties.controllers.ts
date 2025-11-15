@@ -1,4 +1,4 @@
-import type { Request, RequestHandler, Response } from "express";
+import type { Request, Response } from "express";
 import { StatusCodes } from "../../constants/statusCodes.constants.js";
 import {
 	validateUUID,
@@ -118,7 +118,6 @@ export const patchPropertyData = (
 		throw new ValidationError("Invalid property Id");
 
 	const validatedPropertyInfo = propertyInfoResult.data;
-
 
 	// use cleaned data to update db
 

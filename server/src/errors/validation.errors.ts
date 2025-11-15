@@ -8,6 +8,6 @@ export class ValidationError extends AppError {
 
 	constructor(message: string, public readonly errors?: ValidationIssue[]) {
 		super(message);
-		this.name = "ValidationError"
+		this.name = "ValidationError";
 	}
 }

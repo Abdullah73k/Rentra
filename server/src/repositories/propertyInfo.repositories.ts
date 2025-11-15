@@ -51,7 +51,7 @@ export const PropertyInfoRepository = {
 		const dbFn = async (propertyInfo: DB.PropertyInfo) => {
 			const { setString, values } = buildUpdateSet(propertyInfo);
 			const query = await updateRowFromTableWithId<DB.PropertyInfo>({
-				table: "Transaction",
+				table: "PropertyInfo",
 				columnsAndPlaceholders: setString,
 				values,
 				id: propertyInfo.id,
