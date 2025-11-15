@@ -27,7 +27,7 @@ type UpdateQuery = {
 };
 
 export async function executeDataBaseOperation<T>(
-	dataBaseFn: () => T,
+	dataBaseFn: () => Promise<T>,
 	statusCode: StatusCodes,
 	message: string
 ) {
