@@ -1,12 +1,10 @@
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
 } from "@radix-ui/react-navigation-menu";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { navigationMenuTriggerStyle } from "./ui/navigation-menu";
 
 const HeaderNavigation = () => {
@@ -42,24 +40,50 @@ const HeaderNavigation = () => {
         <div className="h-2 w-2 rounded-full bg-black" />
       </div>
       <div className="flex items-center space-x-6">
-
         <NavigationMenu>
-          <NavigationMenuList className="flex flex-row px-2" >
-              <NavigationMenuItem className={navButtonClass}>
-                <NavigationMenuLink asChild className={navigationMenuTriggerStyle()} >
-                  <NavLink to="/auth/Signup">
-                    Sign up
-                  </NavLink>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem className={navButtonClass} >
-                <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                  <NavLink to="/auth/login">
-                    Login
-                  </NavLink>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-          
+          <NavigationMenuList className="flex flex-row px-2">
+            <NavigationMenuItem className={navButtonClass}>
+              <NavigationMenuLink
+                asChild
+                className={navigationMenuTriggerStyle()}
+              >
+                <NavLink to="/auth/Signup">Sign up</NavLink>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem className={navButtonClass}>
+              <NavigationMenuLink
+                asChild
+                className={navigationMenuTriggerStyle()}
+              >
+                <NavLink to="/auth/login">Login</NavLink>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem className={navButtonClass}>
+              <NavigationMenuLink
+                asChild
+                className={navigationMenuTriggerStyle()}
+              >
+                <NavLink className={navButtonClass} to="/auth/settings">
+                  Profile
+                </NavLink>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem className={navButtonClass}>
+              <NavigationMenuLink
+                asChild
+                className={navigationMenuTriggerStyle()}
+              >
+                <NavLink to="/">Home</NavLink>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem className={navButtonClass}>
+              <NavigationMenuLink
+                asChild
+                className={navigationMenuTriggerStyle()}
+              >
+                <NavLink to="/properties/dashboard">Dashboard</NavLink>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
       </div>
