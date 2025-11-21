@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import PropertyCard from "@/components/propertyCard"
-import AddPropertyModal from "@/components/addPropertyModal"
+import AddPropertyModal from "@/components/modals/addPropertyModal"
 import { mockProperty, mockPropertyInfo } from "@/lib/mock-data"
 
 const DashboardPage: React.FC = () => {
