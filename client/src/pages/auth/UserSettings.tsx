@@ -29,33 +29,9 @@ import type { Passkey } from "@/lib/types"
 const SettingsPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"profile" | "security" | "preferences">("profile")
   const [user, setUser] = useState(mockUser)
-  const [isEditing, setIsEditing] = useState(false)
-  const [editedUser, setEditedUser] = useState(mockUser)
-  const [passwordResetSent, setPasswordResetSent] = useState(false)
+ 
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setEditedUser({ ...editedUser, [name]: value })
-  }
 
-  const handleSelectChange = (name: string, value: string) => {
-    setEditedUser({ ...editedUser, [name]: value })
-  }
-
-  const handleSave = () => {
-    setUser(editedUser)
-    setIsEditing(false)
-  }
-
-  const handleCancel = () => {
-    setEditedUser(user)
-    setIsEditing(false)
-  }
-
-  const handlePasswordReset = () => {
-    setPasswordResetSent(true)
-    setTimeout(() => setPasswordResetSent(false), 5000)
-  }
 
   const handleToggle2FA = () => {
     setUser({ ...user, twoFactorEnabled: !user.twoFactorEnabled })
@@ -155,9 +131,6 @@ const SettingsPage: React.FC = () => {
                         <Input
                           id="fullName"
                           name="fullName"
-                          value={isEditing ? editedUser.fullName : user.fullName}
-                          onChange={handleInputChange}
-                          disabled={!isEditing}
                           className="h-12 rounded-lg border-gray-300 bg-white text-sm disabled:opacity-60"
                         />
                       </div>
@@ -191,9 +164,6 @@ const SettingsPage: React.FC = () => {
                         <Input
                           id="phone"
                           name="phone"
-                          value={isEditing ? editedUser.phone || "" : user.phone || ""}
-                          onChange={handleInputChange}
-                          disabled={!isEditing}
                           placeholder="+971 50 123 4567"
                           className="h-12 rounded-lg border-gray-300 bg-white text-sm disabled:opacity-60"
                         />
@@ -208,9 +178,6 @@ const SettingsPage: React.FC = () => {
                         <Input
                           id="company"
                           name="company"
-                          value={isEditing ? editedUser.company || "" : user.company || ""}
-                          onChange={handleInputChange}
-                          disabled={!isEditing}
                           placeholder="Company Name"
                           className="h-12 rounded-lg border-gray-300 bg-white text-sm disabled:opacity-60"
                         />
@@ -227,33 +194,9 @@ const SettingsPage: React.FC = () => {
                       <Input
                         id="country"
                         name="country"
-                        value={isEditing ? editedUser.country || "" : user.country || ""}
-                        onChange={handleInputChange}
-                        disabled={!isEditing}
                         placeholder="United Arab Emirates"
                         className="h-12 rounded-lg border-gray-300 bg-white text-sm disabled:opacity-60"
                       />
-                    </div>
-
-                    <div className="flex gap-3 pt-2">
-                      {!isEditing ? (
-                        <Button onClick={() => setIsEditing(true)} className="rounded-full">
-                          Edit Information
-                        </Button>
-                      ) : (
-                        <>
-                          <Button onClick={handleSave} className="rounded-full">
-                            Save Changes
-                          </Button>
-                          <Button
-                            onClick={handleCancel}
-                            variant="outline"
-                            className="rounded-full"
-                          >
-                            Cancel
-                          </Button>
-                        </>
-                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -272,31 +215,6 @@ const SettingsPage: React.FC = () => {
                     </div>
                     <CardDescription>Request a password reset link via email</CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    {passwordResetSent ? (
-                      <div className="flex items-center gap-2 p-4 bg-green-50 text-green-700 rounded-lg border border-green-200">
-                        <Check className="h-5 w-5" />
-                        <p className="text-sm font-medium">
-                          Password reset link sent to {user.email}
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="space-y-4">
-                        <p className="text-sm text-muted-foreground">
-                          Click the button below to receive a password reset link at{" "}
-                          <strong>{user.email}</strong>
-                        </p>
-                        <Button
-                          onClick={handlePasswordReset}
-                          variant="outline"
-                          className="gap-2 rounded-full"
-                        >
-                          <Mail className="h-4 w-4" />
-                          Send Password Reset Email
-                        </Button>
-                      </div>
-                    )}
-                  </CardContent>
                 </Card>
 
                 {/* Two-Factor Authentication */}
@@ -434,34 +352,7 @@ const SettingsPage: React.FC = () => {
                         >
                           Currency
                         </Label>
-                        {isEditing ? (
-                          <Select
-                            value={editedUser.currency}
-                            onValueChange={(value) =>
-                              handleSelectChange("currency", value)
-                            }
-                          >
-                            <SelectTrigger className="h-12 rounded-lg border-gray-300 bg-white text-sm">
-                              <SelectValue placeholder="Select currency" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="AED">AED (د.إ)</SelectItem>
-                              <SelectItem value="SAR">SAR (ر.س)</SelectItem>
-                              <SelectItem value="USD">USD ($)</SelectItem>
-                              <SelectItem value="EUR">EUR (€)</SelectItem>
-                              <SelectItem value="GBP">GBP (£)</SelectItem>
-                              <SelectItem value="CAD">CAD (C$)</SelectItem>
-                              <SelectItem value="AUD">AUD (A$)</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        ) : (
-                          <Input
-                            id="currency"
-                            value={user.currency || ""}
-                            disabled
-                            className="h-12 rounded-lg border-gray-300 bg-white text-sm opacity-60"
-                          />
-                        )}
+                        
                       </div>
                       <div className="space-y-2">
                         <Label
@@ -477,9 +368,6 @@ const SettingsPage: React.FC = () => {
                           min="0"
                           max="100"
                           step="0.01"
-                          value={isEditing ? editedUser.vatRate || "" : user.vatRate || ""}
-                          onChange={handleInputChange}
-                          disabled={!isEditing}
                           placeholder="5"
                           className="h-12 rounded-lg border-gray-300 bg-white text-sm disabled:opacity-60"
                         />
@@ -487,24 +375,7 @@ const SettingsPage: React.FC = () => {
                     </div>
 
                     <div className="flex gap-3 pt-2">
-                      {!isEditing ? (
-                        <Button onClick={() => setIsEditing(true)} className="rounded-full">
-                          Edit Preferences
-                        </Button>
-                      ) : (
-                        <>
-                          <Button onClick={handleSave} className="rounded-full">
-                            Save Changes
-                          </Button>
-                          <Button
-                            onClick={handleCancel}
-                            variant="outline"
-                            className="rounded-full"
-                          >
-                            Cancel
-                          </Button>
-                        </>
-                      )}
+                      
                     </div>
                   </CardContent>
                 </Card>
