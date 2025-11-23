@@ -1,4 +1,4 @@
-import React, { useState, type ChangeEvent } from "react"
+import React, { useState } from "react"
 import { Link } from "react-router-dom"
 
 import { Button } from "@/components/ui/button"
@@ -7,19 +7,11 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import {
   ArrowLeft,
   Key,
   Shield,
-  Mail,
   Trash2,
-  Check,
+
   UserIcon,
   Settings,
 } from "lucide-react"

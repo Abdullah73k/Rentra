@@ -1,4 +1,3 @@
-import type { FieldValues, Path, UseFormReturn } from "react-hook-form";
 import {
   FormControl,
   FormField,
@@ -6,7 +5,12 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { PasswordInput } from "../ui/password-input";
+import { Input } from "../ui/input";
+import {
+  type UseFormReturn,
+  type FieldValues,
+  type Path,
+} from "react-hook-form";
 
 type TextInputProps<T extends FieldValues> = {
   form: UseFormReturn<T>;
@@ -15,7 +19,7 @@ type TextInputProps<T extends FieldValues> = {
   placeholder: string;
 };
 
-const CustomPasswordInput = <T extends FieldValues>({
+const TextInput = <T extends FieldValues>({
   form,
   name,
   label,
@@ -31,7 +35,7 @@ const CustomPasswordInput = <T extends FieldValues>({
             {label}
           </FormLabel>
           <FormControl>
-            <PasswordInput
+            <Input
               className="h-12 rounded-lg border-gray-300 bg-white text-sm focus-visible:ring-1 focus-visible:ring-black"
               placeholder={placeholder}
               {...field}
@@ -44,4 +48,4 @@ const CustomPasswordInput = <T extends FieldValues>({
   );
 };
 
-export default CustomPasswordInput;
+export default TextInput;

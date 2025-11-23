@@ -4,11 +4,11 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import EmailInput from "@/components/form/EmailInput";
-import PasswordInput from "@/components/form/PasswordInput";
 import OauthButton from "@/components/form/OauthButton";
 import Google from "@/assets/svg/Google";
 import Github from "@/assets/svg/Github";
 import Discord from "@/assets/svg/Discord";
+import PasswordInput from "@/components/form/PasswordInput"
 
 const SignInPage: React.FC = () => {
   const [rememberMe, setRememberMe] = useState<boolean>(false);
@@ -31,8 +31,7 @@ const SignInPage: React.FC = () => {
 
           <form className="space-y-6">
             <EmailInput />
-            <PasswordInput />
-
+            {/* TODO: add password input */}
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <Checkbox
@@ -92,7 +91,7 @@ const SignInPage: React.FC = () => {
           <p className="text-center text-sm text-gray-600">
             Don&apos;t have an account?{" "}
             <Link
-              to="/signup"
+              to="/auth/signup"
               className="font-medium text-black hover:underline"
             >
               Sign up

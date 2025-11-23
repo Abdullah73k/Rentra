@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import HeaderNavigation from '../components/HeaderNavigation'
+import { Toaster } from 'sonner'
 
 const MainLayout = () => {
   return (
@@ -7,6 +8,7 @@ const MainLayout = () => {
         <HeaderNavigation />
         <main>
             <Outlet />
+            <Toaster />
         </main>
     </>
   )
