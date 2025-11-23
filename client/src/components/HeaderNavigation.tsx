@@ -17,7 +17,7 @@ const navigationLinks = [
   },
   {
     title: "Sign up",
-    href: "/auth/Signup",
+    href: "/auth/signup",
     description: "Create an account to start managing your properties.",
   },
   {
