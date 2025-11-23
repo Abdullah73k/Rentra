@@ -1,56 +1,56 @@
-import React from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Home, Users, FileText, Banknote, Plus } from "lucide-react"
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Home, Users, FileText, Banknote, Plus } from "lucide-react";
 
 interface Property {
-  currency: string
-  purchasePrice: number
-  closingCosts: number
-  acquisitionDate: string
-  valuationDate: string
+  currency: string;
+  purchasePrice: number;
+  closingCosts: number;
+  acquisitionDate: string;
+  valuationDate: string;
 }
 
 interface PropertyInfo {
-  propertyNumber: string
-  status: string
-  bedrooms: number
-  bathrooms: number
-  sizeSqm: number
-  furnishing: string
-  notes?: string
-  parking?: string
+  propertyNumber: string;
+  status: string;
+  bedrooms: number;
+  bathrooms: number;
+  sizeSqm: number;
+  furnishing: string;
+  notes?: string;
+  parking?: string;
 }
 
 interface Tenant {
-  name: string
-  phone?: string
-  email: string
+  name: string;
+  phone?: string;
+  email: string;
 }
 
 interface Lease {
-  start: string
-  end: string
-  currency: string
-  rentAmount: number
-  frequency: string
-  deposit: number
+  start: string;
+  end: string;
+  currency: string;
+  rentAmount: number;
+  frequency: string;
+  deposit: number;
 }
 
 interface Loan {
-  lender: string
-  termMonths: number
-  interestRate: number
-  totalMortgageAmount: number
-  monthlyPayment: number
+  lender: string;
+  termMonths: number;
+  interestRate: number;
+  totalMortgageAmount: number;
+  monthlyPayment: number;
 }
 
 interface PropertyOverviewProps {
-  property: Property
-  propertyInfo: PropertyInfo
-  tenant?: Tenant
-  lease?: Lease
-  loan?: Loan
+  property: Property;
+  propertyInfo: PropertyInfo;
+  tenant?: Tenant;
+  lease?: Lease;
+  loan?: Loan;
 }
 
 const PropertyOverview: React.FC<PropertyOverviewProps> = ({
@@ -86,7 +86,9 @@ const PropertyOverview: React.FC<PropertyOverviewProps> = ({
                 </p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Acquisition Date</p>
+                <p className="text-sm text-muted-foreground">
+                  Acquisition Date
+                </p>
                 <p className="font-semibold text-foreground">
                   {new Date(property.acquisitionDate).toLocaleDateString()}
                 </p>
@@ -154,7 +156,9 @@ const PropertyOverview: React.FC<PropertyOverviewProps> = ({
             {propertyInfo.parking && (
               <div className="border-border border-t pt-2">
                 <p className="text-sm text-muted-foreground">Parking</p>
-                <p className="text-sm text-foreground">{propertyInfo.parking}</p>
+                <p className="text-sm text-foreground">
+                  {propertyInfo.parking}
+                </p>
               </div>
             )}
           </CardContent>
@@ -168,7 +172,11 @@ const PropertyOverview: React.FC<PropertyOverviewProps> = ({
                 <Users className="h-5 w-5" />
                 Tenant
               </CardTitle>
-              <Button variant="outline" size="sm" className="gap-1 bg-transparent">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-1 bg-transparent"
+              >
                 Edit
               </Button>
             </CardHeader>
@@ -192,8 +200,7 @@ const PropertyOverview: React.FC<PropertyOverviewProps> = ({
         ) : (
           <Card>
             <CardHeader>
-              <CardTitle className="flex items
--center gap-2">
+              <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5" />
                 Tenant
               </CardTitle>
@@ -202,7 +209,11 @@ const PropertyOverview: React.FC<PropertyOverviewProps> = ({
               <p className="mb-4 text-sm text-muted-foreground">
                 No tenant added yet
               </p>
-              <Button variant="outline" size="sm" className="gap-1 bg-transparent">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-1 bg-transparent"
+              >
                 <Plus className="h-4 w-4" />
                 Add Tenant
               </Button>
@@ -218,7 +229,11 @@ const PropertyOverview: React.FC<PropertyOverviewProps> = ({
                 <FileText className="h-5 w-5" />
                 Lease
               </CardTitle>
-              <Button variant="outline" size="sm" className="gap-1 bg-transparent">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-1 bg-transparent"
+              >
                 Edit
               </Button>
             </CardHeader>
@@ -264,7 +279,11 @@ const PropertyOverview: React.FC<PropertyOverviewProps> = ({
               <p className="mb-4 text-sm text-muted-foreground">
                 No lease added yet
               </p>
-              <Button variant="outline" size="sm" className="gap-1 bg-transparent">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-1 bg-transparent"
+              >
                 <Plus className="h-4 w-4" />
                 Add Lease
               </Button>
@@ -280,7 +299,11 @@ const PropertyOverview: React.FC<PropertyOverviewProps> = ({
                 <Banknote className="h-5 w-5" />
                 Loan
               </CardTitle>
-              <Button variant="outline" size="sm" className="gap-1 bg-transparent">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-1 bg-transparent"
+              >
                 Edit
               </Button>
             </CardHeader>
@@ -329,7 +352,11 @@ const PropertyOverview: React.FC<PropertyOverviewProps> = ({
               <p className="mb-4 text-sm text-muted-foreground">
                 No loan added yet
               </p>
-              <Button variant="outline" size="sm" className="gap-1 bg-transparent">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-1 bg-transparent"
+              >
                 <Plus className="h-4 w-4" />
                 Add Loan
               </Button>
@@ -338,7 +365,7 @@ const PropertyOverview: React.FC<PropertyOverviewProps> = ({
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default PropertyOverview
+export default PropertyOverview;

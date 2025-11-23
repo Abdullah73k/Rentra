@@ -2,15 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import PasswordInput from "@/components/form/PasswordInput";
 import OauthButton from "@/components/form/OauthButton";
 import Github from "@/assets/svg/Github";
@@ -24,16 +16,23 @@ import TextInput from "@/components/form/TextInput";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { authClient } from "@/utils/auth-client";
 import { toast } from "sonner";
+import CountrySelectField from "@/components/form/CountrySelectField";
+import VatInput from "@/components/form/VatInput";
 
-const signupSchema = z.object({
-  fullName: z.string().min(1),
-  email: z.email().min(1),
-  password: z.string().min(6),
-  ConfirmPassword: z.string().min(6),
-  country: z.string(),
-  currency: z.string(),
-  vatRate: z.number(),
-});
+const signupSchema = z
+  .object({
+    fullName: z.string().min(1),
+    email: z.string().email(),
+    password: z.string().min(6),
+    ConfirmPassword: z.string().min(6),
+    country: z.string(),
+    currency: z.string(),
+    vatRate: z.number(),
+  })
+  .refine((data) => data.password === data.ConfirmPassword, {
+    message: "Passwords do not match",
+    path: ["ConfirmPassword"],
+  });
 
 type SignupForm = z.infer<typeof signupSchema>;
 
@@ -55,28 +54,26 @@ const SignUpPage: React.FC = () => {
 
   const { isSubmitting } = form.formState;
 
- async function handleSignup(data: SignupForm) {
-  try {
-    await authClient.signUp.email(
-      {
-        email: data.email,
-        password: data.password,
-        name: data.fullName,
-        callbackURL: "/properties/dashboard",
-      },
-      {
-        onError: (error) => {
-          toast.error(error?.error?.message ?? "Failed to sign up");
+  async function handleSignup(data: SignupForm) {
+    try {
+      await authClient.signUp.email(
+        {
+          email: data.email,
+          password: data.password,
+          name: data.fullName,
+          callbackURL: "/properties/dashboard",
         },
-        onSuccess: () => {
-          
+        {
+          onError: (error) => {
+            toast.error(error?.error?.message ?? "Failed to sign up");
+          },
+          onSuccess: () => {},
         }
-      }
-    );
-  } catch (err: any) {
-    toast.error(err?.message ?? "Failed to sign up");
+      );
+    } catch (err: any) {
+      toast.error(err?.message ?? "Failed to sign up");
+    }
   }
-}
 
   return (
     <div className="min-h-screen bg-[#f8f8f8]">
@@ -125,73 +122,27 @@ const SignUpPage: React.FC = () => {
                 placeholder="••••••••"
               />
 
-              <div className="space-y-2">
-                <label
-                  htmlFor="country"
-                  className="text-xs font-medium uppercase tracking-wide text-gray-600"
-                >
-                  Country
-                </label>
-                <Select>
-                  <SelectTrigger className="h-12 rounded-lg border-gray-300 w-full text-sm ">
-                    <SelectValue placeholder="Select your country" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ae">United Arab Emirates</SelectItem>
-                    <SelectItem value="sa">Saudi Arabia</SelectItem>
-                    <SelectItem value="us">United States</SelectItem>
-                    <SelectItem value="gb">United Kingdom</SelectItem>
-                    <SelectItem value="ca">Canada</SelectItem>
-                    <SelectItem value="au">Australia</SelectItem>
-                    <SelectItem value="de">Germany</SelectItem>
-                    <SelectItem value="fr">France</SelectItem>
-                    <SelectItem value="es">Spain</SelectItem>
-                    <SelectItem value="it">Italy</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              <CountrySelectField
+                form={form}
+                name="country"
+                label="Country"
+                placeholder="Select your country"
+              />
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label
-                    htmlFor="currency"
-                    className="text-xs font-medium uppercase tracking-wide text-gray-600"
-                  >
-                    Currency
-                  </label>
-                  <Select>
-                    <SelectTrigger className="h-12 rounded-lg border-gray-300 bg-white text-sm">
-                      <SelectValue placeholder="Select currency" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="AED">AED (د.إ)</SelectItem>
-                      <SelectItem value="SAR">SAR (ر.س)</SelectItem>
-                      <SelectItem value="USD">USD ($)</SelectItem>
-                      <SelectItem value="EUR">EUR (€)</SelectItem>
-                      <SelectItem value="GBP">GBP (£)</SelectItem>
-                      <SelectItem value="CAD">CAD (C$)</SelectItem>
-                      <SelectItem value="AUD">AUD (A$)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                <CountrySelectField
+                  form={form}
+                  name="currency"
+                  label="Currency"
+                  placeholder="Select your currency"
+                />
 
-                <div className="space-y-2">
-                  <label
-                    htmlFor="vat-rate"
-                    className="text-xs font-medium uppercase tracking-wide text-gray-600"
-                  >
-                    VAT Rate (%)
-                  </label>
-                  <Input
-                    id="vat-rate"
-                    type="number"
-                    placeholder="5"
-                    min="0"
-                    max="100"
-                    step="0.01"
-                    className="h-12 rounded-lg border-gray-300 bg-white text-sm focus-visible:ring-1 focus-visible:ring-black"
-                  />
-                </div>
+                <VatInput
+                  form={form}
+                  name="vatRate"
+                  label="Vat Rate %"
+                  placeholder="5"
+                />
               </div>
 
               <div className="flex items-start space-x-2">

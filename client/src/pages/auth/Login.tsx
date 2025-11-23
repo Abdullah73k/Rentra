@@ -8,7 +8,6 @@ import OauthButton from "@/components/form/OauthButton";
 import Google from "@/assets/svg/Google";
 import Github from "@/assets/svg/Github";
 import Discord from "@/assets/svg/Discord";
-import PasswordInput from "@/components/form/PasswordInput"
 
 const SignInPage: React.FC = () => {
   const [rememberMe, setRememberMe] = useState<boolean>(false);
