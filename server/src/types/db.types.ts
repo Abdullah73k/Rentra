@@ -18,16 +18,28 @@ export type TableObjects =
 	| CreateTenant
 	| CreateTransaction;
 
-export type DatabaseTables =
-	| "Property"
-	| "PropertyInfo"
-	| "Loan"
-	| "Tenant"
-	| "Documents"
-	| "Transaction"
-	| "Lease";
+export const DatabaseTables = [
+	"Property",
+	"PropertyInfo",
+	"Loan",
+	"Tenant",
+	"Documents",
+	"Transaction",
+	"Lease",
+] as const;
 
-export type Ids = "userId" | "propertyId" | "tenantId" | "leaseId" | "id" | "transactionId";
+export type DatabaseTables = (typeof DatabaseTables)[number];
+
+export const Ids = [
+	"userId",
+	"propertyId",
+	"tenantId",
+	"leaseId",
+	"id",
+	"transactionId",
+] as const;
+
+export type Ids = (typeof Ids)[number];
 
 // export type Property = z.output<typeof propertySchema>;
 
