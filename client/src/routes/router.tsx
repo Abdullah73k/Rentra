@@ -1,10 +1,9 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import Root from "../pages/Root";
+import Root from "../layouts/MainLayout";
 import Login from "../pages/auth/Login";
 import Signup from "../pages/auth/Signup";
 import UserSettings from "../pages/auth/UserSettings";
 import Home from "../pages/Home";
-import PropertiesList from "../pages/properties/PropertiesList";
 import Property from "../pages/properties/Property";
 import PropertiesDashboard from "../pages/properties/PropertiesDashboard";
 
@@ -34,10 +33,6 @@ const properties = {
         {
             index: true,
             element: <Home />
-        },
-        {    // protected
-            path: "properties",
-            element: <PropertiesList />
         },
         {    // protected
             path: "properties/:PropertyId",
