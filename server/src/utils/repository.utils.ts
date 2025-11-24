@@ -8,6 +8,8 @@ import { ValidationError } from "../errors/validation.errors.js";
 
 type InsertIntoTable = {
 	table: DB.DatabaseTables;
+	keys: string[];
+	colValidation: DB.ColumnValidation;
 	columns: string;
 	queryPlaceholders: string;
 	values: any[];
@@ -22,6 +24,8 @@ type QueryConfig = {
 type UpdateQuery = {
 	table: DB.DatabaseTables;
 	columnsAndPlaceholders: string;
+	keys: string[];
+	colValidation: DB.ColumnValidation;
 	values: any[];
 	id: string;
 	idName: DB.Ids;
@@ -50,6 +54,7 @@ export function generateCreateQueryColsAndValues<T extends DB.TableObjects>(
 	const queryPlaceholders = generateQueryPlaceholders(keys.length);
 
 	return {
+		keys,
 		columns,
 		values,
 		queryPlaceholders,
@@ -74,17 +79,22 @@ export function buildUpdateSet(table: Record<string, any>) {
 
 	const values = keys.map((key) => table[key]);
 
-	return { setString, values };
+	return { setString, values, keys };
 }
 
 export async function insertIntoTable<T extends DB.TableObjects>({
 	table,
+	keys,
+	colValidation,
 	columns,
 	queryPlaceholders,
 	values,
 }: InsertIntoTable) {
-	if (!DB.DatabaseTables.includes(table))
-		throw new ValidationError("Invalid table name, query unsafe");
+	if (
+		!DB.DatabaseTables.includes(table) ||
+		keys.every((key) => (colValidation as readonly string[]).includes(key))
+	)
+		throw new ValidationError("Invalid data, query unsafe");
 
 	const query = await pool.query<T>({
 		text: `
@@ -135,10 +145,18 @@ export async function updateRowFromTableWithId<T extends DB.TableObjects>({
 	table,
 	columnsAndPlaceholders,
 	values,
+	keys,
+	colValidation,
 	id,
 	idName,
 }: UpdateQuery) {
-	if (!DB.DatabaseTables.includes(table) || !DB.Ids.includes(idName))
+	if (
+		!DB.DatabaseTables.includes(table) ||
+		!DB.Ids.includes(
+			idName ||
+				keys.every((key) => (colValidation as readonly string[]).includes(key))
+		)
+	)
 		throw new ValidationError("Invalid field name, query unsafe");
 
 	const query = await pool.query<T>({

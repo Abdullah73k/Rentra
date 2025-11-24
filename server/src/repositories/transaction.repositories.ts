@@ -1,3 +1,4 @@
+import { TRANSACTION_COLUMNS } from "../constants/db-table-columns.constants.js";
 import { StatusCodes } from "../constants/statusCodes.constants.js";
 import * as DB from "../types/db.types.js";
 import {
@@ -18,13 +19,15 @@ import {
 
 export const TransactionRepository = {
 	async createTransaction(transaction: DB.CreateTransaction) {
-		const { values, queryPlaceholders, columns } =
+		const { values, queryPlaceholders, columns, keys } =
 			generateCreateQueryColsAndValues(transaction);
 
 		const query = await executeDataBaseOperation(
 			() =>
 				insertIntoTable<DB.Transaction>({
 					table: "Transaction",
+					keys,
+					colValidation: TRANSACTION_COLUMNS,
 					columns,
 					queryPlaceholders,
 					values,
@@ -63,11 +66,13 @@ export const TransactionRepository = {
 	},
 	async updateTransaction(transaction: DB.Transaction) {
 		const dbFn = async (transaction: DB.Transaction) => {
-			const { setString, values } = buildUpdateSet(transaction);
+			const { setString, values, keys } = buildUpdateSet(transaction);
 			const query = await updateRowFromTableWithId<DB.Transaction>({
 				table: "Transaction",
 				columnsAndPlaceholders: setString,
 				values,
+				keys,
+				colValidation: TRANSACTION_COLUMNS,
 				id: transaction.id,
 				idName: "id",
 			});

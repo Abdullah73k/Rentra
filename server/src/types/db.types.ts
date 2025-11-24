@@ -1,6 +1,15 @@
 import type z from "zod";
 import * as POST from "../schemas/post.schemas.js";
 import * as PATCH from "../schemas/patch.schemas.js";
+import {
+	DOCUMENT_COLUMNS,
+	LEASE_COLUMNS,
+	LOAN_COLUMNS,
+	PROPERTY_COLUMNS,
+	PROPERTY_INFO_COLUMNS,
+	TENANT_COLUMNS,
+	TRANSACTION_COLUMNS,
+} from "../constants/db-table-columns.constants.js";
 
 export type TableObjects =
 	| Lease
@@ -27,6 +36,15 @@ export const DatabaseTables = [
 	"Transaction",
 	"Lease",
 ] as const;
+
+export type ColumnValidation =
+	| typeof TRANSACTION_COLUMNS
+	| typeof LEASE_COLUMNS
+	| typeof DOCUMENT_COLUMNS
+	| typeof LOAN_COLUMNS
+	| typeof PROPERTY_COLUMNS
+	| typeof PROPERTY_INFO_COLUMNS
+	| typeof TENANT_COLUMNS;
 
 export type DatabaseTables = (typeof DatabaseTables)[number];
 

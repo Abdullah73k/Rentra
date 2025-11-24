@@ -19,13 +19,14 @@ import {
 
 export const PropertyRepository = {
 	async createProperty(property: DB.CreateProperty) {
-		const { columns, values, queryPlaceholders } =
+		const { columns, values, queryPlaceholders, keys } =
 			generateCreateQueryColsAndValues(property);
 
 		const query = await executeDataBaseOperation(
 			() =>
 				insertIntoTable<DB.Property>({
 					table: "Property",
+					keys,
 					columns,
 					queryPlaceholders,
 					values,
