@@ -26,6 +26,7 @@ export async function queryInTransaction<T, U>(
 			console.error(error.message, error);
 			throw new ValidationError(error.message);
 		}
+		throw Error("Unknown server error, query transaction failed");
 	} finally {
 		client.release();
 	}
