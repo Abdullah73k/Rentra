@@ -41,7 +41,6 @@ export const PropertyRepository = {
 
 		return query;
 	},
-	// TODO: must add validation in repo for table and idName cuz sql injection
 	async getProperties(userId: string, client?: PoolClient) {
 		const query = await executeDataBaseOperation(
 			() =>
@@ -57,7 +56,6 @@ export const PropertyRepository = {
 
 		return query;
 	},
-	// TODO: must add validation in repo for table and idName cuz sql injection
 	async deleteProperty(propertyId: string, client?: PoolClient) {
 		await executeDataBaseOperation(
 			() =>

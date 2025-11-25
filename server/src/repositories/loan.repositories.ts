@@ -18,7 +18,7 @@ import {
 
 export const LoanRepository = {
 	async createLoan(loan: DB.CreateLoan, client?: PoolClient) {
-		const { values, queryPlaceholders, columns, keys} =
+		const { values, queryPlaceholders, columns, keys } =
 			generateCreateQueryColsAndValues(loan);
 
 		const query = await executeDataBaseOperation(
@@ -26,7 +26,7 @@ export const LoanRepository = {
 				insertIntoTable<DB.Loan>({
 					table: "Loan",
 					columns,
-					keys, 
+					keys,
 					colValidation: LOAN_COLUMNS,
 					queryPlaceholders,
 					client,

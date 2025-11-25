@@ -17,7 +17,7 @@ import {
 import type { PoolClient } from "pg";
 
 export const TenantRepository = {
-	async createTenant(tenant: DB.CreateTenant, client: PoolClient) {
+	async createTenant(tenant: DB.CreateTenant, client?: PoolClient) {
 		const { values, queryPlaceholders, columns, keys } =
 			generateCreateQueryColsAndValues(tenant);
 
@@ -38,7 +38,7 @@ export const TenantRepository = {
 
 		return query;
 	},
-	async getTenant(propertyId: string, client: PoolClient) {
+	async getTenant(propertyId: string, client?: PoolClient) {
 		const query = await executeDataBaseOperation(
 			() =>
 				getRowsFromTableWithId<DB.Tenant>({
@@ -53,8 +53,8 @@ export const TenantRepository = {
 
 		return query;
 	},
-	async updateTenant(tenant: DB.Tenant, client: PoolClient) {
-		const dbFn = async (tenant: DB.Tenant, client: PoolClient) => {
+	async updateTenant(tenant: DB.Tenant, client?: PoolClient) {
+		const dbFn = async (tenant: DB.Tenant, client?: PoolClient) => {
 			const { setString, values, keys } = buildUpdateSet(tenant);
 			const query = await updateRowFromTableWithId<DB.Tenant>({
 				table: "Tenant",

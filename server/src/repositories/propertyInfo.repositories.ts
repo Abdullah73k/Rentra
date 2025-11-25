@@ -19,7 +19,7 @@ import type { PoolClient } from "pg";
 export const PropertyInfoRepository = {
 	async createPropertyInfo(
 		propertyInfo: DB.CreatePropertyInfo,
-		client: PoolClient
+		client?: PoolClient
 	) {
 		const { values, queryPlaceholders, columns, keys } =
 			generateCreateQueryColsAndValues(propertyInfo);
@@ -41,7 +41,7 @@ export const PropertyInfoRepository = {
 
 		return query;
 	},
-	async getPropertyInfo(propertyId: string, client: PoolClient) {
+	async getPropertyInfo(propertyId: string, client?: PoolClient) {
 		const query = await executeDataBaseOperation(
 			() =>
 				getRowsFromTableWithId<DB.PropertyInfo>({
@@ -56,8 +56,8 @@ export const PropertyInfoRepository = {
 
 		return query;
 	},
-	async updatePropertyInfo(propertyInfo: DB.PropertyInfo, client: PoolClient) {
-		const dbFn = async (propertyInfo: DB.PropertyInfo, client: PoolClient) => {
+	async updatePropertyInfo(propertyInfo: DB.PropertyInfo, client?: PoolClient) {
+		const dbFn = async (propertyInfo: DB.PropertyInfo, client?: PoolClient) => {
 			const { setString, values, keys } = buildUpdateSet(propertyInfo);
 			const query = await updateRowFromTableWithId<DB.PropertyInfo>({
 				table: "PropertyInfo",
