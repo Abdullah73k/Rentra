@@ -52,11 +52,13 @@ export const PropertyInfoRepository = {
 	},
 	async updatePropertyInfo(propertyInfo: DB.PropertyInfo) {
 		const dbFn = async (propertyInfo: DB.PropertyInfo) => {
-			const { setString, values } = buildUpdateSet(propertyInfo);
+			const { setString, values, keys } = buildUpdateSet(propertyInfo);
 			const query = await updateRowFromTableWithId<DB.PropertyInfo>({
 				table: "PropertyInfo",
 				columnsAndPlaceholders: setString,
 				values,
+				keys,
+				colValidation: PROPERTY_INFO_COLUMNS,
 				id: propertyInfo.id,
 				idName: "id",
 			});

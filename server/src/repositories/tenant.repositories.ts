@@ -52,11 +52,13 @@ export const TenantRepository = {
 	},
 	async updateTenant(tenant: DB.Tenant) {
 		const dbFn = async (tenant: DB.Tenant) => {
-			const { setString, values } = buildUpdateSet(tenant);
+			const { setString, values, keys } = buildUpdateSet(tenant);
 			const query = await updateRowFromTableWithId<DB.Tenant>({
 				table: "Tenant",
 				columnsAndPlaceholders: setString,
 				values,
+				keys,
+				colValidation: TENANT_COLUMNS,
 				id: tenant.id,
 				idName: "id",
 			});

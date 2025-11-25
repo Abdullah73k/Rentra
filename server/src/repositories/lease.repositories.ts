@@ -52,10 +52,12 @@ export const LeaseRepository = {
 	},
 	async updateLease(lease: DB.Lease) {
 		const dbFn = async (lease: DB.Lease) => {
-			const { setString, values } = buildUpdateSet(lease);
+			const { setString, values, keys } = buildUpdateSet(lease);
 			const query = await updateRowFromTableWithId<DB.Lease>({
 				table: "Lease",
 				columnsAndPlaceholders: setString,
+				keys,
+				colValidation: LEASE_COLUMNS,
 				values,
 				id: lease.id,
 				idName: "id",

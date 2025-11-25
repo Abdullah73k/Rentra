@@ -52,10 +52,12 @@ export const LoanRepository = {
 	},
 	async updateLoan(loan: DB.Loan) {
 		const dbFn = async (loan: DB.Loan) => {
-			const { setString, values } = buildUpdateSet(loan);
+			const { setString, values, keys } = buildUpdateSet(loan);
 			const query = await updateRowFromTableWithId<DB.Loan>({
 				table: "Loan",
 				columnsAndPlaceholders: setString,
+				keys,
+				colValidation: LOAN_COLUMNS,
 				values,
 				id: loan.id,
 				idName: "id",
