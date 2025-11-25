@@ -110,7 +110,6 @@ export interface Passkey {
   createdAt: string
   lastUsed?: string
 }
-
 export interface CountryOption {
   value: string;
   label: string;
