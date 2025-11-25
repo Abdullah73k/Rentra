@@ -1,3 +1,4 @@
+import type { PoolClient } from "pg";
 import { LeaseRepository } from "../repositories/lease.repositories.js";
 import { LoanRepository } from "../repositories/loan.repositories.js";
 import { PropertyRepository } from "../repositories/property.repositories.js";
@@ -6,24 +7,32 @@ import { TenantRepository } from "../repositories/tenant.repositories.js";
 import { TransactionRepository } from "../repositories/transaction.repositories.js";
 import * as DB from "../types/db.types.js";
 import { queryInTransaction } from "../utils/service.utils.js";
+import { pool } from "../configs/pg.config.js";
 
 export const PropertyService = {
 	async create(data: DB.POSTPropertyData) {
-		const queryFn = async (propertyData: DB.POSTPropertyData) => {
+		const client = await pool.connect();
+
+		const queryFn = async (
+			propertyData: DB.POSTPropertyData,
+			client: PoolClient
+		) => {
 			const property = await PropertyRepository.createProperty(
-				propertyData.property
+				propertyData.property,
+				client
 			);
 			const propertyInfo = await PropertyInfoRepository.createPropertyInfo(
-				propertyData.propertyInfo
+				propertyData.propertyInfo,
+				client
 			);
 			const loan = propertyData.loan
-				? await LoanRepository.createLoan(propertyData.loan)
+				? await LoanRepository.createLoan(propertyData.loan, client)
 				: undefined;
 			const tenant = propertyData.tenant
-				? await TenantRepository.createTenant(propertyData.tenant)
+				? await TenantRepository.createTenant(propertyData.tenant, client)
 				: undefined;
 			const lease = propertyData.lease
-				? await LeaseRepository.createLease(propertyData.lease)
+				? await LeaseRepository.createLease(propertyData.lease, client)
 				: undefined;
 			return {
 				property,
@@ -37,6 +46,7 @@ export const PropertyService = {
 		const query = await queryInTransaction(
 			queryFn,
 			data,
+			client,
 			"Insert property data failed transaction"
 		);
 
@@ -50,15 +60,19 @@ export const PropertyService = {
 		await PropertyRepository.deleteProperty(propertyId);
 	},
 	async getAllData(propertyId: string) {
-		const queryFn = async (propertyId: string) => {
+		const client = await pool.connect();
+
+		const queryFn = async (propertyId: string, client: PoolClient) => {
 			const propertyInfo = await PropertyInfoRepository.getPropertyInfo(
-				propertyId
+				propertyId,
+				client
 			);
-			const loan = await LoanRepository.getLoan(propertyId);
-			const tenant = await TenantRepository.getTenant(propertyId);
-			const lease = await LeaseRepository.getLease(propertyId);
+			const loan = await LoanRepository.getLoan(propertyId, client);
+			const tenant = await TenantRepository.getTenant(propertyId, client);
+			const lease = await LeaseRepository.getLease(propertyId, client);
 			const transaction = await TransactionRepository.getTransaction(
-				propertyId
+				propertyId,
+				client
 			);
 
 			return {
@@ -73,6 +87,7 @@ export const PropertyService = {
 		const result = await queryInTransaction(
 			queryFn,
 			propertyId,
+			client,
 			"Could not fetch all property data"
 		);
 		return result;

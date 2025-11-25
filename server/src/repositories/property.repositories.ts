@@ -1,3 +1,5 @@
+import type { PoolClient } from "pg";
+import { PROPERTY_COLUMNS } from "../constants/db-table-columns.constants.js";
 import { StatusCodes } from "../constants/statusCodes.constants.js";
 import * as DB from "../types/db.types.js";
 import {
@@ -18,17 +20,20 @@ import {
 } from "../utils/repository.utils.js";
 
 export const PropertyRepository = {
-	async createProperty(property: DB.CreateProperty) {
-		const { columns, values, queryPlaceholders } =
+	async createProperty(property: DB.CreateProperty, client?: PoolClient) {
+		const { columns, values, queryPlaceholders, keys } =
 			generateCreateQueryColsAndValues(property);
 
 		const query = await executeDataBaseOperation(
 			() =>
 				insertIntoTable<DB.Property>({
 					table: "Property",
+					keys,
+					colValidation: PROPERTY_COLUMNS,
 					columns,
 					queryPlaceholders,
 					values,
+					client,
 				}),
 			StatusCodes.BAD_REQUEST,
 			failedDbInsertMessage(columns, "Property")
@@ -36,14 +41,14 @@ export const PropertyRepository = {
 
 		return query;
 	},
-	// TODO: must add validation in repo for table and idName cuz sql injection
-	async getProperties(userId: string) {
+	async getProperties(userId: string, client?: PoolClient) {
 		const query = await executeDataBaseOperation(
 			() =>
 				getRowsFromTableWithId<DB.Property>({
 					table: "Property",
 					id: userId,
 					idName: "userId",
+					client,
 				}),
 			StatusCodes.BAD_REQUEST,
 			failedDbGetMessage("Property")
@@ -51,26 +56,29 @@ export const PropertyRepository = {
 
 		return query;
 	},
-	// TODO: must add validation in repo for table and idName cuz sql injection
-	async deleteProperty(propertyId: string) {
+	async deleteProperty(propertyId: string, client?: PoolClient) {
 		await executeDataBaseOperation(
 			() =>
 				deleteRowFromTableWithId({
 					table: "Property",
 					id: propertyId,
 					idName: "id",
+					client,
 				}),
 			StatusCodes.BAD_REQUEST,
 			failedDbDeleteMessage("Property")
 		);
 	},
-	async updateProperty(property: DB.Property) {
-		const dbFn = async (property: DB.Property) => {
-			const { setString, values } = buildUpdateSet(property);
+	async updateProperty(property: DB.Property, client?: PoolClient) {
+		const dbFn = async (property: DB.Property, client?: PoolClient) => {
+			const { setString, values, keys } = buildUpdateSet(property);
 			const query = await updateRowFromTableWithId<DB.Property>({
 				table: "Property",
 				columnsAndPlaceholders: setString,
 				values,
+				keys,
+				colValidation: PROPERTY_COLUMNS,
+				client,
 				id: property.id,
 				idName: "id",
 			});
@@ -79,7 +87,7 @@ export const PropertyRepository = {
 		};
 
 		const query = await executeDataBaseOperation(
-			() => dbFn(property),
+			() => dbFn(property, client),
 			StatusCodes.BAD_REQUEST,
 			failedDbUpdateMessage("Property")
 		);
