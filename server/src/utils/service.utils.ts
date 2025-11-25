@@ -1,17 +1,17 @@
-import { pool } from "../configs/pg.config.js";
+import type { PoolClient } from "pg";
 import { DBError } from "../errors/db.errors.js";
 import { ValidationError } from "../errors/validation.errors.js";
 
 export async function queryInTransaction<T, U>(
-	queryFn: (data: T) => Promise<U>,
+	queryFn: (data: T, client: PoolClient) => Promise<U>,
 	data: T,
+	client: PoolClient,
 	errMsg: string
 ) {
-	const client = await pool.connect();
 
 	try {
 		await client.query("BEGIN");
-		const query = await queryFn(data);
+		const query = await queryFn(data, client);
 		await client.query("COMMIT");
 
 		return query;

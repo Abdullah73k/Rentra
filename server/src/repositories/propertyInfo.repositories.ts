@@ -14,9 +14,13 @@ import {
 	failedDbUpdateMessage,
 } from "../utils/failed-db-messages.utils.js";
 import { PROPERTY_INFO_COLUMNS } from "../constants/db-table-columns.constants.js";
+import type { PoolClient } from "pg";
 
 export const PropertyInfoRepository = {
-	async createPropertyInfo(propertyInfo: DB.CreatePropertyInfo) {
+	async createPropertyInfo(
+		propertyInfo: DB.CreatePropertyInfo,
+		client: PoolClient
+	) {
 		const { values, queryPlaceholders, columns, keys } =
 			generateCreateQueryColsAndValues(propertyInfo);
 
@@ -29,6 +33,7 @@ export const PropertyInfoRepository = {
 					colValidation: PROPERTY_INFO_COLUMNS,
 					queryPlaceholders,
 					values,
+					client,
 				}),
 			StatusCodes.BAD_REQUEST,
 			failedDbInsertMessage(columns, "PropertyInfo")
@@ -36,13 +41,14 @@ export const PropertyInfoRepository = {
 
 		return query;
 	},
-	async getPropertyInfo(propertyId: string) {
+	async getPropertyInfo(propertyId: string, client: PoolClient) {
 		const query = await executeDataBaseOperation(
 			() =>
 				getRowsFromTableWithId<DB.PropertyInfo>({
 					table: "PropertyInfo",
 					id: propertyId,
 					idName: "propertyId",
+					client,
 				}),
 			StatusCodes.BAD_REQUEST,
 			failedDbGetMessage("PropertyInfo")
@@ -50,8 +56,8 @@ export const PropertyInfoRepository = {
 
 		return query;
 	},
-	async updatePropertyInfo(propertyInfo: DB.PropertyInfo) {
-		const dbFn = async (propertyInfo: DB.PropertyInfo) => {
+	async updatePropertyInfo(propertyInfo: DB.PropertyInfo, client: PoolClient) {
+		const dbFn = async (propertyInfo: DB.PropertyInfo, client: PoolClient) => {
 			const { setString, values, keys } = buildUpdateSet(propertyInfo);
 			const query = await updateRowFromTableWithId<DB.PropertyInfo>({
 				table: "PropertyInfo",
@@ -61,13 +67,14 @@ export const PropertyInfoRepository = {
 				colValidation: PROPERTY_INFO_COLUMNS,
 				id: propertyInfo.id,
 				idName: "id",
+				client,
 			});
 
 			return query;
 		};
 
 		const query = await executeDataBaseOperation(
-			() => dbFn(propertyInfo),
+			() => dbFn(propertyInfo, client),
 			StatusCodes.BAD_REQUEST,
 			failedDbUpdateMessage("PropertyInfo")
 		);

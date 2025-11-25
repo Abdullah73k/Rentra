@@ -7,9 +7,10 @@ import {
 	generateCreateQueryColsAndValues,
 	insertIntoTable,
 } from "../utils/repository.utils.js";
+import type { PoolClient } from "pg";
 
 export const DocumentRepository = {
-	async createDocument(document: DB.CreateDocument) {
+	async createDocument(document: DB.CreateDocument, client?: PoolClient) {
 		const { values, queryPlaceholders, columns, keys } =
 			generateCreateQueryColsAndValues(document);
 
@@ -22,6 +23,7 @@ export const DocumentRepository = {
 					colValidation: DOCUMENT_COLUMNS,
 					queryPlaceholders,
 					values,
+					client,
 				}),
 			StatusCodes.BAD_REQUEST,
 			failedDbInsertMessage(columns, "Documents")

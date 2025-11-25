@@ -1,8 +1,9 @@
-import { pool } from "../configs/pg.config.js";
 import * as DB from "../types/db.types.js";
 import { DBError } from "../errors/db.errors.js";
 import { StatusCodes } from "../constants/statusCodes.constants.js";
 import { ValidationError } from "../errors/validation.errors.js";
+import { dbConnection } from "./db-connects.utils.js";
+import type { PoolClient } from "pg";
 
 // TODO: Add undefined type union for get db operation
 
@@ -13,12 +14,14 @@ type InsertIntoTable = {
 	columns: string;
 	queryPlaceholders: string;
 	values: any[];
+	client: PoolClient | undefined;
 };
 
 type QueryConfig = {
 	table: DB.DatabaseTables;
 	id: string;
 	idName: DB.Ids;
+	client: PoolClient | undefined;
 };
 
 type UpdateQuery = {
@@ -29,6 +32,7 @@ type UpdateQuery = {
 	values: any[];
 	id: string;
 	idName: DB.Ids;
+	client: PoolClient | undefined;
 };
 
 export async function executeDataBaseOperation<T>(
@@ -89,6 +93,7 @@ export async function insertIntoTable<T extends DB.TableObjects>({
 	columns,
 	queryPlaceholders,
 	values,
+	client,
 }: InsertIntoTable) {
 	if (
 		!DB.DatabaseTables.includes(table) ||
@@ -96,7 +101,8 @@ export async function insertIntoTable<T extends DB.TableObjects>({
 	)
 		throw new ValidationError("Invalid data, query unsafe");
 
-	const query = await pool.query<T>({
+	const db = dbConnection(client);
+	const query = await db.query<T>({
 		text: `
                 INSERT INTO ${table} (${columns})
                 VALUES (${queryPlaceholders})
@@ -113,11 +119,13 @@ export async function getRowsFromTableWithId<T extends DB.TableObjects>({
 	table,
 	id,
 	idName,
+	client,
 }: QueryConfig) {
 	if (!DB.DatabaseTables.includes(table) || !DB.Ids.includes(idName))
 		throw new ValidationError("Invalid field name, query unsafe");
 
-	const query = await pool.query<T>({
+	const db = dbConnection(client);
+	const query = await db.query<T>({
 		text: `SELECT * FROM ${table} WHERE ${idName} = $1`,
 		values: [id],
 	});
@@ -129,11 +137,13 @@ export async function deleteRowFromTableWithId({
 	table,
 	id,
 	idName,
+	client,
 }: QueryConfig) {
 	if (!DB.DatabaseTables.includes(table) || !DB.Ids.includes(idName))
 		throw new ValidationError("Invalid field name, query unsafe");
 
-	const query = await pool.query({
+	const db = dbConnection(client);
+	const query = await db.query({
 		text: `DELETE FROM ${table} WHERE ${idName} = $1`,
 		values: [id],
 	});
@@ -149,6 +159,7 @@ export async function updateRowFromTableWithId<T extends DB.TableObjects>({
 	colValidation,
 	id,
 	idName,
+	client,
 }: UpdateQuery) {
 	if (
 		!DB.DatabaseTables.includes(table) ||
@@ -159,7 +170,8 @@ export async function updateRowFromTableWithId<T extends DB.TableObjects>({
 	)
 		throw new ValidationError("Invalid field name, query unsafe");
 
-	const query = await pool.query<T>({
+	const db = dbConnection(client);
+	const query = await db.query<T>({
 		text: `
 		UPDATE ${table}
 		SET ${columnsAndPlaceholders}

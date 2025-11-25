@@ -14,9 +14,10 @@ import {
 	insertIntoTable,
 	updateRowFromTableWithId,
 } from "../utils/repository.utils.js";
+import type { PoolClient } from "pg";
 
 export const TenantRepository = {
-	async createTenant(tenant: DB.CreateTenant) {
+	async createTenant(tenant: DB.CreateTenant, client: PoolClient) {
 		const { values, queryPlaceholders, columns, keys } =
 			generateCreateQueryColsAndValues(tenant);
 
@@ -29,6 +30,7 @@ export const TenantRepository = {
 					colValidation: TENANT_COLUMNS,
 					queryPlaceholders,
 					values,
+					client,
 				}),
 			StatusCodes.BAD_REQUEST,
 			failedDbInsertMessage(columns, "Tenant")
@@ -36,13 +38,14 @@ export const TenantRepository = {
 
 		return query;
 	},
-	async getTenant(propertyId: string) {
+	async getTenant(propertyId: string, client: PoolClient) {
 		const query = await executeDataBaseOperation(
 			() =>
 				getRowsFromTableWithId<DB.Tenant>({
 					table: "Tenant",
 					id: propertyId,
 					idName: "propertyId",
+					client,
 				}),
 			StatusCodes.BAD_REQUEST,
 			failedDbGetMessage("Tenant")
@@ -50,8 +53,8 @@ export const TenantRepository = {
 
 		return query;
 	},
-	async updateTenant(tenant: DB.Tenant) {
-		const dbFn = async (tenant: DB.Tenant) => {
+	async updateTenant(tenant: DB.Tenant, client: PoolClient) {
+		const dbFn = async (tenant: DB.Tenant, client: PoolClient) => {
 			const { setString, values, keys } = buildUpdateSet(tenant);
 			const query = await updateRowFromTableWithId<DB.Tenant>({
 				table: "Tenant",
@@ -61,13 +64,14 @@ export const TenantRepository = {
 				colValidation: TENANT_COLUMNS,
 				id: tenant.id,
 				idName: "id",
+				client,
 			});
 
 			return query;
 		};
 
 		const query = await executeDataBaseOperation(
-			() => dbFn(tenant),
+			() => dbFn(tenant, client),
 			StatusCodes.BAD_REQUEST,
 			failedDbUpdateMessage("Tenant")
 		);
