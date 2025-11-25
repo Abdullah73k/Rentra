@@ -97,7 +97,7 @@ export async function insertIntoTable<T extends DB.TableObjects>({
 }: InsertIntoTable) {
 	if (
 		!DB.DatabaseTables.includes(table) ||
-		keys.every((key) => (colValidation as readonly string[]).includes(key))
+		!keys.every((key) => (colValidation as readonly string[]).includes(key))
 	)
 		throw new ValidationError("Invalid data, query unsafe");
 
@@ -163,10 +163,8 @@ export async function updateRowFromTableWithId<T extends DB.TableObjects>({
 }: UpdateQuery) {
 	if (
 		!DB.DatabaseTables.includes(table) ||
-		!DB.Ids.includes(
-			idName ||
-				keys.every((key) => (colValidation as readonly string[]).includes(key))
-		)
+		!DB.Ids.includes(idName) ||
+		!keys.every((key) => (colValidation as readonly string[]).includes(key))
 	)
 		throw new ValidationError("Invalid field name, query unsafe");
 
