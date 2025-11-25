@@ -1,3 +1,4 @@
+import { PROPERTY_COLUMNS } from "../constants/db-table-columns.constants.js";
 import { StatusCodes } from "../constants/statusCodes.constants.js";
 import * as DB from "../types/db.types.js";
 import {
@@ -27,6 +28,7 @@ export const PropertyRepository = {
 				insertIntoTable<DB.Property>({
 					table: "Property",
 					keys,
+					colValidation: PROPERTY_COLUMNS,
 					columns,
 					queryPlaceholders,
 					values,

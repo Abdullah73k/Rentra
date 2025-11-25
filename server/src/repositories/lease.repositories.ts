@@ -1,3 +1,4 @@
+import { LEASE_COLUMNS } from "../constants/db-table-columns.constants.js";
 import { StatusCodes } from "../constants/statusCodes.constants.js";
 import * as DB from "../types/db.types.js";
 import {
@@ -16,7 +17,7 @@ import {
 
 export const LeaseRepository = {
 	async createLease(lease: DB.CreateLease) {
-		const { values, queryPlaceholders, columns } =
+		const { values, queryPlaceholders, columns, keys } =
 			generateCreateQueryColsAndValues(lease);
 
 		const query = await executeDataBaseOperation(
@@ -24,6 +25,8 @@ export const LeaseRepository = {
 				insertIntoTable<DB.Lease>({
 					table: "Lease",
 					columns,
+					keys,
+					colValidation: LEASE_COLUMNS,
 					queryPlaceholders,
 					values,
 				}),

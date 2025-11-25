@@ -1,3 +1,4 @@
+import { LOAN_COLUMNS } from "../constants/db-table-columns.constants.js";
 import { StatusCodes } from "../constants/statusCodes.constants.js";
 import * as DB from "../types/db.types.js";
 import {
@@ -16,7 +17,7 @@ import {
 
 export const LoanRepository = {
 	async createLoan(loan: DB.CreateLoan) {
-		const { values, queryPlaceholders, columns } =
+		const { values, queryPlaceholders, columns, keys} =
 			generateCreateQueryColsAndValues(loan);
 
 		const query = await executeDataBaseOperation(
@@ -24,6 +25,8 @@ export const LoanRepository = {
 				insertIntoTable<DB.Loan>({
 					table: "Loan",
 					columns,
+					keys, 
+					colValidation: LOAN_COLUMNS,
 					queryPlaceholders,
 					values,
 				}),

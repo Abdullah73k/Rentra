@@ -13,10 +13,11 @@ import {
 	failedDbInsertMessage,
 	failedDbUpdateMessage,
 } from "../utils/failed-db-messages.utils.js";
+import { PROPERTY_INFO_COLUMNS } from "../constants/db-table-columns.constants.js";
 
 export const PropertyInfoRepository = {
 	async createPropertyInfo(propertyInfo: DB.CreatePropertyInfo) {
-		const { values, queryPlaceholders, columns } =
+		const { values, queryPlaceholders, columns, keys } =
 			generateCreateQueryColsAndValues(propertyInfo);
 
 		const query = await executeDataBaseOperation(
@@ -24,6 +25,8 @@ export const PropertyInfoRepository = {
 				insertIntoTable<DB.PropertyInfo>({
 					table: "PropertyInfo",
 					columns,
+					keys,
+					colValidation: PROPERTY_INFO_COLUMNS,
 					queryPlaceholders,
 					values,
 				}),

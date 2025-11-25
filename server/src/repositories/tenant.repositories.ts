@@ -1,3 +1,4 @@
+import { TENANT_COLUMNS } from "../constants/db-table-columns.constants.js";
 import { StatusCodes } from "../constants/statusCodes.constants.js";
 import * as DB from "../types/db.types.js";
 import {
@@ -16,7 +17,7 @@ import {
 
 export const TenantRepository = {
 	async createTenant(tenant: DB.CreateTenant) {
-		const { values, queryPlaceholders, columns } =
+		const { values, queryPlaceholders, columns, keys } =
 			generateCreateQueryColsAndValues(tenant);
 
 		const query = await executeDataBaseOperation(
@@ -24,6 +25,8 @@ export const TenantRepository = {
 				insertIntoTable<DB.Tenant>({
 					table: "Tenant",
 					columns,
+					keys,
+					colValidation: TENANT_COLUMNS,
 					queryPlaceholders,
 					values,
 				}),
