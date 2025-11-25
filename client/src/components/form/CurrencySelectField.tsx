@@ -1,6 +1,7 @@
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"; // Adjust import path as needed
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"; // Adjust import path as needed
 import type { FieldValues, Path, UseFormReturn } from "react-hook-form";
+import { CURRENCY_OPTIONS } from "@/constants/auth.constants";
 
 type CurrencySelectFieldProps<T extends FieldValues> = {
   form: UseFormReturn<T>;
@@ -8,8 +9,6 @@ type CurrencySelectFieldProps<T extends FieldValues> = {
   label: string;
   placeholder: string;
 };
-
-const options: string[] = ["AED", "SAR", "USD", "EUR", "GBP", "CAD", "AUD"];
 
 const  CurrencySelectField = <T extends FieldValues>({
   form,
@@ -33,7 +32,7 @@ const  CurrencySelectField = <T extends FieldValues>({
               </SelectTrigger>
             </FormControl>
             <SelectContent>
-              {options.map((option, index) => (
+              {CURRENCY_OPTIONS.map((option, index) => (
                 <SelectItem key={index} value={option}>
                   {option}
                 </SelectItem>

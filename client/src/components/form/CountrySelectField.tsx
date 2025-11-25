@@ -1,11 +1,8 @@
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"; // Adjust import path as needed
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"; // Adjust import path as needed
 import type { FieldValues, Path, UseFormReturn } from "react-hook-form";
+import { COUNTRY_OPTIONS } from "@/constants/auth.constants";
 
-interface CountryOption {
-  value: string;
-  label: string;
-}
 
 type CountrySelectFieldProps<T extends FieldValues> = {
   form: UseFormReturn<T>;
@@ -13,19 +10,6 @@ type CountrySelectFieldProps<T extends FieldValues> = {
   label: string;
   placeholder: string;
 };
-
-const options: CountryOption[] = [
-  { value: "ae", label: "United Arab Emirates" },
-  { value: "sa", label: "Saudi Arabia" },
-  { value: "us", label: "United States" },
-  { value: "gb", label: "United Kingdom" },
-  { value: "ca", label: "Canada" },
-  { value: "au", label: "Australia" },
-  { value: "de", label: "Germany" },
-  { value: "fr", label: "France" },
-  { value: "es", label: "Spain" },
-  { value: "it", label: "Italy" },
-];
 
 const  CountrySelectField = <T extends FieldValues>({
   form,
@@ -49,7 +33,7 @@ const  CountrySelectField = <T extends FieldValues>({
               </SelectTrigger>
             </FormControl>
             <SelectContent>
-              {options.map((option) => (
+              {COUNTRY_OPTIONS.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
                 </SelectItem>
