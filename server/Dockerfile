@@ -7,7 +7,7 @@ FROM node:24.11.1-slim
 WORKDIR /usr/src/app
 
 # Only non-secret ENV vars go here as Dockerfile is pushed to Github and shared with others
-# You inject secret ENV vars at runtime when running 'docker container run ... -e evnvar=...'
+# You inject secret ENV vars at runtime when running 'docker container run ... -e envvar=...'
 
 ENV PORT=5000
 
