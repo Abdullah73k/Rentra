@@ -2,15 +2,16 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-import express, { type Express } from "express";
+import express, { type Express, type Request, type Response } from "express";
 import cors from "cors";
 import propertiesRouter from "./routes/properties.routes.js";
 import { rateLimit } from "express-rate-limit";
 import { fromNodeHeaders, toNodeHandler } from "better-auth/node";
 import { auth } from "./utils/auth.js";
 import { errorHandler } from "./middlewares/error-handler.middlewares.js";
+import { StatusCodes } from "./constants/statusCodes.constants.js";
 
-const PORT = process.env.PORT ?? 3000
+const PORT = process.env.PORT || 5000;
 
 const app: Express = express();
 
@@ -38,6 +39,15 @@ app.get("/api/me", async (req, res) => {
 	});
 	return res.json(session);
 });
+
+/**
+ * Server health check endpoint: \
+ * ensures server is running
+ */
+app.get("/api/ping", (req: Request, res: Response) => {
+	res.status(StatusCodes.SUCCESS).json({ message: "pong" });
+});
+
 app.use("/api/properties", propertiesRouter);
 
 app.use(errorHandler);
