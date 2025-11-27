@@ -10,6 +10,8 @@ import { fromNodeHeaders, toNodeHandler } from "better-auth/node";
 import { auth } from "./utils/auth.js";
 import { errorHandler } from "./middlewares/error-handler.middlewares.js";
 
+const PORT = process.env.PORT ?? 3000
+
 const app: Express = express();
 
 app.all("/api/auth/*splat", toNodeHandler(auth));
@@ -40,8 +42,8 @@ app.use("/api/properties", propertiesRouter);
 
 app.use(errorHandler);
 
-app.listen(3000, () => {
-	console.log("server running on port 3000");
+app.listen(PORT, () => {
+	console.log(`server running on port ${PORT}`);
 });
 
 export default app;
