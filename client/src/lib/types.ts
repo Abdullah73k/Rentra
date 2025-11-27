@@ -114,3 +114,11 @@ export interface CountryOption {
   value: string;
   label: string;
 }
+
+export interface PropertyOverviewProps {
+  property: Property;
+  propertyInfo: PropertyInfo;
+  tenant?: Tenant;
+  lease?: Lease;
+  loan?: Loan;
+}
