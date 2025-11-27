@@ -2,8 +2,6 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Plus } from "lucide-react";
-
-import PropertyOverview from "@/components/PropertyOverview/propertyOverview";
 import TransactionsTable from "@/components/transactionTable";
 import AddTransactionModal from "@/components/modals/addTransactionModal";
 
@@ -16,6 +14,7 @@ import {
   mockTransactions,
 } from "@/lib/mock-data";
 import type { Transaction } from "@/lib/types";
+import PropertyOverview from "@/components/PropertyOverview/propertyOverview";
 
 export default function PropertyDetailPage() {
   // const { id } = useParams()
