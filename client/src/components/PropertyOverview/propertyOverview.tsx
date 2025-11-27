@@ -1,7 +1,4 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Home, Users, FileText, Banknote, Plus } from "lucide-react";
 import PropertyInfoCard from "./PropertyInfoCard";
 import type { PropertyOverviewProps } from "@/lib/types";
 import TenantCard from "./TenantCard";
