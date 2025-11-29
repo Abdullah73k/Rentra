@@ -122,3 +122,5 @@ export interface PropertyOverviewProps {
   lease?: Lease;
   loan?: Loan;
 }
+
+export type UserSettingsTab = "profile" | "security" | "preferences"
