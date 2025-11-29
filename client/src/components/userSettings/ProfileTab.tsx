@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui
 import { Input } from "../ui/input";
 import type { User } from "@/lib/types";
 
-const ProfileTab = ({user}: {user: User}) => {
+const ProfileTab = ({ user }: { user: User }) => {
   return (
     <div className="space-y-6">
       <Card>
