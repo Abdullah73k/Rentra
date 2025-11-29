@@ -1,4 +1,5 @@
-import { Badge, Key, Shield, Trash2 } from "lucide-react";
+import { Key, Shield, Trash2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
