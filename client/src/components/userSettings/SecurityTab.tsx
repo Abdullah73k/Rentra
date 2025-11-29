@@ -58,7 +58,7 @@ const SecurityTab = ({
                       Enabled
                     </Badge>
                   ) : (
-                    <Badge className="ml-2">
+                    <Badge variant="secondary" className="ml-2">
                       Disabled
                     </Badge>
                   )}
