@@ -175,3 +175,15 @@ export interface AddPropertyFormData {
   totalMortgageAmount: number;
   interestRate: number;
 }
+export interface AddTransactionFormData {
+  type: string;
+  subcategory: string;
+  amount: number;
+  currency: string;
+  taxRate: number;
+  from: string;
+  to: string;
+  method: string;
+  date: string;
+  notes: string;
+}

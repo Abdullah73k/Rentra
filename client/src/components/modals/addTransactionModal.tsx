@@ -17,9 +17,9 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { v4 as uuidv4 } from "uuid"
-
-const TRANSACTION_TYPES = ["income", "expense", "repair", "upgrade", "management"] as const
+import { INITIAL_TRANSACTION_FORM, TRANSACTION_TYPES } from "@/constants/form.constants"
+import type { AddTransactionFormData } from "@/lib/types"
+import { buildTransactionFromForm } from "@/lib/buildTransactionFromForm"
 
 interface AddTransactionModalProps {
   isOpen: boolean
@@ -34,18 +34,7 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
   onSave,
   propertyId,
 }) => {
-  const [formData, setFormData] = useState({
-    type: "expense",
-    subcategory: "",
-    amount: 0,
-    currency: "AED",
-    taxRate: 0,
-    from: "",
-    to: "",
-    method: "bank_transfer",
-    date: new Date().toISOString().split("T")[0],
-    notes: "",
-  })
+  const [formData, setFormData] = useState<AddTransactionFormData>(INITIAL_TRANSACTION_FORM)
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -66,38 +55,10 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
   }, [formData.amount, formData.taxRate])
 
   const handleSave = () => {
-    const transaction = {
-      id: uuidv4(),
-      propertyId,
-      type: formData.type,
-      subcategory: formData.subcategory,
-      amount: formData.amount,
-      currency: formData.currency,
-      taxRate: formData.taxRate,
-      taxAmount,
-      fxRateToBase: 1,
-      from: formData.from,
-      to: formData.to,
-      method: formData.method,
-      date: formData.date,
-      notes: formData.notes || undefined,
-      createdAt: new Date().toISOString(),
-    }
-
-    onSave(transaction)
-    setFormData({
-      type: "expense",
-      subcategory: "",
-      amount: 0,
-      currency: "AED",
-      taxRate: 0,
-      from: "",
-      to: "",
-      method: "bank_transfer",
-      date: new Date().toISOString().split("T")[0],
-      notes: "",
-    })
-  }
+  const transaction = buildTransactionFromForm(formData, propertyId, taxAmount);
+  onSave(transaction);
+  setFormData(INITIAL_TRANSACTION_FORM);
+};
 
   const isValid = formData.subcategory && formData.amount > 0
 
