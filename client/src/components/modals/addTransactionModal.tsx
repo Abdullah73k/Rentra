@@ -18,15 +18,8 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { INITIAL_TRANSACTION_FORM, TRANSACTION_TYPES } from "@/constants/form.constants"
-import type { AddTransactionFormData } from "@/lib/types"
+import type { AddTransactionFormData, AddTransactionModalProps } from "@/lib/types"
 import { buildTransactionFromForm } from "@/lib/buildTransactionFromForm"
-
-interface AddTransactionModalProps {
-  isOpen: boolean
-  onClose: () => void
-  onSave: (transaction: any) => void
-  propertyId: string
-}
 
 const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
   isOpen,

@@ -187,3 +187,9 @@ export interface AddTransactionFormData {
   date: string;
   notes: string;
 }
+export interface AddTransactionModalProps {
+  isOpen: boolean
+  onClose: () => void
+  onSave: (transaction: any) => void
+  propertyId: string
+}
