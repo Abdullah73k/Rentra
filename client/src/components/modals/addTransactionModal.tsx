@@ -1,32 +1,31 @@
-import React, { useState, useMemo, type ChangeEvent } from "react"
+import React, { useState, useMemo, type ChangeEvent } from "react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
-import { v4 as uuidv4 } from "uuid"
-
-const TRANSACTION_TYPES = ["income", "expense", "repair", "upgrade", "management"] as const
-
-interface AddTransactionModalProps {
-  isOpen: boolean
-  onClose: () => void
-  onSave: (transaction: any) => void
-  propertyId: string
-}
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  INITIAL_TRANSACTION_FORM,
+  TRANSACTION_TYPES,
+} from "@/constants/form.constants";
+import type {
+  AddTransactionFormData,
+  AddTransactionModalProps,
+} from "@/lib/types";
+import { buildTransactionFromForm } from "@/lib/buildTransactionFromForm";
 
 const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
   isOpen,
@@ -34,72 +33,39 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
   onSave,
   propertyId,
 }) => {
-  const [formData, setFormData] = useState({
-    type: "expense",
-    subcategory: "",
-    amount: 0,
-    currency: "AED",
-    taxRate: 0,
-    from: "",
-    to: "",
-    method: "bank_transfer",
-    date: new Date().toISOString().split("T")[0],
-    notes: "",
-  })
+  const [formData, setFormData] = useState<AddTransactionFormData>(
+    INITIAL_TRANSACTION_FORM
+  );
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value, type } = e.target
+    const { name, value, type } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: type === "number" ? Number.parseFloat(value) || 0 : value,
-    }))
-  }
+    }));
+  };
 
   const handleSelectChange = (name: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const taxAmount = useMemo(() => {
-    return (formData.amount * formData.taxRate) / 100
-  }, [formData.amount, formData.taxRate])
+    return (formData.amount * formData.taxRate) / 100;
+  }, [formData.amount, formData.taxRate]);
 
   const handleSave = () => {
-    const transaction = {
-      id: uuidv4(),
+    const transaction = buildTransactionFromForm(
+      formData,
       propertyId,
-      type: formData.type,
-      subcategory: formData.subcategory,
-      amount: formData.amount,
-      currency: formData.currency,
-      taxRate: formData.taxRate,
-      taxAmount,
-      fxRateToBase: 1,
-      from: formData.from,
-      to: formData.to,
-      method: formData.method,
-      date: formData.date,
-      notes: formData.notes || undefined,
-      createdAt: new Date().toISOString(),
-    }
+      taxAmount
+    );
+    onSave(transaction);
+    setFormData(INITIAL_TRANSACTION_FORM);
+  };
 
-    onSave(transaction)
-    setFormData({
-      type: "expense",
-      subcategory: "",
-      amount: 0,
-      currency: "AED",
-      taxRate: 0,
-      from: "",
-      to: "",
-      method: "bank_transfer",
-      date: new Date().toISOString().split("T")[0],
-      notes: "",
-    })
-  }
-
-  const isValid = formData.subcategory && formData.amount > 0
+  const isValid = formData.subcategory && formData.amount > 0;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -268,7 +234,7 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default AddTransactionModal
+export default AddTransactionModal;

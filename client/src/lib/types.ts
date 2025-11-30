@@ -1,3 +1,5 @@
+import type { TransactionPayload } from "./buildTransactionFromForm"
+
 // Property Management Types
 export type PropertyPurpose = "residential" | "commercial" | "investment" | "vacation"
 export type PropertyType = "apartment" | "house" | "condo" | "office" | "retail" | "land"
@@ -174,4 +176,22 @@ export interface AddPropertyFormData {
   monthlyPayment: number;
   totalMortgageAmount: number;
   interestRate: number;
+}
+export interface AddTransactionFormData {
+  type: string;
+  subcategory: string;
+  amount: number;
+  currency: string;
+  taxRate: number;
+  from: string;
+  to: string;
+  method: string;
+  date: string;
+  notes: string;
+}
+export interface AddTransactionModalProps {
+  isOpen: boolean
+  onClose: () => void
+  onSave: (transaction: TransactionPayload) => void
+  propertyId: string
 }
