@@ -1,12 +1,12 @@
-import { Label } from "@radix-ui/react-label";
 import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@radix-ui/react-select";
+} from "../ui/select";
 import { LEASE_FREQUENCIES } from "@/constants/form.constants";
 import type { AddPropertyFormData } from "@/lib/types";
 

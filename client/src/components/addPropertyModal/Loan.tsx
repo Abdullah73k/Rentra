@@ -1,5 +1,5 @@
-import { Label } from "@radix-ui/react-label";
 import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 import type { AddPropertyFormData } from "@/lib/types";
 
 const Loan = ({

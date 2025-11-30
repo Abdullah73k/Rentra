@@ -7,14 +7,14 @@ const OptionalSections = ({
   formData,
   handleSelectChange,
   handleInputChange,
-  handleCheckboxChange
+  handleCheckboxChange,
 }: {
   formData: AddPropertyFormData;
   handleSelectChange: (name: string, value: string) => void;
   handleInputChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
-  handleCheckboxChange: (name: string) => void
+  handleCheckboxChange: (name: string) => void;
 }) => {
   return (
     <div className="space-y-6">

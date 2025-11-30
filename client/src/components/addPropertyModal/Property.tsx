@@ -1,14 +1,14 @@
-import { Label } from "@radix-ui/react-label";
+import { Input } from "../ui/input";
+import { PROPERTY_PURPOSES, PROPERTY_TYPES } from "@/constants/form.constants";
+import type { AddPropertyFormData } from "@/lib/types";
+import { Label } from "../ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@radix-ui/react-select";
-import { Input } from "../ui/input";
-import { PROPERTY_PURPOSES, PROPERTY_TYPES } from "@/constants/form.constants";
-import type { AddPropertyFormData } from "@/lib/types";
+} from "../ui/select";
 
 const Property = ({
   formData,
@@ -17,7 +17,9 @@ const Property = ({
 }: {
   formData: AddPropertyFormData;
   handleSelectChange: (name: string, value: string) => void;
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
+  handleInputChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
 }) => {
   return (
     <div className="space-y-4">

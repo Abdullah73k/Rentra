@@ -1,9 +1,15 @@
-import { Label } from "@radix-ui/react-label";
 import { Input } from "../ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@radix-ui/react-select";
 import { FURNISHING_TYPES, PROPERTY_STATUS } from "@/constants/form.constants";
 import { Textarea } from "../ui/textarea";
 import type { AddPropertyFormData } from "@/lib/types";
+import { Label } from "../ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 const PropertyInfo = ({
   formData,

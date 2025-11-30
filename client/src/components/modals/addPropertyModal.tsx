@@ -12,7 +12,7 @@ import Property from "../addPropertyModal/Property";
 import PropertyInfo from "../addPropertyModal/PropertyInfo";
 import type { AddPropertyFormData } from "@/lib/types";
 import { INITIAL_FORM_DATA } from "@/constants/form.constants";
-import { buildPropertyFromForm } from "@/lib/buildPropertFromForm";
+import { buildPropertyFromForm } from "@/lib/buildPropertyFromForm";
 import OptionalSections from "../addPropertyModal/OptionalSections";
 
 interface AddPropertyModalProps {
