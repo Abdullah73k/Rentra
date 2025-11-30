@@ -124,3 +124,54 @@ export interface PropertyOverviewProps {
 }
 
 export type UserSettingsTab = "profile" | "security" | "preferences"
+
+export interface AddPropertyFormData {
+  // Step 1: Property
+  purpose: string;
+  type: string;
+  address: string;
+  country: string;
+  currency: string;
+  purchasePrice: number;
+  closingCosts: number;
+  acquisitionDate: string;
+  currentValue: number;
+  valuationDate: string;
+  sold: boolean;
+
+  // Step 2: PropertyInfo
+  propertyNumber: string;
+  bedrooms: number;
+  bathrooms: number;
+  sizeSqm: number;
+  status: string;
+  furnishing: string;
+  parking: string;
+  notes: string;
+
+  // Optional Sections toggles
+  addLease: boolean;
+  addTenant: boolean;
+  addLoan: boolean;
+
+  // Tenant
+  tenantName: string;
+  tenantPhone: string;
+  tenantEmail: string;
+
+  // Lease
+  leaseStart: string;
+  leaseEnd: string;
+  rentAmount: number;
+  leaseCurrency: string;
+  frequency: string;
+  paymentDay: number;
+  deposit: number;
+
+  // Loan
+  lender: string;
+  termMonths: number;
+  monthlyPayment: number;
+  totalMortgageAmount: number;
+  interestRate: number;
+}
