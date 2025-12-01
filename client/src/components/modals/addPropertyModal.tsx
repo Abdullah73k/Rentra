@@ -14,7 +14,29 @@ import type { AddPropertyFormData } from "@/lib/types";
 import { INITIAL_FORM_DATA } from "@/constants/form.constants";
 import { buildPropertyFromForm } from "@/lib/buildPropertyFromForm";
 import OptionalSections from "../addPropertyModal/OptionalSections";
+import { Form } from "../ui/form";
+import { z } from "zod";
+import {
+  LeaseSchema,
+  LoanSchema,
+  OptionalSectionsSchema,
+  PropertyInfoSchema,
+  PropertySchema,
+  TenantSchema,
+} from "@/lib/schemas";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
+const schema = z.object({
+  property: PropertySchema,
+  propertyInfo: PropertyInfoSchema,
+  optionalSections: OptionalSectionsSchema,
+  tenant: TenantSchema.optional(),
+  lease: LeaseSchema.optional(),
+  loan: LoanSchema.optional(),
+});
+
+export type FormFields = z.infer<typeof schema>;
 interface AddPropertyModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -30,6 +52,10 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
   const [step, setStep] = useState(1);
   const [formData, setFormData] =
     useState<AddPropertyFormData>(INITIAL_FORM_DATA);
+
+  const form = useForm<FormFields>({
+    resolver: zodResolver(schema),
+  });
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -78,35 +104,32 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
           </DialogTitle>
         </DialogHeader>
 
-        <div className="py-4">
-          {/* Step 1: Property */}
-          {step === 1 && (
-            <Property
-              formData={formData}
-              handleSelectChange={handleSelectChange}
-              handleInputChange={handleInputChange}
-            />
-          )}
+        <Form {...form}>
+          <form>
+            <div className="py-4">
+              {step === 1 && <Property form={form} />}
 
-          {/* Step 2: PropertyInfo */}
-          {step === 2 && (
-            <PropertyInfo
-              formData={formData}
-              handleSelectChange={handleSelectChange}
-              handleInputChange={handleInputChange}
-            />
-          )}
+              {/* Step 2: PropertyInfo */}
+              {step === 2 && (
+                <PropertyInfo
+                  formData={formData}
+                  handleSelectChange={handleSelectChange}
+                  handleInputChange={handleInputChange}
+                />
+              )}
 
-          {/* Step 3: Optional Sections */}
-          {step === 3 && (
-            <OptionalSections
-              formData={formData}
-              handleSelectChange={handleSelectChange}
-              handleInputChange={handleInputChange}
-              handleCheckboxChange={handleCheckboxChange}
-            />
-          )}
-        </div>
+              {/* Step 3: Optional Sections */}
+              {step === 3 && (
+                <OptionalSections
+                  formData={formData}
+                  handleSelectChange={handleSelectChange}
+                  handleInputChange={handleInputChange}
+                  handleCheckboxChange={handleCheckboxChange}
+                />
+              )}
+            </div>
+          </form>
+        </Form>
 
         <DialogFooter className="flex justify-between">
           <Button

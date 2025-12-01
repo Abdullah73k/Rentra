@@ -16,7 +16,7 @@ type TextInputProps<T extends FieldValues> = {
   form: UseFormReturn<T>;
   name: Path<T>; // ensures name is a valid key of your form
   label: string;
-  placeholder: string;
+  placeholder?: string;
   type?: "number" | "text" | "date";
 };
 
