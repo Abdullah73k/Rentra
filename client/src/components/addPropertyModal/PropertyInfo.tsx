@@ -1,8 +1,5 @@
-import { Input } from "../ui/input";
 import { FURNISHING_TYPES, PROPERTY_STATUS } from "@/constants/form.constants";
 import { Textarea } from "../ui/textarea";
-import type { AddPropertyFormData } from "@/lib/types";
-import { Label } from "../ui/label";
 import {
   Select,
   SelectContent,
@@ -10,131 +7,129 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import TextInput from "../form/TextInput";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import type { UseFormReturn } from "react-hook-form";
+import type { FormFields } from "../modals/addPropertyModal";
 
-const PropertyInfo = ({
-  formData,
-  handleSelectChange,
-  handleInputChange,
-}: {
-  formData: AddPropertyFormData;
-  handleSelectChange: (name: string, value: string) => void;
-  handleInputChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void;
-}) => {
+type PropertyInfoProps = {
+  form: UseFormReturn<FormFields>;
+};
+
+const PropertyInfo = ({ form }: PropertyInfoProps) => {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="propertyNumber">Property Number *</Label>
-          <Input
-            id="propertyNumber"
-            name="propertyNumber"
-            value={formData.propertyNumber}
-            onChange={handleInputChange}
-            placeholder="4B"
-          />
-        </div>
-        <div>
-          <Label htmlFor="status">Status *</Label>
-          <Select
-            value={formData.status}
-            onValueChange={(value) => handleSelectChange("status", value)}
-          >
-            <SelectTrigger id="status">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {PROPERTY_STATUS.map((status) => (
-                <SelectItem key={status} value={status}>
-                  {status.charAt(0).toUpperCase() +
-                    status.slice(1).replace(/_/g, " ")}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <TextInput
+          form={form}
+          name="propertyInfo.propertyNumber"
+          label="Property Number *"
+          placeholder="4B"
+        />
+        <FormField
+          control={form.control}
+          name="propertyInfo.status"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Status *</FormLabel>
+              <Select onValueChange={field.onChange} value={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {PROPERTY_STATUS.map((status) => (
+                    <SelectItem key={status} value={status}>
+                      {status.charAt(0).toUpperCase() +
+                        status.slice(1).replace(/_/g, " ")}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </div>
 
       <div className="grid grid-cols-3 gap-4">
-        <div>
-          <Label htmlFor="bedrooms">Bedrooms *</Label>
-          <Input
-            id="bedrooms"
-            name="bedrooms"
-            type="number"
-            value={formData.bedrooms}
-            onChange={handleInputChange}
-            min={0}
-          />
-        </div>
-        <div>
-          <Label htmlFor="bathrooms">Bathrooms *</Label>
-          <Input
-            id="bathrooms"
-            name="bathrooms"
-            type="number"
-            value={formData.bathrooms}
-            onChange={handleInputChange}
-            min={0}
-            step={0.5}
-          />
-        </div>
-        <div>
-          <Label htmlFor="sizeSqm">Size (sqm) *</Label>
-          <Input
-            id="sizeSqm"
-            name="sizeSqm"
-            type="number"
-            value={formData.sizeSqm}
-            onChange={handleInputChange}
-            min={0}
-          />
-        </div>
-      </div>
-
-      <div>
-        <Label htmlFor="furnishing">Furnishing *</Label>
-        <Select
-          value={formData.furnishing}
-          onValueChange={(value) => handleSelectChange("furnishing", value)}
-        >
-          <SelectTrigger id="furnishing">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {FURNISHING_TYPES.map((type) => (
-              <SelectItem key={type} value={type}>
-                {type.charAt(0).toUpperCase() +
-                  type.slice(1).replace(/_/g, " ")}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div>
-        <Label htmlFor="parking">Parking</Label>
-        <Input
-          id="parking"
-          name="parking"
-          value={formData.parking}
-          onChange={handleInputChange}
-          placeholder="Covered Parking - Spot B12"
+        <TextInput
+          form={form}
+          name="propertyInfo.bedrooms"
+          label="Bedrooms *"
+          type="number"
+        />
+        <TextInput
+          form={form}
+          name="propertyInfo.bathrooms"
+          label="Bathrooms *"
+          type="number"
+        />
+        <TextInput
+          form={form}
+          name="propertyInfo.sizeSqm"
+          label="Size (sqm) *"
+          type="number"
         />
       </div>
 
-      <div>
-        <Label htmlFor="notes">Notes</Label>
-        <Textarea
-          id="notes"
-          name="notes"
-          value={formData.notes}
-          onChange={handleInputChange}
-          placeholder="Add any additional notes about the property..."
-          rows={3}
-        />
-      </div>
+      <FormField
+        control={form.control}
+        name="propertyInfo.furnishing"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Furnishing *</FormLabel>
+            <Select onValueChange={field.onChange} value={field.value}>
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                {FURNISHING_TYPES.map((type) => (
+                  <SelectItem key={type} value={type}>
+                    {type.charAt(0).toUpperCase() +
+                      type.slice(1).replace(/_/g, " ")}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <TextInput
+        form={form}
+        name="propertyInfo.parking"
+        label="Parking"
+        placeholder="Covered Parking - Spot B12"
+      />
+
+      <FormField
+        control={form.control}
+        name="propertyInfo.notes"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Notes</FormLabel>
+            <FormControl>
+              <Textarea
+                {...field}
+                placeholder="Add any additional notes about the property..."
+                rows={3}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
     </div>
   );
 };

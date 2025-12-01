@@ -1,84 +1,95 @@
-import type { AddPropertyFormData } from "@/lib/types";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { Checkbox } from "../ui/checkbox"; // Assuming you have shadcn/ui Checkbox component
 import Lease from "./Lease";
 import Loan from "./Loan";
 import Tenant from "./Tenant";
+import type { UseFormReturn } from "react-hook-form";
+import type { FormFields } from "../modals/addPropertyModal";
 
-const OptionalSections = ({
-  formData,
-  handleSelectChange,
-  handleInputChange,
-  handleCheckboxChange,
-}: {
-  formData: AddPropertyFormData;
-  handleSelectChange: (name: string, value: string) => void;
-  handleInputChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void;
-  handleCheckboxChange: (name: string) => void;
-}) => {
+type OptionalSectionsProps = {
+  form: UseFormReturn<FormFields>;
+};
+
+const OptionalSections = ({ form }: OptionalSectionsProps) => {
+  const watchedOptionalSections = form.watch("optionalSections");
+
   return (
     <div className="space-y-6">
       {/* Toggle Sections */}
       <div className="space-y-4 border-b pb-6">
         <h3 className="font-semibold text-foreground">Optional Sections</h3>
         <div className="space-y-3">
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="addTenant"
-              checked={formData.addTenant}
-              onChange={() => handleCheckboxChange("addTenant")}
-              className="h-4 w-4"
-            />
-            <label htmlFor="addTenant" className="ml-2 text-sm cursor-pointer">
-              Add Tenant Now?
-            </label>
-          </div>
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="addLease"
-              checked={formData.addLease}
-              onChange={() => handleCheckboxChange("addLease")}
-              className="h-4 w-4"
-            />
-            <label htmlFor="addLease" className="ml-2 text-sm cursor-pointer">
-              Add Lease Now?
-            </label>
-          </div>
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="addLoan"
-              checked={formData.addLoan}
-              onChange={() => handleCheckboxChange("addLoan")}
-              className="h-4 w-4"
-            />
-            <label htmlFor="addLoan" className="ml-2 text-sm cursor-pointer">
-              Add Loan Now?
-            </label>
-          </div>
+          <FormField
+            control={form.control}
+            name="optionalSections.addTenant"
+            render={({ field }) => (
+              <FormItem className="flex items-center space-x-2">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <FormLabel className="text-sm cursor-pointer">
+                  Add Tenant Now?
+                </FormLabel>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="optionalSections.addLease"
+            render={({ field }) => (
+              <FormItem className="flex items-center space-x-2">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <FormLabel className="text-sm cursor-pointer">
+                  Add Lease Now?
+                </FormLabel>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="optionalSections.addLoan"
+            render={({ field }) => (
+              <FormItem className="flex items-center space-x-2">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <FormLabel className="text-sm cursor-pointer">
+                  Add Loan Now?
+                </FormLabel>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
       </div>
 
       {/* Tenant Form */}
-      {formData.addTenant && (
-        <Tenant formData={formData} handleInputChange={handleInputChange} />
-      )}
+      {watchedOptionalSections?.addTenant && <Tenant form={form} />}
 
       {/* Lease Form */}
-      {formData.addLease && (
-        <Lease
-          formData={formData}
-          handleSelectChange={handleSelectChange}
-          handleInputChange={handleInputChange}
-        />
-      )}
+      {watchedOptionalSections?.addLease && <Lease form={form} />}
 
       {/* Loan Form */}
-      {formData.addLoan && (
-        <Loan formData={formData} handleInputChange={handleInputChange} />
-      )}
+      {watchedOptionalSections?.addLoan && <Loan form={form} />}
     </div>
   );
 };

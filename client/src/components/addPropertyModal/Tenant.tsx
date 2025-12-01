@@ -1,50 +1,34 @@
-import { Input } from "../ui/input";
-import type { AddPropertyFormData } from "@/lib/types";
-import { Label } from "../ui/label";
+import type { UseFormReturn } from "react-hook-form";
+import TextInput from "../form/TextInput";
+import type { FormFields } from "../modals/addPropertyModal";
 
-const Tenant = ({
-  formData,
-  handleInputChange,
-}: {
-  formData: AddPropertyFormData;
-  handleInputChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void;
-}) => {
+type TenantProps = {
+  form: UseFormReturn<FormFields>;
+};
+
+const Tenant = ({ form }: TenantProps) => {
   return (
     <div className="space-y-4 border-b pb-6">
       <h3 className="font-semibold text-foreground">Tenant Information</h3>
-      <div>
-        <Label htmlFor="tenantName">Name *</Label>
-        <Input
-          id="tenantName"
-          name="tenantName"
-          value={formData.tenantName}
-          onChange={handleInputChange}
-          placeholder="John Doe"
-        />
-      </div>
-      <div>
-        <Label htmlFor="tenantPhone">Phone</Label>
-        <Input
-          id="tenantPhone"
-          name="tenantPhone"
-          value={formData.tenantPhone}
-          onChange={handleInputChange}
-          placeholder="+1 (555) 123-4567"
-        />
-      </div>
-      <div>
-        <Label htmlFor="tenantEmail">Email *</Label>
-        <Input
-          id="tenantEmail"
-          name="tenantEmail"
-          type="email"
-          value={formData.tenantEmail}
-          onChange={handleInputChange}
-          placeholder="john@example.com"
-        />
-      </div>
+      <TextInput
+        form={form}
+        name="tenant.tenantName"
+        label="Name *"
+        placeholder="John Doe"
+      />
+      <TextInput
+        form={form}
+        name="tenant.tenantPhone"
+        label="Phone"
+        placeholder="+1 (555) 123-4567"
+      />
+      <TextInput
+        form={form}
+        name="tenant.tenantEmail"
+        label="Email *"
+        placeholder="john@example.com"
+        type="email"
+      />
     </div>
   );
 };

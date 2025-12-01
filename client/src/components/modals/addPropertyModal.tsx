@@ -10,11 +10,32 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Property from "../addPropertyModal/Property";
 import PropertyInfo from "../addPropertyModal/PropertyInfo";
-import type { AddPropertyFormData } from "@/lib/types";
-import { INITIAL_FORM_DATA } from "@/constants/form.constants";
 import { buildPropertyFromForm } from "@/lib/buildPropertyFromForm";
 import OptionalSections from "../addPropertyModal/OptionalSections";
+import { Form } from "../ui/form";
+import { z } from "zod";
+import {
+  LeaseSchema,
+  LoanSchema,
+  OptionalSectionsSchema,
+  PropertyInfoSchema,
+  PropertySchema,
+  TenantSchema,
+} from "@/lib/schemas";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ADD_PROPERTY_DEFAULT_VALUES } from "@/constants/form.constants";
 
+const schema = z.object({
+  property: PropertySchema,
+  propertyInfo: PropertyInfoSchema,
+  optionalSections: OptionalSectionsSchema,
+  tenant: TenantSchema.optional(),
+  lease: LeaseSchema.optional(),
+  loan: LoanSchema.optional(),
+});
+
+export type FormFields = z.infer<typeof schema>;
 interface AddPropertyModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -28,44 +49,44 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
   onSave,
 }) => {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] =
-    useState<AddPropertyFormData>(INITIAL_FORM_DATA);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value, type } = e.target;
-    setFormData((prev: any) => ({
-      ...prev,
-      [name]: type === "number" ? Number.parseFloat(value) || 0 : value,
-    }));
-  };
+  const form = useForm<FormFields>({
+    resolver: zodResolver(schema),
+    defaultValues: ADD_PROPERTY_DEFAULT_VALUES,
+  });
 
-  const handleSelectChange = (name: string, value: string) => {
-    setFormData((prev: any) => ({ ...prev, [name]: value }));
-  };
+  const handleSave = async () => {
+    const isValid = await form.trigger();
+    if (!isValid) return;
 
-  const handleCheckboxChange = (name: string) => {
-    setFormData((prev: any) => ({ ...prev, [name]: !prev[name] }));
-  };
-
-  const handleSave = () => {
-    const property = buildPropertyFromForm(formData);
+    const values = form.getValues();
+    const property = buildPropertyFromForm(values);
     onSave(property);
+    form.reset();
     setStep(1);
-    setFormData(INITIAL_FORM_DATA);
   };
 
+  const watchedProperty = form.watch("property");
   const isStep1Valid =
-    formData.purpose &&
-    formData.type &&
-    formData.address &&
-    formData.country &&
-    formData.acquisitionDate &&
-    formData.valuationDate;
+    !!watchedProperty?.purpose &&
+    !!watchedProperty?.type &&
+    !!watchedProperty?.address &&
+    !!watchedProperty?.country &&
+    !!watchedProperty?.currency &&
+    watchedProperty?.purchasePrice !== undefined &&
+    watchedProperty?.closingCosts !== undefined &&
+    watchedProperty?.currentValue !== undefined &&
+    !!watchedProperty?.acquisitionDate &&
+    !!watchedProperty?.valuationDate;
 
+  const watchedPropertyInfo = form.watch("propertyInfo");
   const isStep2Valid =
-    formData.propertyNumber && formData.bedrooms !== undefined;
+    !!watchedPropertyInfo?.propertyNumber &&
+    watchedPropertyInfo?.bedrooms !== undefined &&
+    watchedPropertyInfo?.bathrooms !== undefined &&
+    watchedPropertyInfo?.sizeSqm !== undefined &&
+    !!watchedPropertyInfo?.status &&
+    !!watchedPropertyInfo?.furnishing;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -78,35 +99,19 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
           </DialogTitle>
         </DialogHeader>
 
-        <div className="py-4">
-          {/* Step 1: Property */}
-          {step === 1 && (
-            <Property
-              formData={formData}
-              handleSelectChange={handleSelectChange}
-              handleInputChange={handleInputChange}
-            />
-          )}
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(handleSave)}>
+            <div className="py-4">
+              {step === 1 && <Property form={form} />}
 
-          {/* Step 2: PropertyInfo */}
-          {step === 2 && (
-            <PropertyInfo
-              formData={formData}
-              handleSelectChange={handleSelectChange}
-              handleInputChange={handleInputChange}
-            />
-          )}
+              {/* Step 2: PropertyInfo */}
+              {step === 2 && <PropertyInfo form={form} />}
 
-          {/* Step 3: Optional Sections */}
-          {step === 3 && (
-            <OptionalSections
-              formData={formData}
-              handleSelectChange={handleSelectChange}
-              handleInputChange={handleInputChange}
-              handleCheckboxChange={handleCheckboxChange}
-            />
-          )}
-        </div>
+              {/* Step 3: Optional Sections */}
+              {step === 3 && <OptionalSections form={form} />}
+            </div>
+          </form>
+        </Form>
 
         <DialogFooter className="flex justify-between">
           <Button

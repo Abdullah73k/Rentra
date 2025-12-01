@@ -109,3 +109,34 @@ export const PAYMENT_METHODS = [
   { value: "check", label: "Check" },
   { value: "credit_card", label: "Credit Card" },
 ];
+
+export const ADD_PROPERTY_DEFAULT_VALUES = {
+    property: {
+      purpose: "",
+      type: "",
+      address: "",
+      country: "",
+      currency: "",
+      purchasePrice: 0,
+      closingCosts: 0,
+      acquisitionDate: "",
+      currentValue: 0,
+      valuationDate: "",
+      sold: false,
+    },
+    propertyInfo: {
+      propertyNumber: "",
+      bedrooms: 0,
+      bathrooms: 0,
+      sizeSqm: 0,
+      status: "",
+      furnishing: "",
+      parking: "",
+      notes: "",
+    },
+    optionalSections: {
+      addTenant: false,
+      addLease: false,
+      addLoan: false,
+    },
+  }
