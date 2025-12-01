@@ -10,8 +10,6 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Property from "../addPropertyModal/Property";
 import PropertyInfo from "../addPropertyModal/PropertyInfo";
-import type { AddPropertyFormData } from "@/lib/types";
-import { INITIAL_FORM_DATA } from "@/constants/form.constants";
 import { buildPropertyFromForm } from "@/lib/buildPropertyFromForm";
 import OptionalSections from "../addPropertyModal/OptionalSections";
 import { Form } from "../ui/form";
@@ -50,48 +48,32 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
   onSave,
 }) => {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] =
-    useState<AddPropertyFormData>(INITIAL_FORM_DATA);
 
   const form = useForm<FormFields>({
     resolver: zodResolver(schema),
   });
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value, type } = e.target;
-    setFormData((prev: any) => ({
-      ...prev,
-      [name]: type === "number" ? Number.parseFloat(value) || 0 : value,
-    }));
-  };
-
-  const handleSelectChange = (name: string, value: string) => {
-    setFormData((prev: any) => ({ ...prev, [name]: value }));
-  };
-
-  const handleCheckboxChange = (name: string) => {
-    setFormData((prev: any) => ({ ...prev, [name]: !prev[name] }));
-  };
-
   const handleSave = () => {
-    const property = buildPropertyFromForm(formData);
+    const values = form.getValues();
+    const property = buildPropertyFromForm(values);
     onSave(property);
+    form.reset();
     setStep(1);
-    setFormData(INITIAL_FORM_DATA);
   };
 
+  const watchedProperty = form.watch("property");
   const isStep1Valid =
-    formData.purpose &&
-    formData.type &&
-    formData.address &&
-    formData.country &&
-    formData.acquisitionDate &&
-    formData.valuationDate;
+    !!watchedProperty?.purpose &&
+    !!watchedProperty?.type &&
+    !!watchedProperty?.address &&
+    !!watchedProperty?.country &&
+    !!watchedProperty?.acquisitionDate &&
+    !!watchedProperty?.valuationDate;
 
+  const watchedPropertyInfo = form.watch("propertyInfo");
   const isStep2Valid =
-    formData.propertyNumber && formData.bedrooms !== undefined;
+    !!watchedPropertyInfo?.propertyNumber &&
+    watchedPropertyInfo?.bedrooms !== undefined;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -113,14 +95,7 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
               {step === 2 && <PropertyInfo form={form} />}
 
               {/* Step 3: Optional Sections */}
-              {step === 3 && (
-                <OptionalSections
-                  formData={formData}
-                  handleSelectChange={handleSelectChange}
-                  handleInputChange={handleInputChange}
-                  handleCheckboxChange={handleCheckboxChange}
-                />
-              )}
+              {step === 3 && <OptionalSections form={form} />}
             </div>
           </form>
         </Form>

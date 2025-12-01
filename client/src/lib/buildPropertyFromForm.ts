@@ -1,80 +1,80 @@
-// buildPropertyFromForm.ts
+import type { FormFields } from "@/components/modals/addPropertyModal";
 import { v4 as uuidv4 } from "uuid";
-import type { AddPropertyFormData } from "./types";
 
 export interface PropertyPayload {
-  // you can type this properly later, keeping `any` is also fine for now
+  // TODO: type this properly later
   [key: string]: any;
 }
 
-export function buildPropertyFromForm(formData: AddPropertyFormData): PropertyPayload {
+export function buildPropertyFromForm(formValues: FormFields): PropertyPayload {
+  const { property, propertyInfo, optionalSections, tenant, lease, loan } = formValues;
   const propertyId = uuidv4();
-  const tenantId = formData.addTenant ? uuidv4() : undefined;
+  const tenantId = optionalSections.addTenant ? uuidv4() : undefined;
   const now = new Date().toISOString();
 
   return {
     id: propertyId,
-    purpose: formData.purpose,
-    type: formData.type,
-    address: formData.address,
-    country: formData.country,
-    currency: formData.currency,
-    purchasePrice: formData.purchasePrice,
-    closingCosts: formData.closingCosts,
-    acquisitionDate: formData.acquisitionDate,
-    currentValue: formData.currentValue,
-    valuationDate: formData.valuationDate,
-    sold: formData.sold,
+    purpose: property.purpose,
+    type: property.type,
+    address: property.address,
+    country: property.country,
+    currency: property.currency,
+    purchasePrice: property.purchasePrice,
+    closingCosts: property.closingCosts,
+    acquisitionDate: property.acquisitionDate,
+    currentValue: property.currentValue,
+    valuationDate: property.valuationDate,
+    sold: false, // Assuming default false since not present in form
     photos: [],
     createdAt: now,
     info: {
       id: uuidv4(),
       propertyId,
-      propertyNumber: formData.propertyNumber,
-      bedrooms: formData.bedrooms,
-      bathrooms: formData.bathrooms,
-      sizeSqm: formData.sizeSqm,
-      status: formData.status,
-      furnishing: formData.furnishing,
-      parking: formData.parking || undefined,
-      notes: formData.notes || undefined,
+      propertyNumber: propertyInfo.propertyNumber,
+      bedrooms: propertyInfo.bedrooms,
+      bathrooms: propertyInfo.bathrooms,
+      sizeSqm: propertyInfo.sizeSqm,
+      status: propertyInfo.status,
+      furnishing: propertyInfo.furnishing,
+      parking: propertyInfo.parking || undefined,
+      notes: propertyInfo.notes || undefined,
     },
-    tenant: formData.addTenant
+    tenant: optionalSections.addTenant
       ? {
-          id: tenantId,
-          propertyId,
-          name: formData.tenantName,
-          phone: formData.tenantPhone || undefined,
-          email: formData.tenantEmail,
-          createdAt: now,
-        }
+        id: tenantId,
+        propertyId,
+        name: tenant?.tenantName,
+        phone: tenant?.tenantPhone || undefined,
+        email: tenant?.tenantEmail,
+        createdAt: now,
+      }
       : undefined,
-    lease: formData.addLease
+    lease: optionalSections.addLease
       ? {
-          id: uuidv4(),
-          propertyId,
-          tenantId,
-          start: formData.leaseStart,
-          end: formData.leaseEnd,
-          rentAmount: formData.rentAmount,
-          currency: formData.leaseCurrency,
-          frequency: formData.frequency,
-          paymentDay: formData.paymentDay,
-          deposit: formData.deposit,
-          createdAt: now,
-        }
+        id: uuidv4(),
+        propertyId,
+        tenantId,
+        start: lease?.leaseStart,
+        end: lease?.leaseEnd,
+        rentAmount: lease?.rentAmount,
+        currency: property.currency, // Reusing property currency
+        frequency: lease?.frequency,
+        paymentDay: lease?.paymentDay,
+        deposit: lease?.deposit,
+        createdAt: now,
+      }
       : undefined,
-    loan: formData.addLoan
+    loan: optionalSections.addLoan
       ? {
-          id: uuidv4(),
-          propertyId,
-          lender: formData.lender,
-          termMonths: formData.termMonths,
-          monthlyPayment: formData.monthlyPayment,
-          totalMortgageAmount: formData.totalMortgageAmount,
-          interestRate: formData.interestRate,
-          createdAt: now,
-        }
+        id: uuidv4(),
+        propertyId,
+        lender: loan?.lender,
+        termMonths: loan?.termMonths,
+        monthlyPayment: loan?.monthlyPayment,
+        totalMortgageAmount: loan?.totalMortgageAmount,
+        interestRate: loan?.interestRate,
+        createdAt: now,
+      }
       : undefined,
   };
 }

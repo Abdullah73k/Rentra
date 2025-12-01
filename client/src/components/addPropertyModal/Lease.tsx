@@ -1,5 +1,4 @@
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+import TextInput from "../form/TextInput";
 import {
   Select,
   SelectContent,
@@ -8,100 +7,84 @@ import {
   SelectValue,
 } from "../ui/select";
 import { LEASE_FREQUENCIES } from "@/constants/form.constants";
-import type { AddPropertyFormData } from "@/lib/types";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import type { FormFields } from "../modals/addPropertyModal";
+import type { UseFormReturn } from "react-hook-form";
 
-const Lease = ({
-  formData,
-  handleSelectChange,
-  handleInputChange,
-}: {
-  formData: AddPropertyFormData;
-  handleSelectChange: (name: string, value: string) => void;
-  handleInputChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void;
-}) => {
+type LeaseProps = {
+  form: UseFormReturn<FormFields>;
+};
+
+const Lease = ({ form }: LeaseProps) => {
   return (
     <div className="space-y-4 border-b pb-6">
       <h3 className="font-semibold text-foreground">Lease Information</h3>
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="leaseStart">Start Date *</Label>
-          <Input
-            id="leaseStart"
-            name="leaseStart"
-            type="date"
-            value={formData.leaseStart}
-            onChange={handleInputChange}
-          />
-        </div>
-        <div>
-          <Label htmlFor="leaseEnd">End Date *</Label>
-          <Input
-            id="leaseEnd"
-            name="leaseEnd"
-            type="date"
-            value={formData.leaseEnd}
-            onChange={handleInputChange}
-          />
-        </div>
+        <TextInput
+          form={form}
+          name="lease.leaseStart"
+          label="Start Date *"
+          type="date"
+        />
+        <TextInput
+          form={form}
+          name="lease.leaseEnd"
+          label="End Date *"
+          type="date"
+        />
       </div>
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="rentAmount">Rent Amount *</Label>
-          <Input
-            id="rentAmount"
-            name="rentAmount"
-            type="number"
-            value={formData.rentAmount}
-            onChange={handleInputChange}
-            min={0}
-          />
-        </div>
-        <div>
-          <Label htmlFor="frequency">Frequency *</Label>
-          <Select
-            value={formData.frequency}
-            onValueChange={(value) => handleSelectChange("frequency", value)}
-          >
-            <SelectTrigger id="frequency">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {LEASE_FREQUENCIES.map((freq) => (
-                <SelectItem key={freq} value={freq}>
-                  {freq.charAt(0).toUpperCase() +
-                    freq.slice(1).replace(/_/g, " ")}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <TextInput
+          form={form}
+          name="lease.rentAmount"
+          label="Rent Amount *"
+          type="number"
+        />
+        <FormField
+          control={form.control}
+          name="lease.frequency"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Frequency *</FormLabel>
+              <Select onValueChange={field.onChange} value={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {LEASE_FREQUENCIES.map((freq) => (
+                    <SelectItem key={freq} value={freq}>
+                      {freq.charAt(0).toUpperCase() +
+                        freq.slice(1).replace(/_/g, " ")}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </div>
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="paymentDay">Payment Day (1-31) *</Label>
-          <Input
-            id="paymentDay"
-            name="paymentDay"
-            type="number"
-            value={formData.paymentDay}
-            onChange={handleInputChange}
-            min={1}
-            max={31}
-          />
-        </div>
-        <div>
-          <Label htmlFor="deposit">Deposit *</Label>
-          <Input
-            id="deposit"
-            name="deposit"
-            type="number"
-            value={formData.deposit}
-            onChange={handleInputChange}
-            min={0}
-          />
-        </div>
+        <TextInput
+          form={form}
+          name="lease.paymentDay"
+          label="Payment Day (1-31) *"
+          type="number"
+        />
+        <TextInput
+          form={form}
+          name="lease.deposit"
+          label="Deposit *"
+          type="number"
+        />
       </div>
     </div>
   );
