@@ -102,3 +102,10 @@ export const INITIAL_TRANSACTION_FORM: AddTransactionFormData = {
   date: new Date().toISOString().split("T")[0],
   notes: "",
 };
+
+export const PAYMENT_METHODS = [
+  { value: "bank_transfer", label: "Bank Transfer" },
+  { value: "cash", label: "Cash" },
+  { value: "check", label: "Check" },
+  { value: "credit_card", label: "Credit Card" },
+]

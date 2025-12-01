@@ -17,6 +17,7 @@ type TextInputProps<T extends FieldValues> = {
   name: Path<T>; // ensures name is a valid key of your form
   label: string;
   placeholder: string;
+  type?: "number" | "text" | "date"
 };
 
 const TextInput = <T extends FieldValues>({
@@ -24,6 +25,7 @@ const TextInput = <T extends FieldValues>({
   name,
   label,
   placeholder,
+  type = "text",
 }: TextInputProps<T>) => {
   return (
     <FormField
@@ -39,6 +41,7 @@ const TextInput = <T extends FieldValues>({
               className="h-12 rounded-lg border-gray-300 bg-white text-sm focus-visible:ring-1 focus-visible:ring-black"
               placeholder={placeholder}
               {...field}
+              type={type}
             />
           </FormControl>
           <FormMessage />
