@@ -4,30 +4,30 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"; // Adjust import path as needed
+} from "@/components/ui/form";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"; // Adjust import path as needed
+} from "@/components/ui/select";
+import { PAYMENT_METHODS } from "@/constants/form.constants";
 import type { FieldValues, Path, UseFormReturn } from "react-hook-form";
-import { CURRENCY_OPTIONS } from "@/constants/auth.constants";
 
-type CurrencySelectFieldProps<T extends FieldValues> = {
+type PaymentMethodSelectFieldProps<T extends FieldValues> = {
   form: UseFormReturn<T>;
   name: Path<T>;
   label: string;
-  placeholder: string;
+  placeholder?: string;
 };
 
-const CurrencySelectField = <T extends FieldValues>({
+const PaymentMethodSelectField = <T extends FieldValues>({
   form,
   name,
   label,
-  placeholder,
-}: CurrencySelectFieldProps<T>) => {
+  placeholder = "Select payment method",
+}: PaymentMethodSelectFieldProps<T>) => {
   return (
     <FormField
       control={form.control}
@@ -37,20 +37,23 @@ const CurrencySelectField = <T extends FieldValues>({
           <FormLabel className="text-xs font-medium uppercase tracking-wide text-gray-600">
             {label}
           </FormLabel>
+
           <Select onValueChange={field.onChange} defaultValue={field.value}>
             <FormControl>
               <SelectTrigger className="h-12 rounded-lg border-gray-300 bg-white text-sm">
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>
+
             <SelectContent>
-              {CURRENCY_OPTIONS.map((option, index) => (
-                <SelectItem key={index} value={option}>
-                  {option}
+              {PAYMENT_METHODS.map((method) => (
+                <SelectItem key={method.value} value={method.value}>
+                  {method.label}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
+
           <FormMessage />
         </FormItem>
       )}
@@ -58,4 +61,4 @@ const CurrencySelectField = <T extends FieldValues>({
   );
 };
 
-export default CurrencySelectField;
+export default PaymentMethodSelectField;

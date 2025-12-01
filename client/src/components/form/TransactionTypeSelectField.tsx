@@ -4,30 +4,30 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"; // Adjust import path as needed
+} from "@/components/ui/form";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"; // Adjust import path as needed
+} from "@/components/ui/select";
 import type { FieldValues, Path, UseFormReturn } from "react-hook-form";
-import { CURRENCY_OPTIONS } from "@/constants/auth.constants";
+import { TRANSACTION_TYPES } from "@/constants/form.constants";
 
-type CurrencySelectFieldProps<T extends FieldValues> = {
+type TransactionTypeSelectFieldProps<T extends FieldValues> = {
   form: UseFormReturn<T>;
   name: Path<T>;
   label: string;
-  placeholder: string;
+  placeholder?: string;
 };
 
-const CurrencySelectField = <T extends FieldValues>({
+const TransactionTypeSelectField = <T extends FieldValues>({
   form,
   name,
   label,
-  placeholder,
-}: CurrencySelectFieldProps<T>) => {
+  placeholder = "Select type",
+}: TransactionTypeSelectFieldProps<T>) => {
   return (
     <FormField
       control={form.control}
@@ -44,9 +44,9 @@ const CurrencySelectField = <T extends FieldValues>({
               </SelectTrigger>
             </FormControl>
             <SelectContent>
-              {CURRENCY_OPTIONS.map((option, index) => (
-                <SelectItem key={index} value={option}>
-                  {option}
+              {TRANSACTION_TYPES.map((type) => (
+                <SelectItem key={type} value={type}>
+                  {type.charAt(0).toUpperCase() + type.slice(1)}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -58,4 +58,4 @@ const CurrencySelectField = <T extends FieldValues>({
   );
 };
 
-export default CurrencySelectField;
+export default TransactionTypeSelectField;
