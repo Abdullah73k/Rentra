@@ -110,13 +110,7 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
               {step === 1 && <Property form={form} />}
 
               {/* Step 2: PropertyInfo */}
-              {step === 2 && (
-                <PropertyInfo
-                  formData={formData}
-                  handleSelectChange={handleSelectChange}
-                  handleInputChange={handleInputChange}
-                />
-              )}
+              {step === 2 && <PropertyInfo form={form} />}
 
               {/* Step 3: Optional Sections */}
               {step === 3 && (
