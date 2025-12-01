@@ -42,6 +42,11 @@ const TextInput = <T extends FieldValues>({
               placeholder={placeholder}
               {...field}
               type={type}
+              onChange={
+                type === "number"
+                  ? (e) => field.onChange(e.target.valueAsNumber)
+                  : field.onChange
+              }
             />
           </FormControl>
           <FormMessage />

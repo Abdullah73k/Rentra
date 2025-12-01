@@ -108,4 +108,4 @@ export const PAYMENT_METHODS = [
   { value: "cash", label: "Cash" },
   { value: "check", label: "Check" },
   { value: "credit_card", label: "Credit Card" },
-]
+];

@@ -21,12 +21,13 @@ import { Form } from "../ui/form";
 import TextInput from "../form/TextInput";
 import PaymentMethodSelectField from "../form/PaymentMethodSelectField";
 
+// TODO: make validation more sophisticated when integrating with backend
 const schema = z.object({
   type: z.string(),
   subcategory: z.string(),
   amount: z.number(),
   currency: z.string(),
-  taxRate: z.number().min(1).max(100),
+  taxRate: z.number().min(0).max(100),
   from: z.string(),
   to: z.string(),
   method: z.string(),
@@ -34,7 +35,7 @@ const schema = z.object({
   notes: z.string(),
 });
 
-type formFields = z.infer<typeof schema>;
+type FormFields = z.infer<typeof schema>;
 
 const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
   isOpen,
@@ -46,7 +47,7 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
     INITIAL_TRANSACTION_FORM
   );
 
-  const form = useForm<formFields>({
+  const form = useForm<FormFields>({
     resolver: zodResolver(schema),
     defaultValues: INITIAL_TRANSACTION_FORM,
   });
