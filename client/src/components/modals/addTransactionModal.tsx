@@ -1,4 +1,4 @@
-import React, { useState, useMemo, type ChangeEvent } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Dialog,
   DialogContent,
@@ -7,8 +7,6 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { INITIAL_TRANSACTION_FORM } from "@/constants/form.constants";
 import type {
   AddTransactionFormData,
@@ -53,21 +51,12 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
     defaultValues: INITIAL_TRANSACTION_FORM,
   });
 
-  const handleInputChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value, type } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "number" ? Number.parseFloat(value) || 0 : value,
-    }));
-  };
-
   const taxAmount = useMemo(() => {
     return (formData.amount * formData.taxRate) / 100;
   }, [formData.amount, formData.taxRate]);
 
   const handleSave = () => {
+    // TODO: send actual request to backend
     const transaction = buildTransactionFromForm(
       formData,
       propertyId,
@@ -168,33 +157,10 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
                 name="notes"
                 label="Notes"
                 placeholder="Add any notes..."
-
               />
             </div>
           </form>
         </Form>
-
-        <div className="py-4 space-y-4">
-          <div className="grid grid-cols-2 gap-4"></div>
-
-          <div className="grid grid-cols-3 gap-4"></div>
-
-          <div className="grid grid-cols-2 gap-4"></div>
-
-          <div className="grid grid-cols-2 gap-4"></div>
-
-          <div>
-            <Label htmlFor="notes">Notes</Label>
-            <Textarea
-              id="notes"
-              name="notes"
-              value={formData.notes}
-              onChange={handleInputChange}
-              placeholder="Add any notes..."
-              rows={3}
-            />
-          </div>
-        </div>
 
         <DialogFooter className="flex justify-between">
           <Button variant="outline" onClick={onClose}>

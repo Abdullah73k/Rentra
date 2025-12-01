@@ -1,5 +1,17 @@
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"; // Adjust import path as needed
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"; // Adjust import path as needed
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"; // Adjust import path as needed
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"; // Adjust import path as needed
 import type { FieldValues, Path, UseFormReturn } from "react-hook-form";
 import { CURRENCY_OPTIONS } from "@/constants/auth.constants";
 
@@ -10,7 +22,7 @@ type CurrencySelectFieldProps<T extends FieldValues> = {
   placeholder: string;
 };
 
-const  CurrencySelectField = <T extends FieldValues>({
+const CurrencySelectField = <T extends FieldValues>({
   form,
   name,
   label,
@@ -44,6 +56,6 @@ const  CurrencySelectField = <T extends FieldValues>({
       )}
     />
   );
-}
+};
 
 export default CurrencySelectField;

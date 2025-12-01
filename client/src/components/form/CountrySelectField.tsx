@@ -1,8 +1,19 @@
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"; // Adjust import path as needed
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"; // Adjust import path as needed
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"; // Adjust import path as needed
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"; // Adjust import path as needed
 import type { FieldValues, Path, UseFormReturn } from "react-hook-form";
 import { COUNTRY_OPTIONS } from "@/constants/auth.constants";
-
 
 type CountrySelectFieldProps<T extends FieldValues> = {
   form: UseFormReturn<T>;
@@ -11,7 +22,7 @@ type CountrySelectFieldProps<T extends FieldValues> = {
   placeholder: string;
 };
 
-const  CountrySelectField = <T extends FieldValues>({
+const CountrySelectField = <T extends FieldValues>({
   form,
   name,
   label,
@@ -45,6 +56,6 @@ const  CountrySelectField = <T extends FieldValues>({
       )}
     />
   );
-}
+};
 
-export default CountrySelectField
+export default CountrySelectField;

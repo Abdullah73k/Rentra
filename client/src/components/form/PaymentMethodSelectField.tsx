@@ -4,23 +4,23 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
+} from "@/components/ui/form";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { PAYMENT_METHODS } from "@/constants/form.constants"
-import type { FieldValues, Path, UseFormReturn } from "react-hook-form"
+} from "@/components/ui/select";
+import { PAYMENT_METHODS } from "@/constants/form.constants";
+import type { FieldValues, Path, UseFormReturn } from "react-hook-form";
 
 type PaymentMethodSelectFieldProps<T extends FieldValues> = {
-  form: UseFormReturn<T>
-  name: Path<T>
-  label: string
-  placeholder?: string
-}
+  form: UseFormReturn<T>;
+  name: Path<T>;
+  label: string;
+  placeholder?: string;
+};
 
 const PaymentMethodSelectField = <T extends FieldValues>({
   form,
@@ -58,7 +58,7 @@ const PaymentMethodSelectField = <T extends FieldValues>({
         </FormItem>
       )}
     />
-  )
-}
+  );
+};
 
-export default PaymentMethodSelectField
+export default PaymentMethodSelectField;

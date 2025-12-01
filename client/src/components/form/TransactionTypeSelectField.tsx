@@ -1,27 +1,26 @@
-// components/form/TransactionTypeSelectField.tsx
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
+} from "@/components/ui/form";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import type { FieldValues, Path, UseFormReturn } from "react-hook-form"
-import { TRANSACTION_TYPES } from "@/constants/form.constants"
+} from "@/components/ui/select";
+import type { FieldValues, Path, UseFormReturn } from "react-hook-form";
+import { TRANSACTION_TYPES } from "@/constants/form.constants";
 
 type TransactionTypeSelectFieldProps<T extends FieldValues> = {
-  form: UseFormReturn<T>
-  name: Path<T>
-  label: string
-  placeholder?: string
-}
+  form: UseFormReturn<T>;
+  name: Path<T>;
+  label: string;
+  placeholder?: string;
+};
 
 const TransactionTypeSelectField = <T extends FieldValues>({
   form,
@@ -56,7 +55,7 @@ const TransactionTypeSelectField = <T extends FieldValues>({
         </FormItem>
       )}
     />
-  )
-}
+  );
+};
 
-export default TransactionTypeSelectField
+export default TransactionTypeSelectField;
