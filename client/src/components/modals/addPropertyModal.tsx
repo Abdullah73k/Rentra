@@ -24,6 +24,7 @@ import {
 } from "@/lib/schemas";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ADD_PROPERTY_DEFAULT_VALUES } from "@/constants/form.constants";
 
 const schema = z.object({
   property: PropertySchema,
@@ -51,9 +52,13 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
 
   const form = useForm<FormFields>({
     resolver: zodResolver(schema),
+    defaultValues: ADD_PROPERTY_DEFAULT_VALUES,
   });
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    const isValid = await form.trigger();
+    if (!isValid) return;
+
     const values = form.getValues();
     const property = buildPropertyFromForm(values);
     onSave(property);
@@ -67,13 +72,21 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
     !!watchedProperty?.type &&
     !!watchedProperty?.address &&
     !!watchedProperty?.country &&
+    !!watchedProperty?.currency &&
+    watchedProperty?.purchasePrice !== undefined &&
+    watchedProperty?.closingCosts !== undefined &&
+    watchedProperty?.currentValue !== undefined &&
     !!watchedProperty?.acquisitionDate &&
     !!watchedProperty?.valuationDate;
 
   const watchedPropertyInfo = form.watch("propertyInfo");
   const isStep2Valid =
     !!watchedPropertyInfo?.propertyNumber &&
-    watchedPropertyInfo?.bedrooms !== undefined;
+    watchedPropertyInfo?.bedrooms !== undefined &&
+    watchedPropertyInfo?.bathrooms !== undefined &&
+    watchedPropertyInfo?.sizeSqm !== undefined &&
+    !!watchedPropertyInfo?.status &&
+    !!watchedPropertyInfo?.furnishing;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -87,7 +100,7 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
         </DialogHeader>
 
         <Form {...form}>
-          <form>
+          <form onSubmit={form.handleSubmit(handleSave)}>
             <div className="py-4">
               {step === 1 && <Property form={form} />}
 

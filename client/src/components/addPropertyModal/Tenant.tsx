@@ -27,7 +27,7 @@ const Tenant = ({ form }: TenantProps) => {
         name="tenant.tenantEmail"
         label="Email *"
         placeholder="john@example.com"
-        // email
+        type="email"
       />
     </div>
   );

@@ -17,6 +17,7 @@ import {
   FormMessage,
 } from "../ui/form";
 import type { FormFields } from "../modals/addPropertyModal";
+import DateInput from "../form/DateInput";
 
 type PropertyProps = {
   form: UseFormReturn<FormFields>;
@@ -123,17 +124,15 @@ const Property = ({ form }: PropertyProps) => {
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <TextInput
+        <DateInput
           form={form}
           name="property.acquisitionDate"
           label="Acquisition Date *"
-          type="date"
         />
-        <TextInput
+        <DateInput
           form={form}
           name="property.valuationDate"
           label="Valuation Date *"
-          type="date"
         />
       </div>
 

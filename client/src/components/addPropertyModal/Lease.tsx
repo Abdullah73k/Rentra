@@ -16,6 +16,7 @@ import {
 } from "../ui/form";
 import type { FormFields } from "../modals/addPropertyModal";
 import type { UseFormReturn } from "react-hook-form";
+import DateInput from "../form/DateInput";
 
 type LeaseProps = {
   form: UseFormReturn<FormFields>;
@@ -26,18 +27,8 @@ const Lease = ({ form }: LeaseProps) => {
     <div className="space-y-4 border-b pb-6">
       <h3 className="font-semibold text-foreground">Lease Information</h3>
       <div className="grid grid-cols-2 gap-4">
-        <TextInput
-          form={form}
-          name="lease.leaseStart"
-          label="Start Date *"
-          type="date"
-        />
-        <TextInput
-          form={form}
-          name="lease.leaseEnd"
-          label="End Date *"
-          type="date"
-        />
+        <DateInput form={form} name="lease.leaseStart" label="Start Date *" />
+        <DateInput form={form} name="lease.leaseEnd" label="End Date *" />
       </div>
       <div className="grid grid-cols-2 gap-4">
         <TextInput
