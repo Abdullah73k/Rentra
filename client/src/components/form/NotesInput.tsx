@@ -23,11 +23,14 @@ const NotesInput = <T extends FieldValues>({
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Notes</FormLabel>
+          <FormLabel className="text-xs font-medium uppercase tracking-wide text-gray-600">
+            Notes
+          </FormLabel>
           <FormControl>
             <Textarea
               {...field}
-              placeholder="Add any additional notes about the property..."
+              className="h-12 rounded-lg border-gray-300 bg-white text-sm focus-visible:ring-1 focus-visible:ring-black"
+              placeholder="Add any notes..."
               rows={3}
             />
           </FormControl>
