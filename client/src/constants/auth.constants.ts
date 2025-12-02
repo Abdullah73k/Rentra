@@ -1,8 +1,16 @@
-import type { CountryOption } from "@/lib/types";
+import type { Options } from "@/lib/types";
 
-export const CURRENCY_OPTIONS = ["AED", "SAR", "USD", "EUR", "GBP", "CAD", "AUD"] as const;
+export const CURRENCY_OPTIONS: Options[] = [
+  { value: "AED", label: " AED د.إ" },
+  { value: "SAR", label: "SAR ﷼" },
+  { value: "USD", label: "$ USD" },
+  { value: "EUR", label: "€ EUR" },
+  { value: "GBP", label: "£ GBP" },
+  { value: "CAD", label: "$ CAD" },
+  { value: "AUD", label: "$ AUD" }
+]
 
-export const COUNTRY_OPTIONS: CountryOption[] = [
+export const COUNTRY_OPTIONS: Options[] = [
   { value: "ae", label: "United Arab Emirates" },
   { value: "sa", label: "Saudi Arabia" },
   { value: "us", label: "United States" },
