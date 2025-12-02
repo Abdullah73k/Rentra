@@ -1,5 +1,4 @@
 import { FURNISHING_TYPES, PROPERTY_STATUS } from "@/constants/form.constants";
-import { Textarea } from "../ui/textarea";
 import {
   Select,
   SelectContent,
@@ -17,6 +16,7 @@ import {
 } from "../ui/form";
 import type { UseFormReturn } from "react-hook-form";
 import type { FormFields } from "../modals/addPropertyModal";
+import NotesInput from "../form/NotesInput";
 
 type PropertyInfoProps = {
   form: UseFormReturn<FormFields>;
@@ -113,23 +113,7 @@ const PropertyInfo = ({ form }: PropertyInfoProps) => {
         placeholder="Covered Parking - Spot B12"
       />
 
-      <FormField
-        control={form.control}
-        name="propertyInfo.notes"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Notes</FormLabel>
-            <FormControl>
-              <Textarea
-                {...field}
-                placeholder="Add any additional notes about the property..."
-                rows={3}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+      <NotesInput form={form} name="propertyInfo.notes" />
     </div>
   );
 };
