@@ -1,12 +1,5 @@
 import { FURNISHING_TYPES, PROPERTY_STATUS } from "@/constants/form.constants";
 import { Textarea } from "../ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 import TextInput from "../form/TextInput";
 import {
   FormControl,
@@ -17,6 +10,7 @@ import {
 } from "../ui/form";
 import type { UseFormReturn } from "react-hook-form";
 import type { FormFields } from "../modals/addPropertyModal";
+import SelectField from "../form/SelectField";
 
 type PropertyInfoProps = {
   form: UseFormReturn<FormFields>;
@@ -32,30 +26,11 @@ const PropertyInfo = ({ form }: PropertyInfoProps) => {
           label="Property Number *"
           placeholder="4B"
         />
-        <FormField
-          control={form.control}
+        <SelectField
+          form={form}
           name="propertyInfo.status"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Status *</FormLabel>
-              <Select onValueChange={field.onChange} value={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {PROPERTY_STATUS.map((status) => (
-                    <SelectItem key={status} value={status}>
-                      {status.charAt(0).toUpperCase() +
-                        status.slice(1).replace(/_/g, " ")}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Status *"
+          options={PROPERTY_STATUS}
         />
       </div>
 
@@ -79,31 +54,11 @@ const PropertyInfo = ({ form }: PropertyInfoProps) => {
           type="number"
         />
       </div>
-
-      <FormField
-        control={form.control}
+      <SelectField
+        form={form}
         name="propertyInfo.furnishing"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Furnishing *</FormLabel>
-            <Select onValueChange={field.onChange} value={field.value}>
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                {FURNISHING_TYPES.map((type) => (
-                  <SelectItem key={type} value={type}>
-                    {type.charAt(0).toUpperCase() +
-                      type.slice(1).replace(/_/g, " ")}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <FormMessage />
-          </FormItem>
-        )}
+        label="Furnishing *"
+        options={FURNISHING_TYPES}
       />
 
       <TextInput

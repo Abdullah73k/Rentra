@@ -5,7 +5,7 @@ export const PROPERTY_PURPOSES = [
   "commercial",
   "investment",
   "vacation",
-] as const;
+]
 export const PROPERTY_TYPES = [
   "apartment",
   "house",
@@ -13,31 +13,31 @@ export const PROPERTY_TYPES = [
   "office",
   "retail",
   "land",
-] as const;
+]
 export const PROPERTY_STATUS = [
   "available",
   "rented",
   "sold",
   "under_construction",
-] as const;
+]
 export const FURNISHING_TYPES = [
   "unfurnished",
   "semi_furnished",
   "fully_furnished",
-] as const;
+]
 export const LEASE_FREQUENCIES = [
   "monthly",
   "quarterly",
   "semi_annual",
   "annual",
-] as const;
+]
 export const TRANSACTION_TYPES = [
   "income",
   "expense",
   "repair",
   "upgrade",
   "management",
-] as const;
+]
 
 export const INITIAL_FORM_DATA: AddPropertyFormData = {
   // Step 1: Property

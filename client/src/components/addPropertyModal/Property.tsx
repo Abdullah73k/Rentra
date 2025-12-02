@@ -1,23 +1,9 @@
-import { Input } from "../ui/input";
 import { PROPERTY_PURPOSES, PROPERTY_TYPES } from "@/constants/form.constants";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 import TextInput from "../form/TextInput";
 import type { UseFormReturn } from "react-hook-form";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
 import type { FormFields } from "../modals/addPropertyModal";
 import DateInput from "../form/DateInput";
+import SelectField from "../form/SelectField";
 
 type PropertyProps = {
   form: UseFormReturn<FormFields>;
@@ -27,68 +13,26 @@ const Property = ({ form }: PropertyProps) => {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
-        <FormField
-          control={form.control}
+        <SelectField
+          form={form}
           name="property.purpose"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Purpose *</FormLabel>
-              <Select onValueChange={field.onChange} value={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select purpose" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {PROPERTY_PURPOSES.map((purpose) => (
-                    <SelectItem key={purpose} value={purpose}>
-                      {purpose.charAt(0).toUpperCase() + purpose.slice(1)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Purpose *"
+          placeholder="Select purpose"
+          options={PROPERTY_PURPOSES}
         />
-        <FormField
-          control={form.control}
+        <SelectField
+          form={form}
           name="property.type"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Type *</FormLabel>
-              <Select onValueChange={field.onChange} value={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select type" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {PROPERTY_TYPES.map((type) => (
-                    <SelectItem key={type} value={type}>
-                      {type.charAt(0).toUpperCase() + type.slice(1)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Type *"
+          placeholder="Select type"
+          options={PROPERTY_TYPES}
         />
       </div>
-
-      <FormField
-        control={form.control}
+      <TextInput
+        form={form}
         name="property.address"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Address *</FormLabel>
-            <FormControl>
-              <Input {...field} placeholder="123 Main Street, Apt 4B" />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
+        label="Address *"
+        placeholder="123 Main Street, Apt 4B"
       />
 
       <div className="grid grid-cols-2 gap-4">

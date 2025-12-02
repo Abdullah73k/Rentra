@@ -195,3 +195,4 @@ export interface AddTransactionModalProps {
   onSave: (transaction: TransactionPayload) => void
   propertyId: string
 }
+export type ObjectOption = { value: string; label: string };

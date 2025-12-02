@@ -13,31 +13,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import type { ObjectOption } from "@/lib/types";
+import { isStringArray } from "@/lib/utils";
 
-type SelectFieldProps<
-  T extends FieldValues,
-  K extends { value: string; label: string } | string
-> = {
+type SelectFieldProps<T extends FieldValues> = {
   form: UseFormReturn<T>;
-  name: Path<T>; // ensures name is a valid key of your form
+  name: Path<T>;
   label: string;
-  placeholder: string;
-  options: K[];
+  placeholder?: string;
+  options: string[] | ObjectOption[];
 };
 
-const SelectField = <
-  T extends FieldValues,
-  K extends { value: string; label: string } | string
->({
+const SelectField = <T extends FieldValues>({
   form,
   name,
   label,
-  placeholder,
+  placeholder = "",
   options,
-}: SelectFieldProps<T, K>) => {
-  let string = false;
-
-  if (typeof options === "string") {
+}: SelectFieldProps<T>) => {
+  if (isStringArray(options)) {
     return (
       <FormField
         control={form.control}
@@ -66,9 +60,6 @@ const SelectField = <
         )}
       />
     );
-  }
-  if (string) {
-    
   }
   return (
     <FormField
