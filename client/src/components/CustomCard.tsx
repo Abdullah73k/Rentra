@@ -19,6 +19,7 @@ const CustomCard = ({ children, Icon, title }: CardProps) => {
           {Icon && <Icon className="h-5 w-5" />}
           {title}
         </CardTitle>
+        {/* TODO: add functionality to edit button */}
         <Button variant="outline" size="sm" className="gap-1 bg-transparent">
           Edit
         </Button>

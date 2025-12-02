@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Plus } from "lucide-react";
-import TransactionsTable from "@/components/transactionTable";
+import TransactionsTable from "@/components/TransactionTable";
 import AddTransactionModal from "@/components/modals/addTransactionModal";
 
 import {
