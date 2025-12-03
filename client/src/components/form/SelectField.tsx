@@ -13,15 +13,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import type { ObjectOption } from "@/lib/types";
 import { isStringArray } from "@/lib/utils";
+import type { SelectOptions } from "@/lib/types";
 
 type SelectFieldProps<T extends FieldValues> = {
   form: UseFormReturn<T>;
   name: Path<T>;
   label: string;
   placeholder?: string;
-  options: string[] | ObjectOption[];
+  options: string[] | SelectOptions[];
 };
 
 const SelectField = <T extends FieldValues>({
@@ -43,14 +43,15 @@ const SelectField = <T extends FieldValues>({
             </FormLabel>
             <Select onValueChange={field.onChange} defaultValue={field.value}>
               <FormControl>
-                <SelectTrigger className="h-12 rounded-lg border-gray-300 w-full text-sm focus-visible:ring-1 focus-visible:ring-black">
+                <SelectTrigger className="h-12 bg-white rounded-lg border-gray-300 w-full text-sm focus-visible:ring-1 focus-visible:ring-black">
                   <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
                 {options.map((option) => (
                   <SelectItem key={option} value={option}>
-                    {option.charAt(0).toUpperCase() + option.slice(1)}
+                    {option.replace(/_/g, " ").charAt(0).toUpperCase() +
+                      option.replace(/_/g, " ").slice(1)}
                   </SelectItem>
                 ))}
               </SelectContent>

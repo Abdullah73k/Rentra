@@ -1,7 +1,7 @@
-import type { Options } from "@/lib/types";
+import type { SelectOptions } from "@/lib/types";
 
-export const CURRENCY_OPTIONS: Options[] = [
-  { value: "AED", label: " AED د.إ" },
+export const CURRENCY_OPTIONS: SelectOptions[] = [
+  { value: "AED", label: "د.إ AED" },
   { value: "SAR", label: "SAR ﷼" },
   { value: "USD", label: "$ USD" },
   { value: "EUR", label: "€ EUR" },
@@ -10,7 +10,7 @@ export const CURRENCY_OPTIONS: Options[] = [
   { value: "AUD", label: "$ AUD" }
 ]
 
-export const COUNTRY_OPTIONS: Options[] = [
+export const COUNTRY_OPTIONS: SelectOptions[] = [
   { value: "ae", label: "United Arab Emirates" },
   { value: "sa", label: "Saudi Arabia" },
   { value: "us", label: "United States" },

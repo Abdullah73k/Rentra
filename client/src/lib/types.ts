@@ -112,7 +112,7 @@ export interface Passkey {
   createdAt: string
   lastUsed?: string
 }
-export interface Options {
+export interface SelectOptions {
   value: string;
   label: string;
 }
@@ -195,4 +195,3 @@ export interface AddTransactionModalProps {
   onSave: (transaction: TransactionPayload) => void
   propertyId: string
 }
-export type ObjectOption = { value: string; label: string };
