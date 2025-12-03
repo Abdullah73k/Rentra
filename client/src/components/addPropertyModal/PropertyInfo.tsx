@@ -1,20 +1,5 @@
 import { FURNISHING_TYPES, PROPERTY_STATUS } from "@/constants/form.constants";
-import { Textarea } from "../ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 import TextInput from "../form/TextInput";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
 import type { UseFormReturn } from "react-hook-form";
 import type { FormFields } from "../modals/addPropertyModal";
 import SelectField from "../form/SelectField";
