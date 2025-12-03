@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
-import PropertyCard from "@/components/propertyCard"
+import PropertyCard from "@/components/PropertyCard"
 import AddPropertyModal from "@/components/modals/addPropertyModal"
 import { mockProperty, mockPropertyInfo } from "@/lib/mock-data"
 

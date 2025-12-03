@@ -23,6 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "../ui/form";
 import TextInput from "../form/TextInput";
 import SelectField from "../form/SelectField";
+import NotesInput from "../form/NotesInput";
 
 // TODO: make validation more sophisticated when integrating with backend
 const schema = z.object({
@@ -158,12 +159,7 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
                   options={PAYMENT_METHODS}
                 />
               </div>
-              <TextInput
-                form={form}
-                name="notes"
-                label="Notes"
-                placeholder="Add any notes..."
-              />
+              <NotesInput form={form} name="notes" />
             </div>
           </form>
         </Form>
