@@ -7,7 +7,11 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { INITIAL_TRANSACTION_FORM } from "@/constants/form.constants";
+import {
+  INITIAL_TRANSACTION_FORM,
+  PAYMENT_METHODS,
+  TRANSACTION_TYPES,
+} from "@/constants/form.constants";
 import type {
   AddTransactionFormData,
   AddTransactionModalProps,
@@ -16,10 +20,9 @@ import { buildTransactionFromForm } from "@/lib/buildTransactionFromForm";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import TransactionTypeSelectField from "../form/TransactionTypeSelectField";
 import { Form } from "../ui/form";
 import TextInput from "../form/TextInput";
-import PaymentMethodSelectField from "../form/PaymentMethodSelectField";
+import SelectField from "../form/SelectField";
 import NotesInput from "../form/NotesInput";
 
 // TODO: make validation more sophisticated when integrating with backend
@@ -81,10 +84,11 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
           <form onSubmit={form.handleSubmit(handleSave)}>
             <div className="py-4 space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                <TransactionTypeSelectField
+                <SelectField
                   form={form}
                   name="type"
                   label="Type *"
+                  options={TRANSACTION_TYPES}
                 />
                 <TextInput
                   form={form}
@@ -148,10 +152,11 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
                   placeholder=""
                   type="date"
                 />
-                <PaymentMethodSelectField
+                <SelectField
                   form={form}
                   name="method"
                   label="Payment Method *"
+                  options={PAYMENT_METHODS}
                 />
               </div>
               <NotesInput form={form} name="notes" />

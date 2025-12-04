@@ -16,8 +16,9 @@ import TextInput from "@/components/form/TextInput";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { authClient } from "@/utils/auth-client";
 import { toast } from "sonner";
-import CountrySelectField from "@/components/form/CountrySelectField";
 import VatInput from "@/components/form/VatInput";
+import SelectField from "@/components/form/SelectField";
+import { COUNTRY_OPTIONS, CURRENCY_OPTIONS } from "@/constants/auth.constants";
 
 const signupSchema = z
   .object({
@@ -121,20 +122,21 @@ const SignUpPage: React.FC = () => {
                 label="Confirm Password"
                 placeholder="••••••••"
               />
-
-              <CountrySelectField
+              <SelectField
                 form={form}
                 name="country"
                 label="Country"
                 placeholder="Select your country"
+                options={COUNTRY_OPTIONS}
               />
 
               <div className="grid grid-cols-2 gap-4">
-                <CountrySelectField
+                <SelectField
                   form={form}
                   name="currency"
                   label="Currency"
                   placeholder="Select your currency"
+                  options={CURRENCY_OPTIONS}
                 />
 
                 <VatInput

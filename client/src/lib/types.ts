@@ -1,5 +1,3 @@
-import type { TransactionPayload } from "./buildTransactionFromForm"
-
 // Property Management Types
 export type PropertyPurpose = "residential" | "commercial" | "investment" | "vacation"
 export type PropertyType = "apartment" | "house" | "condo" | "office" | "retail" | "land"
@@ -112,7 +110,7 @@ export interface Passkey {
   createdAt: string
   lastUsed?: string
 }
-export interface CountryOption {
+export interface SelectOptions {
   value: string;
   label: string;
 }
@@ -192,6 +190,6 @@ export interface AddTransactionFormData {
 export interface AddTransactionModalProps {
   isOpen: boolean
   onClose: () => void
-  onSave: (transaction: TransactionPayload) => void
+  onSave: (transaction: Transaction) => void
   propertyId: string
 }
