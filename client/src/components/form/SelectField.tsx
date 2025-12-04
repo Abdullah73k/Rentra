@@ -48,12 +48,14 @@ const SelectField = <T extends FieldValues>({
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                {options.map((option) => (
-                  <SelectItem key={option} value={option}>
-                    {option.replace(/_/g, " ").charAt(0).toUpperCase() +
-                      option.replace(/_/g, " ").slice(1)}
-                  </SelectItem>
-                ))}
+                {options.map((option) => {
+                  const formatted = option.replace(/_/g, " ");
+                  return (
+                    <SelectItem key={option} value={option}>
+                      {formatted.charAt(0).toUpperCase() + formatted.slice(1)}
+                    </SelectItem>
+                  );
+                })}
               </SelectContent>
             </Select>
             <FormMessage />
@@ -73,7 +75,7 @@ const SelectField = <T extends FieldValues>({
           </FormLabel>
           <Select onValueChange={field.onChange} defaultValue={field.value}>
             <FormControl>
-              <SelectTrigger className="h-12 rounded-lg border-gray-300 w-full text-sm focus-visible:ring-1 focus-visible:ring-black">
+              <SelectTrigger className="h-12 rounded-lg bg-white border-gray-300 w-full text-sm focus-visible:ring-1 focus-visible:ring-black">
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>
