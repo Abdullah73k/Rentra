@@ -54,3 +54,10 @@ export const LoanSchema = z.object({
     totalMortgageAmount: z.number(),
     interestRate: z.number().min(0).max(100),
 });
+
+export const PasswordSchema = z.string()
+    .min(8, { message: 'Password must be at least 8 characters' })
+    .regex(/\d/, { message: 'Password must contain at least one number (0-9)' })
+    .regex(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/, { message: 'Password must contain at least one special character' })
+    .regex(/[A-Z]/, { message: 'Password must contain at least one uppercase letter' })
+    .regex(/[a-z]/, { message: 'Password must contain at least one lowercase letter' });

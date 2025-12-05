@@ -19,13 +19,14 @@ import { toast } from "sonner";
 import VatInput from "@/components/form/VatInput";
 import SelectField from "@/components/form/SelectField";
 import { COUNTRY_OPTIONS, CURRENCY_OPTIONS } from "@/constants/auth.constants";
+import { PasswordSchema } from "@/lib/schemas";
 
 const signupSchema = z
   .object({
     fullName: z.string().min(1),
     email: z.email(),
-    password: z.string().min(6),
-    ConfirmPassword: z.string().min(6),
+    password: PasswordSchema,
+    ConfirmPassword: PasswordSchema,
     country: z.string(),
     currency: z.string(),
     vatRate: z.number(),

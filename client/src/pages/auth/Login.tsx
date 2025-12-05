@@ -14,10 +14,11 @@ import CustomPasswordInput from "@/components/form/PasswordInput";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { authClient } from "@/utils/auth-client";
 import { toast } from "sonner";
+import { PasswordSchema } from "@/lib/schemas";
 
 const signInSchema = z.object({
   email: z.email(),
-  password: z.string().min(6),
+  password: PasswordSchema,
 });
 
 type SignInForm = z.infer<typeof signInSchema>;
