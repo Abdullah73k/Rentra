@@ -1,16 +1,57 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import EmailInput from "@/components/form/EmailInput";
 import OauthButton from "@/components/form/OauthButton";
 import Google from "@/assets/svg/Google";
 import Github from "@/assets/svg/Github";
 import Discord from "@/assets/svg/Discord";
+import { Form } from "@/components/ui/form";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import TextInput from "@/components/form/TextInput";
+import CustomPasswordInput from "@/components/form/PasswordInput";
+import { LoadingSwap } from "@/components/ui/loading-swap";
+import { authClient } from "@/utils/auth-client";
+import { toast } from "sonner";
+import { PasswordSchema } from "@/lib/schemas";
+
+const signInSchema = z.object({
+  email: z.email(),
+  password: PasswordSchema,
+});
+
+type SignInForm = z.infer<typeof signInSchema>;
 
 const SignInPage: React.FC = () => {
-  const [rememberMe, setRememberMe] = useState<boolean>(false);
+  const form = useForm<SignInForm>({
+    resolver: zodResolver(signInSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const { isSubmitting } = form.formState;
+
+  async function handleSignIn(data: SignInForm) {
+    try {
+      await authClient.signIn.email(
+        {
+          ...data,
+          callbackURL: "/properties/dashboard",
+        },
+        {
+          onError: (error) => {
+            toast.error(error?.error?.message ?? "Failed to sign In");
+          },
+          onSuccess: () => {},
+        }
+      );
+    } catch (err: any) {
+      toast.error(err?.message ?? "Failed to sign In");
+    }
+  }
 
   return (
     <div className="min-h-screen bg-[#f8f8f8]">
@@ -27,42 +68,42 @@ const SignInPage: React.FC = () => {
               Sign in to your account to continue
             </p>
           </div>
-
-          <form className="space-y-6">
-            <EmailInput />
-            {/* TODO: add password input */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="remember"
-                  checked={rememberMe}
-                  onCheckedChange={(checked: boolean) =>
-                    setRememberMe(checked === true)
-                  }
-                  className="border-gray-300"
-                />
-                <label
-                  htmlFor="remember"
-                  className="cursor-pointer text-sm text-gray-600"
-                >
-                  Remember me
-                </label>
-              </div>
-              <Link
-                to="/forgot-password"
-                className="text-sm text-gray-600 hover:text-black hover:underline"
-              >
-                Forgot password?
-              </Link>
-            </div>
-
-            <Button
-              type="submit"
-              className="h-12 w-full rounded-full bg-black text-sm font-medium text-white hover:bg-black/90"
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleSignIn)}
+              className="space-y-6"
             >
-              SIGN IN
-            </Button>
-          </form>
+              <TextInput
+                form={form}
+                label="Email"
+                name="email"
+                placeholder="you@example.com"
+                type="email"
+              />
+              <CustomPasswordInput
+                name="password"
+                form={form}
+                label="Password"
+                placeholder="••••••••"
+              />
+
+              <div className="flex items-center justify-between">
+                <Link
+                  to="/forgot-password"
+                  className="text-sm text-gray-600 hover:text-black hover:underline"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+
+              <Button
+                type="submit"
+                className="h-12 w-full rounded-full bg-black text-sm font-medium text-white hover:bg-black/90"
+              >
+                <LoadingSwap isLoading={isSubmitting}>SIGN IN</LoadingSwap>
+              </Button>
+            </form>
+          </Form>
 
           <div className="space-y-4">
             <div className="flex items-center gap-3">
