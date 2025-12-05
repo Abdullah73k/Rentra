@@ -23,7 +23,7 @@ import { COUNTRY_OPTIONS, CURRENCY_OPTIONS } from "@/constants/auth.constants";
 const signupSchema = z
   .object({
     fullName: z.string().min(1),
-    email: z.string().email(),
+    email: z.email(),
     password: z.string().min(6),
     ConfirmPassword: z.string().min(6),
     country: z.string(),

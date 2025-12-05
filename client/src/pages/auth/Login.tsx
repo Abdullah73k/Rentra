@@ -42,13 +42,13 @@ const SignInPage: React.FC = () => {
         },
         {
           onError: (error) => {
-            toast.error(error?.error?.message ?? "Failed to sign up");
+            toast.error(error?.error?.message ?? "Failed to sign In");
           },
           onSuccess: () => {},
         }
       );
     } catch (err: any) {
-      toast.error(err?.message ?? "Failed to sign up");
+      toast.error(err?.message ?? "Failed to sign In");
     }
   }
 
