@@ -198,14 +198,14 @@ const SignUpPage: React.FC = () => {
             </div>
 
             <div className="flex gap-3">
-              <OauthButton>
+              <OauthButton provider="google">
                 <Google />
                 Google
               </OauthButton>
-              <OauthButton>
+              <OauthButton provider="github">
                 <Github /> Github
               </OauthButton>
-              <OauthButton>
+              <OauthButton provider="discord">
                 <Discord /> Discord
               </OauthButton>
             </div>
