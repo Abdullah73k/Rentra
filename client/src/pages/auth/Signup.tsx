@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -39,6 +39,7 @@ const signupSchema = z
 type SignupForm = z.infer<typeof signupSchema>;
 
 const SignUpPage: React.FC = () => {
+  const navigate = useNavigate()
   const [agreeToTerms, setAgreeToTerms] = useState<boolean>(false);
 
   const form = useForm<SignupForm>({
@@ -58,7 +59,7 @@ const SignUpPage: React.FC = () => {
 
   async function handleSignup(data: SignupForm) {
     try {
-      await authClient.signUp.email(
+      const res = await authClient.signUp.email(
         {
           email: data.email,
           password: data.password,
@@ -72,6 +73,10 @@ const SignUpPage: React.FC = () => {
           onSuccess: () => {},
         }
       );
+
+      if (res.error == null && !res.data.user.emailVerified) {
+        navigate("/auth/verify-email")
+      }
     } catch (err: any) {
       toast.error(err?.message ?? "Failed to sign up");
     }

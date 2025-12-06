@@ -6,6 +6,7 @@ import UserSettings from "../pages/auth/UserSettings";
 import Home from "../pages/Home";
 import Property from "../pages/properties/Property";
 import PropertiesDashboard from "../pages/properties/PropertiesDashboard";
+import EmailVerification from "@/pages/auth/EmailVerification";
 
 const auth = {
     path: "/auth",
@@ -23,6 +24,10 @@ const auth = {
         {    // protected
             path: "settings",
             element: <UserSettings /> 
+        },
+        {
+            path: "verify-email",
+            element: <EmailVerification />
         }
     ]
 }
