@@ -12,9 +12,7 @@ import Discord from "@/assets/svg/Discord";
 const SignInPage: React.FC = () => {
   const [rememberMe, setRememberMe] = useState<boolean>(false);
 
-  {
-    /* TODO: add check to see if user is already logged in and redirect if needed */
-  }
+  // TODO: add check to see if user is already logged in and redirect if needed
 
   return (
     <div className="min-h-screen bg-[#f8f8f8]">
