@@ -1,13 +1,8 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import PasswordInput from "@/components/form/PasswordInput";
-import OauthButton from "@/components/form/OauthButton";
-import Github from "@/assets/svg/Github";
-import Google from "@/assets/svg/Google";
-import Discord from "@/assets/svg/Discord";
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,6 +14,7 @@ import { toast } from "sonner";
 import VatInput from "@/components/form/VatInput";
 import SelectField from "@/components/form/SelectField";
 import { COUNTRY_OPTIONS, CURRENCY_OPTIONS } from "@/constants/auth.constants";
+import OAuthButtons from "@/components/form/OAuthButtons";
 import { PasswordSchema } from "@/lib/schemas";
 
 const signupSchema = z
@@ -29,7 +25,7 @@ const signupSchema = z
     ConfirmPassword: PasswordSchema,
     country: z.string(),
     currency: z.string(),
-    vatRate: z.number(),
+    vatRate: z.coerce.number<number>(),
   })
   .refine((data) => data.password === data.ConfirmPassword, {
     message: "Passwords do not match",
@@ -39,6 +35,7 @@ const signupSchema = z
 type SignupForm = z.infer<typeof signupSchema>;
 
 const SignUpPage: React.FC = () => {
+  const navigate = useNavigate();
   const [agreeToTerms, setAgreeToTerms] = useState<boolean>(false);
 
   const form = useForm<SignupForm>({
@@ -58,7 +55,7 @@ const SignUpPage: React.FC = () => {
 
   async function handleSignup(data: SignupForm) {
     try {
-      await authClient.signUp.email(
+      const res = await authClient.signUp.email(
         {
           email: data.email,
           password: data.password,
@@ -72,6 +69,10 @@ const SignUpPage: React.FC = () => {
           onSuccess: () => {},
         }
       );
+
+      if (res.error == null && !res.data.user.emailVerified) {
+        navigate(`/auth/verify-email/${encodeURIComponent(data.email)}`);
+      }
     } catch (err: any) {
       toast.error(err?.message ?? "Failed to sign up");
     }
@@ -199,16 +200,7 @@ const SignUpPage: React.FC = () => {
             </div>
 
             <div className="flex gap-3">
-              <OauthButton>
-                <Google />
-                Google
-              </OauthButton>
-              <OauthButton>
-                <Github /> Github
-              </OauthButton>
-              <OauthButton>
-                <Discord /> Discord
-              </OauthButton>
+              <OAuthButtons />
             </div>
           </div>
 

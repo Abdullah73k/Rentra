@@ -1,10 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import OauthButton from "@/components/form/OauthButton";
-import Google from "@/assets/svg/Google";
-import Github from "@/assets/svg/Github";
-import Discord from "@/assets/svg/Discord";
+import OAuthButtons from "@/components/form/OAuthButtons";
 import { Form } from "@/components/ui/form";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -52,6 +49,8 @@ const SignInPage: React.FC = () => {
       toast.error(err?.message ?? "Failed to sign In");
     }
   }
+
+  // TODO: add check to see if user is already logged in and redirect if needed
 
   return (
     <div className="min-h-screen bg-[#f8f8f8]">
@@ -115,16 +114,7 @@ const SignInPage: React.FC = () => {
             </div>
 
             <div className="flex gap-3">
-              <OauthButton>
-                <Google />
-                Google
-              </OauthButton>
-              <OauthButton>
-                <Github /> Github
-              </OauthButton>
-              <OauthButton>
-                <Discord /> Discord
-              </OauthButton>
+              <OAuthButtons />
             </div>
           </div>
 
