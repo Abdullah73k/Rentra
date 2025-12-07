@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import OAuthButtons from "@/components/form/OAuthButtons";
 import { Form } from "@/components/ui/form";
 import { z } from "zod";
