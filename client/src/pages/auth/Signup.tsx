@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import PasswordInput from "@/components/form/PasswordInput";
@@ -25,7 +25,7 @@ const signupSchema = z
     ConfirmPassword: PasswordSchema,
     country: z.string(),
     currency: z.string(),
-    vatRate: z.number(),
+    vatRate: z.coerce.number<number>(),
   })
   .refine((data) => data.password === data.ConfirmPassword, {
     message: "Passwords do not match",
@@ -35,6 +35,7 @@ const signupSchema = z
 type SignupForm = z.infer<typeof signupSchema>;
 
 const SignUpPage: React.FC = () => {
+  const navigate = useNavigate();
   const [agreeToTerms, setAgreeToTerms] = useState<boolean>(false);
 
   const form = useForm<SignupForm>({
@@ -54,7 +55,7 @@ const SignUpPage: React.FC = () => {
 
   async function handleSignup(data: SignupForm) {
     try {
-      await authClient.signUp.email(
+      const res = await authClient.signUp.email(
         {
           email: data.email,
           password: data.password,
@@ -68,6 +69,10 @@ const SignUpPage: React.FC = () => {
           onSuccess: () => {},
         }
       );
+
+      if (res.error == null && !res.data.user.emailVerified) {
+        navigate(`/auth/verify-email/${encodeURIComponent(data.email)}`);
+      }
     } catch (err: any) {
       toast.error(err?.message ?? "Failed to sign up");
     }
