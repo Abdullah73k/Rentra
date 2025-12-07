@@ -75,7 +75,7 @@ const SignUpPage: React.FC = () => {
       );
 
       if (res.error == null && !res.data.user.emailVerified) {
-        navigate("/auth/verify-email")
+        navigate(`/auth/verify-email/${data.email}`)
       }
     } catch (err: any) {
       toast.error(err?.message ?? "Failed to sign up");

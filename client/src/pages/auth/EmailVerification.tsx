@@ -1,8 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/utils/auth-client";
 import { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 
-const EmailVerification = ({ email }: { email: string }) => {
+const EmailVerification = () => {
+  const { email } = useParams();
+
+  if (!email) {
+    return (
+      <div className="space-y-4">
+        <p className="text-sm text-muted-foreground mt-2">
+          Sorry something went wrong with the verification try again
+        </p>
+      </div>
+    );
+  }
+
   const [timeToNextResend, setTimeToNextResend] = useState(30);
   const interval = useRef<number | undefined>(undefined);
 
@@ -36,13 +49,13 @@ const EmailVerification = ({ email }: { email: string }) => {
         variant="outline"
         className="w-full"
         disabled={timeToNextResend > 0}
-        onClick={() =>{
-            startEmailVerificationCountdown()
+        onClick={() => {
+          startEmailVerificationCountdown();
           authClient.sendVerificationEmail({
             email,
             callbackURL: "/",
-          })}
-        }
+          });
+        }}
       >
         {timeToNextResend > 0
           ? `Resend Email (${timeToNextResend})`

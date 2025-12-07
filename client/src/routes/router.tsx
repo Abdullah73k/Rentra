@@ -26,7 +26,7 @@ const auth = {
             element: <UserSettings /> 
         },
         {
-            path: "verify-email",
+            path: "verify-email/:email",
             element: <EmailVerification />
         }
     ]
