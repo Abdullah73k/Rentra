@@ -29,7 +29,7 @@ const signupSchema = z
     ConfirmPassword: PasswordSchema,
     country: z.string(),
     currency: z.string(),
-    vatRate: z.number(),
+    vatRate: z.coerce.number<number>(),
   })
   .refine((data) => data.password === data.ConfirmPassword, {
     message: "Passwords do not match",
