@@ -1,13 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import EmailInput from "@/components/form/EmailInput";
-import OauthButton from "@/components/form/OauthButton";
-import Google from "@/assets/svg/Google";
-import Github from "@/assets/svg/Github";
-import Discord from "@/assets/svg/Discord";
+import OAuthButtons from "@/components/form/OAuthButtons";
 
 const SignInPage: React.FC = () => {
   const [rememberMe, setRememberMe] = useState<boolean>(false);
@@ -76,16 +72,7 @@ const SignInPage: React.FC = () => {
             </div>
 
             <div className="flex gap-3">
-              <OauthButton provider="google">
-                <Google />
-                Google
-              </OauthButton>
-              <OauthButton provider="github">
-                <Github /> Github
-              </OauthButton>
-              <OauthButton provider="discord">
-                <Discord /> Discord
-              </OauthButton>
+              <OAuthButtons />
             </div>
           </div>
 
