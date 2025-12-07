@@ -8,9 +8,10 @@ const EmailVerification = () => {
 
   if (!email) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-4" role="alert">
+        <h2 className="text-lg font-semibold">Verification Error</h2>
         <p className="text-sm text-muted-foreground mt-2">
-          Sorry something went wrong with the verification try again
+          Sorry, something went wrong with the verification. Please try again.
         </p>
       </div>
     );
@@ -21,9 +22,17 @@ const EmailVerification = () => {
 
   useEffect(() => {
     startEmailVerificationCountdown();
+    return () => {
+      if (interval.current !== undefined) {
+        clearInterval(interval.current);
+      }
+    };
   }, []);
 
   function startEmailVerificationCountdown(time = 30) {
+    if (interval.current !== undefined) {
+      clearInterval(interval.current);
+    }
     setTimeToNextResend(time);
     interval.current = setInterval(() => {
       setTimeToNextResend((t) => {
@@ -39,6 +48,7 @@ const EmailVerification = () => {
 
   return (
     <div className="space-y-4">
+      <h1 className="text-2xl font-semibold">Verify Your Email</h1>
       <p className="text-sm text-muted-foreground mt-2">
         We sent you a verification link. Please check your email and click the
         link to verify

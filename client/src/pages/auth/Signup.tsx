@@ -39,7 +39,7 @@ const signupSchema = z
 type SignupForm = z.infer<typeof signupSchema>;
 
 const SignUpPage: React.FC = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [agreeToTerms, setAgreeToTerms] = useState<boolean>(false);
 
   const form = useForm<SignupForm>({
@@ -75,7 +75,7 @@ const SignUpPage: React.FC = () => {
       );
 
       if (res.error == null && !res.data.user.emailVerified) {
-        navigate(`/auth/verify-email/${data.email}`)
+        navigate(`/auth/verify-email/${encodeURIComponent(data.email)}`);
       }
     } catch (err: any) {
       toast.error(err?.message ?? "Failed to sign up");
