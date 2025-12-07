@@ -1,13 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import PasswordInput from "@/components/form/PasswordInput";
-import OauthButton from "@/components/form/OauthButton";
-import Github from "@/assets/svg/Github";
-import Google from "@/assets/svg/Google";
-import Discord from "@/assets/svg/Discord";
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,6 +14,7 @@ import { toast } from "sonner";
 import VatInput from "@/components/form/VatInput";
 import SelectField from "@/components/form/SelectField";
 import { COUNTRY_OPTIONS, CURRENCY_OPTIONS } from "@/constants/auth.constants";
+import OAuthButtons from "@/components/form/OAuthButtons";
 import { PasswordSchema } from "@/lib/schemas";
 
 const signupSchema = z
@@ -204,16 +200,7 @@ const SignUpPage: React.FC = () => {
             </div>
 
             <div className="flex gap-3">
-              <OauthButton>
-                <Google />
-                Google
-              </OauthButton>
-              <OauthButton>
-                <Github /> Github
-              </OauthButton>
-              <OauthButton>
-                <Discord /> Discord
-              </OauthButton>
+              <OAuthButtons />
             </div>
           </div>
 

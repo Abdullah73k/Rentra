@@ -15,8 +15,6 @@ const PORT = process.env.PORT || 5000;
 
 const app: Express = express();
 
-app.all("/api/auth/*splat", toNodeHandler(auth));
-
 app.use(
 	cors({
 		origin: "http://localhost:5173",
@@ -30,6 +28,8 @@ const rateLimiter = rateLimit({
 	windowMs: 1 * 60 * 1000,
 	limit: 50,
 });
+
+app.all("/api/auth/*splat", toNodeHandler(auth));
 
 app.use(rateLimiter);
 
