@@ -88,7 +88,7 @@ const SignInPage: React.FC = () => {
 
               <div className="flex items-center justify-between">
                 <Link
-                  to="/forgot-password"
+                  to="/auth/forgot-password"
                   className="text-sm text-gray-600 hover:text-black hover:underline"
                 >
                   Forgot password?
