@@ -60,6 +60,9 @@ const SignUpPage: React.FC = () => {
           email: data.email,
           password: data.password,
           name: data.fullName,
+          country: data.country,
+          currency: data.currency,
+          vatProfile: data.vatRate,
           callbackURL: "/properties/dashboard",
         },
         {
