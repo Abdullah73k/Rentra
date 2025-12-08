@@ -1,4 +1,7 @@
 import type { SelectOptions } from "@/lib/types";
+import Github from "@/assets/svg/Github";
+import Discord from "@/assets/svg/Discord";
+import Google from "@/assets/svg/Google";
 
 export const CURRENCY_OPTIONS: SelectOptions[] = [
   { value: "AED", label: "د.إ AED" },
@@ -7,8 +10,8 @@ export const CURRENCY_OPTIONS: SelectOptions[] = [
   { value: "EUR", label: "€ EUR" },
   { value: "GBP", label: "£ GBP" },
   { value: "CAD", label: "$ CAD" },
-  { value: "AUD", label: "$ AUD" }
-]
+  { value: "AUD", label: "$ AUD" },
+];
 
 export const COUNTRY_OPTIONS: SelectOptions[] = [
   { value: "ae", label: "United Arab Emirates" },
@@ -22,3 +25,9 @@ export const COUNTRY_OPTIONS: SelectOptions[] = [
   { value: "es", label: "Spain" },
   { value: "it", label: "Italy" },
 ];
+
+export const OAuthProviders = [
+  { provider: "google", Icon: <Google /> },
+  { provider: "github", Icon: <Github /> },
+  { provider: "discord", Icon: <Discord /> },
+] as const;

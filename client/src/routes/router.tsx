@@ -8,6 +8,7 @@ import Property from "../pages/properties/Property";
 import PropertiesDashboard from "../pages/properties/PropertiesDashboard";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
 import ResetPassword from "@/pages/auth/ResetPassword";
+import EmailVerification from "@/pages/auth/EmailVerification";
 
 const auth = {
     path: "/auth",
@@ -33,6 +34,10 @@ const auth = {
         {
             path: "reset-password",
             element: <ResetPassword />
+        },
+        {
+            path: "verify-email/:email",
+            element: <EmailVerification />
         }
     ]
 }
