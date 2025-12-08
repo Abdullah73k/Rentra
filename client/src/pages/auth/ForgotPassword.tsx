@@ -28,7 +28,7 @@ const ForgotPassword = () => {
 
   async function handleForgotPassword(data: ForgotPasswordForm) {
     try {
-      await authClient.requestPasswordReset(
+      const res = await authClient.requestPasswordReset(
         {
           ...data,
           redirectTo: "/auth/reset-password",
@@ -39,7 +39,11 @@ const ForgotPassword = () => {
           },
         }
       );
+      console.log(res);
+      
     } catch (error) {
+      console.error(error);
+      
       toast.error("Failed to send password reset email");
     }
   }
@@ -67,10 +71,11 @@ const ForgotPassword = () => {
                 form={form}
                 name="email"
                 label="Email"
-                placeholder="Test@example.com"
+                placeholder="you@example.com"
+                type="email"
               />
 
-              <div className="space-x-2 flex justify-between">
+              <div className="flex justify-between">
                 <Button
                   type="button"
                   variant="outline"

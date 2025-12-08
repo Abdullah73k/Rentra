@@ -40,12 +40,12 @@ const ResetPassword = () => {
         },
         {
           onSuccess: () => {
-            toast.success("Password reset Successful", {
+            toast.success("Password reset successful", {
               description: "Redirecting to login...",
             });
             setTimeout(() => {
               navigate("/auth/login");
-            });
+            }, 1000);
           },
         }
       );
@@ -90,7 +90,7 @@ const ResetPassword = () => {
         <div className="relative w-full max-w-md space-y-8">
           <div className="space-y-2">
             <h1 className="text-5xl font-light tracking-tight">
-              Forgot Password
+              Reset Password
             </h1>
           </div>
           <Form {...form}>
