@@ -119,13 +119,11 @@ const SignUpPage: React.FC = () => {
                 form={form}
                 name="password"
                 label="password"
-                placeholder="••••••••"
               />
               <PasswordInput
                 form={form}
                 name="ConfirmPassword"
                 label="Confirm Password"
-                placeholder="••••••••"
               />
               <SelectField
                 form={form}

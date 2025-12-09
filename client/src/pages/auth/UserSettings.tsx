@@ -23,7 +23,7 @@ const SettingsPage: React.FC = () => {
   }, [isPending, session, navigate]);
 
   if (isPending) {
-    return null; // could render a spinner here
+    return null; // TODO: add loading screen here
   }
 
   console.log(session?.user);

@@ -11,7 +11,8 @@ import { Button } from "../ui/button";
 import type { Account, Session, User } from "@/lib/types";
 import { authClient } from "@/utils/auth-client";
 import { useEffect, useState } from "react";
-import BetterAuthActionButton from "../form/BetterAuthActionButton";
+import SetPasswordSchema from "./SetPasswordSchema";
+import ChangePasswordForm from "./ChangePasswordForm";
 
 const SecurityTab = ({
   user,
@@ -28,7 +29,7 @@ const SecurityTab = ({
 }) => {
   const [accounts, setAccounts] = useState<Account>([]);
 
-  if (!session) return null;
+  if (!session) return null;  // TODO: redirect to other page
 
   useEffect(() => {
     let isMounted = true;
@@ -44,11 +45,14 @@ const SecurityTab = ({
     };
   }, [session]);
 
-  if (accounts === null) return;
+  if (accounts === null) return; // TODO: redirect to other page
 
   console.log(accounts);
+  
 
   const hasPasswordAccount = accounts.some(a => a.providerId === "credential")
+  console.log(hasPasswordAccount);
+  
 
   const { user: userInfo } = session;
 
@@ -62,25 +66,10 @@ const SecurityTab = ({
               <Key className="h-5 w-5 text-muted-foreground" />
               <CardTitle>Password</CardTitle>
             </div>
-            {hasPasswordAccount ? (
-              <>
-                <CardDescription>
-                  Request a password reset link via email
-                </CardDescription>
-                <BetterAuthActionButton
-                  successMessage="Password reset email sent"
-                  action={() => {
-                    return authClient.requestPasswordReset({
-                      email: userInfo.email,
-                      redirectTo: "/auth/reset-password",
-                    });
-                  }}
-                >
-                  Send a password reset email
-                </BetterAuthActionButton>
-              </>
+            {!hasPasswordAccount ? (
+              <SetPasswordSchema userInfo={userInfo} />
             ) : (
-              <div></div>
+              <ChangePasswordForm />
             )}
           </CardHeader>
         </Card>
