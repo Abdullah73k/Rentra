@@ -96,14 +96,35 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 		google: {
 			clientId: GOOGLE_CLIENT_ID,
 			clientSecret: GOOGLE_CLIENT_SECRET,
+			mapProfileToUser: () => {
+				return {
+					country: "",
+					currency: "",
+					vatProfile: 0
+				}
+			}
 		},
 		discord: {
 			clientId: DISCORD_CLIENT_ID,
 			clientSecret: DISCORD_CLIENT_SECRET,
+			mapProfileToUser: () => {
+				return {
+					country: "",
+					currency: "",
+					vatProfile: 0
+				}
+			}
 		},
 		github: {
 			clientId: GITHUB_CLIENT_ID,
 			clientSecret: GITHUB_CLIENT_SECRET,
+			mapProfileToUser: () => {
+				return {
+					country: "",
+					currency: "",
+					vatProfile: 0
+				}
+			}
 		},
 	},
 	hooks: {
