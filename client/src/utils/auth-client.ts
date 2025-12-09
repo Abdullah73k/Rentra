@@ -1,11 +1,11 @@
-import { inferAdditionalFields } from "better-auth/client/plugins";
+import { inferAdditionalFields, twoFactorClient } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react"
 
 export const authClient = createAuthClient({
-    baseURL: "http://localhost:5000/api/auth",
-    plugins: [inferAdditionalFields({
-        user: {
-            country: {
+	baseURL: "http://localhost:5000/api/auth",
+	plugins: [inferAdditionalFields({
+		user: {
+			country: {
 				type: "string",
 			},
 			currency: {
@@ -14,6 +14,6 @@ export const authClient = createAuthClient({
 			vatProfile: {
 				type: "number",
 			},
-        }
-    })]
+		}
+	}), twoFactorClient()]
 })

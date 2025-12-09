@@ -1,48 +1,33 @@
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
-import { Input } from "../ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import BetterAuthActionButton from "../form/BetterAuthActionButton";
+import { authClient } from "@/utils/auth-client";
 
 const PreferencesTab = () => {
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="border border-destructive">
         <CardHeader>
-          <CardTitle>Regional & Financial Settings</CardTitle>
-          <CardDescription>
-            Configure your currency and tax preferences
+          <CardTitle className="text-destructive">Danger Zone</CardTitle>
+          <CardDescription className="text-destructive">
+            This action cant be undone
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label
-                htmlFor="currency"
-                className="text-xs font-medium uppercase tracking-wide text-gray-600"
-              >
-                Currency
-              </Label>
-            </div>
-            <div className="space-y-2">
-              <Label
-                htmlFor="vatRate"
-                className="text-xs font-medium uppercase tracking-wide text-gray-600"
-              >
-                VAT Rate (%)
-              </Label>
-              <Input
-                id="vatRate"
-                name="vatRate"
-                type="number"
-                min="0"
-                max="100"
-                step="0.01"
-                placeholder="5"
-                className="h-12 rounded-lg border-gray-300 bg-white text-sm disabled:opacity-60"
-              />
-            </div>
-          </div>
-
-          <div className="flex gap-3 pt-2"></div>
+          <BetterAuthActionButton
+            requireAreYouSure
+            variant="destructive"
+            className="w-full"
+            successMessage="Account deletion initiated. Please check you email to confirm."
+            action={() => authClient.deleteUser({ callbackURL: "/" })}
+          >
+            Delete Account Permanently
+          </BetterAuthActionButton>
         </CardContent>
       </Card>
     </div>

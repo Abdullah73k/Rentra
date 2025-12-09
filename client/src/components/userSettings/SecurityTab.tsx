@@ -29,7 +29,7 @@ const SecurityTab = ({
 }) => {
   const [accounts, setAccounts] = useState<Account>([]);
 
-  if (!session) return null;  // TODO: redirect to other page
+  if (!session) return null;// TODO: redirect to other page
 
   useEffect(() => {
     let isMounted = true;
