@@ -1,0 +1,36 @@
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    image: pm-client
+    container_name: pm-client
+    depends_on:
+      - server
+    ports:
+      - "5173:5173"
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    image: pm-server
+    container_name: pm-server
+    ports:
+      - "4000:4000"
+      - "4001:5000"
+    environment:
+      - BETTER_AUTH_SECRET
+      - BETTER_AUTH_URL
+      - DISCORD_CLIENT_ID
+      - DISCORD_CLIENT_SECRET
+      - GITHUB_CLIENT_ID
+      - GITHUB_CLIENT_SECRET
+      - GMAIL_APP_PASSWORD
+      - GMAIL_USER
+      - GOOGLE_CLIENT_ID
+      - GOOGLE_CLIENT_SECRET
+      - PORT
+      - SUPABASE_API_KEY
+      - SUPABASE_CONNECTION_STRING
+      - SUPABASE_POSTGRES_PASSWORD
+      - SUPABASE_URL
