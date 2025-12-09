@@ -1,24 +1,26 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import PropertyCard from "@/components/PropertyCard";
 import AddPropertyModal from "@/components/modals/addPropertyModal";
 import { mockProperty, mockPropertyInfo } from "@/lib/mock-data";
-import type { Session } from "@/lib/types";
 import { authClient } from "@/utils/auth-client";
 
 const DashboardPage: React.FC = () => {
-  const [session, setSession] = useState<Session>();
+  const navigate = useNavigate();
+
+  const { data: session, isPending } = authClient.useSession();
 
   useEffect(() => {
-    async () => {
-      const { data: session } = await authClient.useSession()
-      setSession(session);
-    };
-  }, []);
+    if (!isPending && !session) navigate("/auth/login");
+  }, [isPending, session, navigate]);
+
+  if (isPending) {
+    return null; // could render a spinner here
+  }
 
   console.log(session);
-  
 
   const [properties, setProperties] = useState([
     {
