@@ -47,16 +47,24 @@ const ProfileTab = ({ user }: { user: Session }) => {
   const { isSubmitting } = form.formState;
 
   function handleUpdateUser(data: ProfileSchema) {
-    authClient.updateUser({
-      name: data.fullName,
-      currency: data.currency,
-      country: data.country,
-      vatProfile: data.vatRate
-    }, {
-      onSuccess: () => {
-        toast.success("Update Info Successfully")
+    authClient.updateUser(
+      {
+        name: data.fullName,
+        currency: data.currency,
+        country: data.country,
+        vatProfile: data.vatRate,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Update Info Successfully");
+        },
+        onError: (error) => {
+          toast.error(
+            error?.error?.message ?? "Failed to update info, try again"
+          );
+        },
       }
-    })
+    );
   }
 
   return (
@@ -68,7 +76,7 @@ const ProfileTab = ({ user }: { user: Session }) => {
         </CardHeader>
         <CardContent className="space-y-4">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleUpdateUser)} >
+            <form onSubmit={form.handleSubmit(handleUpdateUser)}>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <TextInput form={form} name="fullName" label="Name" />

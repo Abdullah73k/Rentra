@@ -8,19 +8,50 @@ import {
   CardTitle,
 } from "../ui/card";
 import { Button } from "../ui/button";
-import type { User } from "@/lib/types";
+import type { Account, Session, User } from "@/lib/types";
+import { authClient } from "@/utils/auth-client";
+import { useEffect, useState } from "react";
+import BetterAuthActionButton from "../form/BetterAuthActionButton";
 
 const SecurityTab = ({
   user,
+  session,
   handleGeneratePasskey,
   handleToggle2FA,
-  handleDeletePasskey
+  handleDeletePasskey,
 }: {
   user: User;
+  session: Session;
   handleGeneratePasskey: () => void;
   handleToggle2FA: () => void;
   handleDeletePasskey: (passkeyId: string) => void;
 }) => {
+  const [accounts, setAccounts] = useState<Account>([]);
+
+  if (!session) return null;
+
+  useEffect(() => {
+    let isMounted = true;
+    const loadAccounts = async () => {
+      const { data } = await authClient.listAccounts();
+      if (isMounted) {
+        setAccounts(data ?? []);
+      }
+    };
+    loadAccounts();
+    return () => {
+      isMounted = false;
+    };
+  }, [session]);
+
+  if (accounts === null) return;
+
+  console.log(accounts);
+
+  const hasPasswordAccount = accounts.some(a => a.providerId === "credential")
+
+  const { user: userInfo } = session;
+
   return (
     <>
       <div className="space-y-6">
@@ -31,9 +62,26 @@ const SecurityTab = ({
               <Key className="h-5 w-5 text-muted-foreground" />
               <CardTitle>Password</CardTitle>
             </div>
-            <CardDescription>
-              Request a password reset link via email
-            </CardDescription>
+            {hasPasswordAccount ? (
+              <>
+                <CardDescription>
+                  Request a password reset link via email
+                </CardDescription>
+                <BetterAuthActionButton
+                  successMessage="Password reset email sent"
+                  action={() => {
+                    return authClient.requestPasswordReset({
+                      email: userInfo.email,
+                      redirectTo: "/auth/reset-password",
+                    });
+                  }}
+                >
+                  Send a password reset email
+                </BetterAuthActionButton>
+              </>
+            ) : (
+              <div></div>
+            )}
           </CardHeader>
         </Card>
 

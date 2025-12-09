@@ -80,6 +80,7 @@ const SettingsPage: React.FC = () => {
             {activeTab === "security" && (
               <SecurityTab
                 user={user}
+                session={session}
                 handleDeletePasskey={handleDeletePasskey}
                 handleGeneratePasskey={handleGeneratePasskey}
                 handleToggle2FA={handleToggle2FA}

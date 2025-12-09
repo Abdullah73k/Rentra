@@ -218,3 +218,11 @@ export type Session = {
     userAgent?: string | null | undefined;
   };
 } | null
+export type Account = {
+  id: string;
+  providerId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  accountId: string;
+  scopes: string[];
+}[] | null
