@@ -1,9 +1,21 @@
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 import { Input } from "../ui/input";
-import type { User } from "@/lib/types";
+import type { Session } from "@/lib/types";
 
-const ProfileTab = ({ user }: { user: User }) => {
+const ProfileTab = ({
+  user,
+}: {
+  user: Session
+}) => {
+  console.log(user?.user);
+  
   return (
     <div className="space-y-6">
       <Card>
@@ -39,7 +51,7 @@ const ProfileTab = ({ user }: { user: User }) => {
                 id="email"
                 name="email"
                 type="email"
-                value={user.email}
+                value={user?.user.email}
                 disabled
                 className="h-12 rounded-lg border-gray-300 bg-gray-100 text-sm opacity-60 cursor-not-allowed"
               />

@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { mockUser } from "@/lib/mock-user";
@@ -9,10 +8,25 @@ import LeftSidebar from "@/components/userSettings/LeftSidebar";
 import ProfileTab from "@/components/userSettings/ProfileTab";
 import SecurityTab from "@/components/userSettings/SecurityTab";
 import PreferencesTab from "@/components/userSettings/PreferencesTab";
+import { authClient } from "@/utils/auth-client";
 
 const SettingsPage: React.FC = () => {
+  const navigate = useNavigate();
+
   const [activeTab, setActiveTab] = useState<UserSettingsTab>("profile");
   const [user, setUser] = useState(mockUser);
+
+  const { data: session, isPending } = authClient.useSession();
+
+  useEffect(() => {
+    if (!isPending && !session) navigate("/auth/login");
+  }, [isPending, session, navigate]);
+
+  if (isPending) {
+    return null; // could render a spinner here
+  }
+
+  console.log(session?.user);
 
   const handleToggle2FA = () => {
     setUser({ ...user, twoFactorEnabled: !user.twoFactorEnabled });
@@ -60,7 +74,7 @@ const SettingsPage: React.FC = () => {
           {/* Main Content Area */}
           <div className="flex-1 p-6 max-w-4xl">
             {/* Profile Tab */}
-            {activeTab === "profile" && <ProfileTab user={user} />}
+            {activeTab === "profile" && <ProfileTab user={session} />}
 
             {/* Security Tab */}
             {activeTab === "security" && (
@@ -73,9 +87,7 @@ const SettingsPage: React.FC = () => {
             )}
 
             {/* Preferences Tab */}
-            {activeTab === "preferences" && (
-              <PreferencesTab />
-            )}
+            {activeTab === "preferences" && <PreferencesTab />}
           </div>
         </div>
       </div>

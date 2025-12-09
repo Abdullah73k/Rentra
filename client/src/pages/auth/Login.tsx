@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import OAuthButtons from "@/components/form/OAuthButtons";
 import { Form } from "@/components/ui/form";
@@ -21,6 +21,8 @@ const signInSchema = z.object({
 type SignInForm = z.infer<typeof signInSchema>;
 
 const SignInPage: React.FC = () => {
+  const navigate = useNavigate()
+
   const form = useForm<SignInForm>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -40,6 +42,9 @@ const SignInPage: React.FC = () => {
         },
         {
           onError: (error) => {
+            if (error.error.code === "EMAIL_NOT_VERIFIED") {
+              navigate(`/auth/verify-email/${encodeURIComponent(data.email)}`)
+            }
             toast.error(error?.error?.message ?? "Failed to sign In");
           },
           onSuccess: () => {},

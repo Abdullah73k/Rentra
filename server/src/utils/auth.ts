@@ -16,12 +16,15 @@ import { twoFactor } from "better-auth/plugins";
 export const auth: ReturnType<typeof betterAuth> = betterAuth({
 	appName: "Property Management",
 	database: pool,
+	trustedOrigins: ["http://localhost:5000", "http://localhost:5173"],
 	advanced: {
 		database: {
 			generateId: () => crypto.randomUUID(),
 		},
 	},
 	session: {
+		expiresIn: 60 * 60 * 24 * 7,
+        updateAge: 60 * 60 * 24,
 		cookieCache: {
 			enabled: true,
 			maxAge: 60 * 5, // 5 minutes

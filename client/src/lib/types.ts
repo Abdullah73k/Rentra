@@ -193,3 +193,28 @@ export interface AddTransactionModalProps {
   onSave: (transaction: Transaction) => void
   propertyId: string
 }
+
+export type Session = {
+  user: {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    email: string;
+    emailVerified: boolean;
+    name: string;
+    image?: string | null | undefined;
+    country: string;
+    currency: string;
+    vatProfile: number;
+  };
+  session: {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    userId: string;
+    expiresAt: Date;
+    token: string;
+    ipAddress?: string | null | undefined;
+    userAgent?: string | null | undefined;
+  };
+} | null
