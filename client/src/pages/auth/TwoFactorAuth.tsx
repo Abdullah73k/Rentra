@@ -1,10 +1,14 @@
+import BackupCodeForm from "@/components/form/BackupCodeForm";
+import TotpForm from "@/components/form/TotpForm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { authClient } from "@/utils/auth-client";
 import { useNavigate } from "react-router-dom";
 
 const TwoFactorAuth = () => {
   const navigate = useNavigate();
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (session != null) return navigate("/");
+  const { data: session } = authClient.useSession();
+  if (session != null) navigate("/");
 
   return (
     <div className="my-6 px-4">
@@ -26,7 +30,7 @@ const TwoFactorAuth = () => {
             </TabsContent>
 
             <TabsContent value="backup">
-              <BackupCodeTab />
+              <BackupCodeForm />
             </TabsContent>
           </Tabs>
         </CardContent>
