@@ -18,11 +18,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "../ui/form";
 import { PasswordSchema } from "@/lib/schemas";
-import TextInput from "../form/TextInput";
 import CustomPasswordInput from "../form/PasswordInput";
 import { LoadingSwap } from "../ui/loading-swap";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import QRCodeVerify from "./QRCodeVerify";
 
 const twoFactorAuthSchema = z.object({
   password: PasswordSchema,
@@ -34,7 +34,6 @@ const SecurityTab = ({
   user,
   session,
   handleGeneratePasskey,
-  handleToggle2FA,
   handleDeletePasskey,
 }: {
   user: User;
@@ -43,9 +42,10 @@ const SecurityTab = ({
   handleToggle2FA: () => void;
   handleDeletePasskey: (passkeyId: string) => void;
 }) => {
-  const navigate = useNavigate()
+  const isTwoFactorEnabled = session?.user.twoFactorEnabled;
+  const navigate = useNavigate();
   const [accounts, setAccounts] = useState<Account>([]);
-  const [twoFactorData, setTwoFactorData] = useState<twoFactorData>(null)
+  const [twoFactorData, setTwoFactorData] = useState<twoFactorData>(null);
 
   const form = useForm<twoFactorAuthForm>({
     resolver: zodResolver(twoFactorAuthSchema),
@@ -57,35 +57,40 @@ const SecurityTab = ({
       password: data.password,
     });
 
-    if(res.error) {
-      toast.error(res.error.message || "Failed to enable 2FA")
-    } {
-      setTwoFactorData(res.data)
-      form.reset()
+    if (res.error) {
+      toast.error(res.error.message || "Failed to enable 2FA");
+    }
+    {
+      setTwoFactorData(res.data);
+      form.reset();
     }
   }
 
   async function handleDisableTwoFactorAuth(data: twoFactorAuthForm) {
-    await authClient.twoFactor.disable({
-      password: data.password
-    },
-    {
-      onError: (error) => {
-        toast.error(error.error.message || "Failed to disable 2FA")
+    await authClient.twoFactor.disable(
+      {
+        password: data.password,
       },
+      {
+        onError: (error) => {
+          toast.error(error.error.message || "Failed to disable 2FA");
+        },
         onSuccess: () => {
-          form.reset(),
-           navigate(".", { replace: true });
-        }
-      
-    })
-
+          form.reset(), navigate(".", { replace: true });
+        },
+      }
+    );
   }
 
-  if(twoFactorData != null) {
-    return <QRCodeVerify {...twoFactorData} onDone={() => {
-      setTwoFactorData(null)
-    }} />
+  if (twoFactorData != null) {
+    return (
+      <QRCodeVerify
+        {...twoFactorData}
+        onDone={() => {
+          setTwoFactorData(null);
+        }}
+      />
+    );
   }
 
   if (!session) return null; // TODO: redirect to other page
@@ -139,10 +144,8 @@ const SecurityTab = ({
               <div className="flex items-center gap-2">
                 <Shield className="h-5 w-5 text-muted-foreground" />
                 <CardTitle>Two-Factor Authentication (2FA)</CardTitle>
-                <Badge
-                  variant={user.twoFactorEnabled ? "default" : "secondary"}
-                >
-                  {user.twoFactorEnabled ? "Enabled" : "Disabled"}
+                <Badge variant={isTwoFactorEnabled ? "default" : "secondary"}>
+                  {isTwoFactorEnabled ? "Enabled" : "Disabled"}
                 </Badge>
               </div>
               <CardDescription>
@@ -151,7 +154,13 @@ const SecurityTab = ({
             </CardHeader>
             <CardContent>
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(user.twoFactorEnabled ? handleEnableTwoFactorAuth : handleDisableTwoFactorAuth)}>
+                <form
+                  onSubmit={form.handleSubmit(
+                    isTwoFactorEnabled
+                      ? handleEnableTwoFactorAuth
+                      : handleDisableTwoFactorAuth
+                  )}
+                >
                   <CustomPasswordInput
                     form={form}
                     name="password"
@@ -164,7 +173,7 @@ const SecurityTab = ({
                     disabled={isSubmitting}
                   >
                     <LoadingSwap isLoading={isSubmitting}>
-                      {user.twoFactorEnabled ? "Enabled" : "Disabled"}
+                      {isTwoFactorEnabled ? "Enabled" : "Disabled"}
                     </LoadingSwap>
                   </Button>
                 </form>

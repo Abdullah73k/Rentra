@@ -15,5 +15,9 @@ export const authClient = createAuthClient({
 				type: "number",
 			},
 		}
-	}), twoFactorClient()]
+	}), twoFactorClient({
+		onTwoFactorRedirect: () => {
+			window.location.href = "/auth/2fa"
+		}
+	})]
 })

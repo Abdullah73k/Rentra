@@ -206,6 +206,7 @@ export type Session = {
     country: string;
     currency: string;
     vatProfile: number;
+    twoFactorEnabled: boolean | null | undefined;
   };
   session: {
     id: string;
