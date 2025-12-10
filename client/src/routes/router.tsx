@@ -6,6 +6,8 @@ import UserSettings from "../pages/auth/UserSettings";
 import Home from "../pages/Home";
 import Property from "../pages/properties/Property";
 import PropertiesDashboard from "../pages/properties/PropertiesDashboard";
+import ForgotPassword from "@/pages/auth/ForgotPassword";
+import ResetPassword from "@/pages/auth/ResetPassword";
 import EmailVerification from "@/pages/auth/EmailVerification";
 import TwoFactorAuth from "@/pages/auth/TwoFactorAuth";
 
@@ -25,6 +27,14 @@ const auth = {
         {    // protected
             path: "settings",
             element: <UserSettings /> 
+        },
+        {
+            path: "forgot-password",
+            element: <ForgotPassword />
+        },
+        {
+            path: "reset-password",
+            element: <ResetPassword />
         },
         {
             path: "verify-email/:email",

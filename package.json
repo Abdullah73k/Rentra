@@ -6,6 +6,8 @@
 		"husky": "^9.1.7"
 	},
 	"scripts": {
-		"prepare": "husky"
+		"prepare": "husky",
+		"compose:up": "doppler run -- docker compose up --build",
+		"compose:down": "docker compose down"
 	}
 }

@@ -9,11 +9,11 @@ WORKDIR /usr/src/app
 # Only non-secret ENV vars go here as Dockerfile is pushed to Github and shared with others
 # You inject secret ENV vars at runtime when running 'docker container run ... -e envvar=...'
 
-ENV PORT=5000
+# ENV PORT=5000
 
 RUN npm install pnpm -g
 
-EXPOSE 5000
+EXPOSE 4000 5000
 
 COPY package.json pnpm-lock.yaml ./
 
