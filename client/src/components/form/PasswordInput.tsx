@@ -13,6 +13,7 @@ type TextInputProps<T extends FieldValues> = {
   name: Path<T>; // ensures name is a valid key of your form
   label: string;
   placeholder?: string;
+  autoComplete?: string;
 };
 
 const CustomPasswordInput = <T extends FieldValues>({
@@ -20,6 +21,7 @@ const CustomPasswordInput = <T extends FieldValues>({
   name,
   label,
   placeholder = "••••••••",
+  autoComplete,
 }: TextInputProps<T>) => {
   return (
     <FormField
@@ -34,6 +36,7 @@ const CustomPasswordInput = <T extends FieldValues>({
             <PasswordInput
               className="h-12 rounded-lg border-gray-300 bg-white text-sm focus-visible:ring-1 focus-visible:ring-black"
               placeholder={placeholder}
+              autoComplete={autoComplete}
               {...field}
             />
           </FormControl>

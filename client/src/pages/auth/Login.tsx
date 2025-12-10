@@ -12,6 +12,7 @@ import { LoadingSwap } from "@/components/ui/loading-swap";
 import { authClient } from "@/utils/auth-client";
 import { toast } from "sonner";
 import { PasswordSchema } from "@/lib/schemas";
+import PasskeyButton from "@/components/form/PasskeyButton";
 
 const signInSchema = z.object({
   email: z.email(),
@@ -21,7 +22,7 @@ const signInSchema = z.object({
 type SignInForm = z.infer<typeof signInSchema>;
 
 const SignInPage: React.FC = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const form = useForm<SignInForm>({
     resolver: zodResolver(signInSchema),
@@ -43,7 +44,7 @@ const SignInPage: React.FC = () => {
         {
           onError: (error) => {
             if (error.error.code === "EMAIL_NOT_VERIFIED") {
-              navigate(`/auth/verify-email/${encodeURIComponent(data.email)}`)
+              navigate(`/auth/verify-email/${encodeURIComponent(data.email)}`);
             }
             toast.error(error?.error?.message ?? "Failed to sign In");
           },
@@ -83,12 +84,14 @@ const SignInPage: React.FC = () => {
                 name="email"
                 placeholder="you@example.com"
                 type="email"
+                autoComplete="email webauthn"
               />
               <CustomPasswordInput
                 name="password"
                 form={form}
                 label="Password"
                 placeholder="••••••••"
+                autoComplete="current-password webauthn"
               />
 
               <div className="flex items-center justify-between">
@@ -108,6 +111,8 @@ const SignInPage: React.FC = () => {
               </Button>
             </form>
           </Form>
+
+          <PasskeyButton />
 
           <div className="space-y-4">
             <div className="flex items-center gap-3">
