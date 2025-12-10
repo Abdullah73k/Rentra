@@ -1,4 +1,4 @@
-import { inferAdditionalFields, twoFactorClient } from "better-auth/client/plugins";
+import { inferAdditionalFields, passkeyClient, twoFactorClient } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react"
 
 export const authClient = createAuthClient({
@@ -19,5 +19,5 @@ export const authClient = createAuthClient({
 		onTwoFactorRedirect: () => {
 			window.location.href = "/auth/2fa"
 		}
-	})]
+	}), passkeyClient()]
 })

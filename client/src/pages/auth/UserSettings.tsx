@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { mockUser } from "@/lib/mock-user";
-import type { Passkey, UserSettingsTab } from "@/lib/types";
+import type { UserSettingsTab } from "@/lib/types";
 import LeftSidebar from "@/components/userSettings/LeftSidebar";
 import ProfileTab from "@/components/userSettings/ProfileTab";
 import SecurityTab from "@/components/userSettings/SecurityTab";
@@ -14,7 +13,6 @@ const SettingsPage: React.FC = () => {
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState<UserSettingsTab>("profile");
-  const [user, setUser] = useState(mockUser);
 
   const { data: session, isPending } = authClient.useSession();
 
@@ -27,26 +25,6 @@ const SettingsPage: React.FC = () => {
   }
 
   console.log(session?.user);
-
-  const handleToggle2FA = () => {
-    setUser({ ...user, twoFactorEnabled: !user.twoFactorEnabled });
-  };
-
-  const handleGeneratePasskey = () => {
-    const newPasskey: Passkey = {
-      id: `passkey-${Date.now()}`,
-      name: `Passkey ${user.passkeys.length + 1}`,
-      createdAt: new Date().toISOString(),
-    };
-    setUser({ ...user, passkeys: [...user.passkeys, newPasskey] });
-  };
-
-  const handleDeletePasskey = (passkeyId: string) => {
-    setUser({
-      ...user,
-      passkeys: user.passkeys.filter((p) => p.id !== passkeyId),
-    });
-  };
 
   return (
     <div className="min-h-screen bg-[#f8f8f8]">
@@ -77,15 +55,7 @@ const SettingsPage: React.FC = () => {
             {activeTab === "profile" && <ProfileTab user={session} />}
 
             {/* Security Tab */}
-            {activeTab === "security" && (
-              <SecurityTab
-                user={user}
-                session={session}
-                handleDeletePasskey={handleDeletePasskey}
-                handleGeneratePasskey={handleGeneratePasskey}
-                handleToggle2FA={handleToggle2FA}
-              />
-            )}
+            {activeTab === "security" && <SecurityTab session={session} />}
 
             {/* Preferences Tab */}
             {activeTab === "preferences" && <PreferencesTab />}
