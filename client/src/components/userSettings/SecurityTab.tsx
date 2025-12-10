@@ -8,11 +8,27 @@ import {
   CardTitle,
 } from "../ui/card";
 import { Button } from "../ui/button";
-import type { Account, Session, User } from "@/lib/types";
+import type { Account, Session, twoFactorData, User } from "@/lib/types";
 import { authClient } from "@/utils/auth-client";
 import { useEffect, useState } from "react";
 import SetPasswordSchema from "./SetPasswordSchema";
 import ChangePasswordForm from "./ChangePasswordForm";
+import z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form } from "../ui/form";
+import { PasswordSchema } from "@/lib/schemas";
+import TextInput from "../form/TextInput";
+import CustomPasswordInput from "../form/PasswordInput";
+import { LoadingSwap } from "../ui/loading-swap";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+
+const twoFactorAuthSchema = z.object({
+  password: PasswordSchema,
+});
+
+type twoFactorAuthForm = z.infer<typeof twoFactorAuthSchema>;
 
 const SecurityTab = ({
   user,
@@ -27,9 +43,52 @@ const SecurityTab = ({
   handleToggle2FA: () => void;
   handleDeletePasskey: (passkeyId: string) => void;
 }) => {
+  const navigate = useNavigate()
   const [accounts, setAccounts] = useState<Account>([]);
+  const [twoFactorData, setTwoFactorData] = useState<twoFactorData>(null)
 
-  if (!session) return null;// TODO: redirect to other page
+  const form = useForm<twoFactorAuthForm>({
+    resolver: zodResolver(twoFactorAuthSchema),
+    defaultValues: {},
+  });
+
+  async function handleEnableTwoFactorAuth(data: twoFactorAuthForm) {
+    const res = await authClient.twoFactor.enable({
+      password: data.password,
+    });
+
+    if(res.error) {
+      toast.error(res.error.message || "Failed to enable 2FA")
+    } {
+      setTwoFactorData(res.data)
+      form.reset()
+    }
+  }
+
+  async function handleDisableTwoFactorAuth(data: twoFactorAuthForm) {
+    await authClient.twoFactor.disable({
+      password: data.password
+    },
+    {
+      onError: (error) => {
+        toast.error(error.error.message || "Failed to disable 2FA")
+      },
+        onSuccess: () => {
+          form.reset(),
+           navigate(".", { replace: true });
+        }
+      
+    })
+
+  }
+
+  if(twoFactorData != null) {
+    return <QRCodeVerify {...twoFactorData} onDone={() => {
+      setTwoFactorData(null)
+    }} />
+  }
+
+  if (!session) return null; // TODO: redirect to other page
 
   useEffect(() => {
     let isMounted = true;
@@ -47,14 +106,13 @@ const SecurityTab = ({
 
   if (accounts === null) return; // TODO: redirect to other page
 
-  console.log(accounts);
-  
-
-  const hasPasswordAccount = accounts.some(a => a.providerId === "credential")
-  console.log(hasPasswordAccount);
-  
+  const hasPasswordAccount = accounts.some(
+    (a) => a.providerId === "credential"
+  );
 
   const { user: userInfo } = session;
+
+  const { isSubmitting } = form.formState;
 
   return (
     <>
@@ -75,47 +133,45 @@ const SecurityTab = ({
         </Card>
 
         {/* Two-Factor Authentication */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <Shield className="h-5 w-5 text-muted-foreground" />
-              <CardTitle>Two-Factor Authentication (2FA)</CardTitle>
-            </div>
-            <CardDescription>
-              Add an extra layer of security to your account
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <p className="text-sm font-medium">
-                  Status:{" "}
-                  {user.twoFactorEnabled ? (
-                    <Badge className="ml-2 bg-green-100 text-green-700 hover:bg-green-100">
-                      Enabled
-                    </Badge>
-                  ) : (
-                    <Badge variant="secondary" className="ml-2">
-                      Disabled
-                    </Badge>
-                  )}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {user.twoFactorEnabled
-                    ? "Your account is protected with two-factor authentication"
-                    : "Enable 2FA to secure your account with an additional verification step"}
-                </p>
+        {hasPasswordAccount && (
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Shield className="h-5 w-5 text-muted-foreground" />
+                <CardTitle>Two-Factor Authentication (2FA)</CardTitle>
+                <Badge
+                  variant={user.twoFactorEnabled ? "default" : "secondary"}
+                >
+                  {user.twoFactorEnabled ? "Enabled" : "Disabled"}
+                </Badge>
               </div>
-              <Button
-                onClick={handleToggle2FA}
-                variant={user.twoFactorEnabled ? "destructive" : "default"}
-                className="rounded-full"
-              >
-                {user.twoFactorEnabled ? "Disable 2FA" : "Enable 2FA"}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+              <CardDescription>
+                Add an extra layer of security to your account
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(user.twoFactorEnabled ? handleEnableTwoFactorAuth : handleDisableTwoFactorAuth)}>
+                  <CustomPasswordInput
+                    form={form}
+                    name="password"
+                    label="Password"
+                  />
+
+                  <Button
+                    type="submit"
+                    className="h-12 w-full rounded-full bg-black text-sm font-medium text-white hover:bg-black/90"
+                    disabled={isSubmitting}
+                  >
+                    <LoadingSwap isLoading={isSubmitting}>
+                      {user.twoFactorEnabled ? "Enabled" : "Disabled"}
+                    </LoadingSwap>
+                  </Button>
+                </form>
+              </Form>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Passkeys */}
         <Card>

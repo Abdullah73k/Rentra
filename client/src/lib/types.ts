@@ -226,3 +226,7 @@ export type Account = {
   accountId: string;
   scopes: string[];
 }[] | null
+export type twoFactorData = {
+  totpURI: string;
+  backupCodes: string[];
+} | null
