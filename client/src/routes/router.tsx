@@ -7,6 +7,7 @@ import Home from "../pages/Home";
 import Property from "../pages/properties/Property";
 import PropertiesDashboard from "../pages/properties/PropertiesDashboard";
 import EmailVerification from "@/pages/auth/EmailVerification";
+import TwoFactorAuth from "@/pages/auth/TwoFactorAuth";
 
 const auth = {
     path: "/auth",
@@ -28,6 +29,10 @@ const auth = {
         {
             path: "verify-email/:email",
             element: <EmailVerification />
+        },
+        {
+            path: "2fa",
+            element: <TwoFactorAuth />
         }
     ]
 }
