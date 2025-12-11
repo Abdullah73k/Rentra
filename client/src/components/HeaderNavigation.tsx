@@ -45,8 +45,8 @@ const HeaderNavigation = () => {
       </div>
 
       {/* hamburger menu absolutely positioned at the top-right */}
-      <NavigationMenu className="relative right-6 top-6">
-        <NavigationMenuList className="justify-end  ">
+      <NavigationMenu className=" relative right-6 top-6">
+        <NavigationMenuList className="justify-end ml-110 ">
           <NavigationMenuItem className="">
             <NavigationMenuTrigger className="flex items-center justify-between gap-3 rounded-2xl border border-grey-500/60 bg-white px-4 py-3 font-semibold uppercase tracking-wide text-[#2e1c17] shadow-sm transition hover:bg-[#ffffff] focus-visible:ring-grey-600/50 focus-visible:ring-offset-0 [&_svg]:hidden">
               <span className="sr-only">Toggle site navigation</span>
