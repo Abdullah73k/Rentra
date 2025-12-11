@@ -58,6 +58,9 @@ const PasskeyManagement = ({ passkeys }: { passkeys: Passkey[] }) => {
         onSuccess: () => {
           navigate(0);
         },
+        onError: (error) => {
+          toast.error(error?.error?.message || "Failed to delete passkey");
+        },
       }
     );
   }

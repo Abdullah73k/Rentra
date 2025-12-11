@@ -24,7 +24,7 @@ const CheckBoxInput = <T extends FieldValues>({
       control={form.control}
       name={name}
       render={({ field }) => (
-        <FormItem className="flex">
+        <FormItem className="flex flex-row items-center gap-2">
           <FormControl>
             <Checkbox checked={field.value} onCheckedChange={field.onChange} />
           </FormControl>

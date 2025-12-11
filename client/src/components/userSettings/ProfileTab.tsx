@@ -30,7 +30,8 @@ const profileSchema = z.object({
 type ProfileSchema = z.infer<typeof profileSchema>;
 
 const ProfileTab = ({ user }: { user: Session }) => {
-  if (user == null) return;
+  if (user == null)
+    return <LoadingSwap isLoading={true} children={undefined} />;
 
   const { user: userInfo } = user;
 
@@ -46,8 +47,8 @@ const ProfileTab = ({ user }: { user: Session }) => {
 
   const { isSubmitting } = form.formState;
 
-  function handleUpdateUser(data: ProfileSchema) {
-    authClient.updateUser(
+  async function handleUpdateUser(data: ProfileSchema) {
+    await authClient.updateUser(
       {
         name: data.fullName,
         currency: data.currency,

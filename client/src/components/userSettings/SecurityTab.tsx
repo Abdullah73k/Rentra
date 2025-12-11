@@ -41,8 +41,38 @@ const SecurityTab = ({ session }: { session: Session }) => {
 
   const form = useForm<twoFactorAuthForm>({
     resolver: zodResolver(twoFactorAuthSchema),
-    defaultValues: {},
+    defaultValues: {
+      password: "",
+    },
   });
+
+  useEffect(() => {
+    let isMounted = true;
+    const loadAccounts = async () => {
+      const { data } = await authClient.listAccounts();
+      if (isMounted) {
+        setAccounts(data ?? []);
+      }
+    };
+    loadAccounts();
+    return () => {
+      isMounted = false;
+    };
+  }, [session]);
+
+  useEffect(() => {
+    let isMounted = true;
+    const loadPasskeys = async () => {
+      const { data: passkeys } = await authClient.passkey.listUserPasskeys();
+      if (isMounted) {
+        setPasskeys(passkeys ?? []);
+      }
+    };
+    loadPasskeys();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   async function handleEnableTwoFactorAuth(data: twoFactorAuthForm) {
     const res = await authClient.twoFactor.enable({
@@ -87,28 +117,6 @@ const SecurityTab = ({ session }: { session: Session }) => {
   }
 
   if (!session) return <LoadingSwap isLoading={true} children={undefined} />;
-
-  useEffect(() => {
-    let isMounted = true;
-    const loadAccounts = async () => {
-      const { data } = await authClient.listAccounts();
-      if (isMounted) {
-        setAccounts(data ?? []);
-      }
-    };
-    loadAccounts();
-    return () => {
-      isMounted = false;
-    };
-  }, [session]);
-
-  useEffect(() => {
-    const loadPasskeys = async () => {
-      const { data: passkeys } = await authClient.passkey.listUserPasskeys();
-      setPasskeys(passkeys ?? []);
-    };
-    loadPasskeys();
-  }, []);
 
   if (accounts === null)
     return <LoadingSwap isLoading={true} children={undefined} />;
@@ -157,6 +165,7 @@ const SecurityTab = ({ session }: { session: Session }) => {
             <CardContent>
               <Form {...form}>
                 <form
+                  className="space-y-4"
                   onSubmit={form.handleSubmit(
                     isTwoFactorEnabled
                       ? handleDisableTwoFactorAuth

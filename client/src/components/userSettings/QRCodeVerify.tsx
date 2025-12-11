@@ -10,7 +10,6 @@ import QRCode from "react-qr-code";
 import { authClient } from "@/utils/auth-client";
 import { toast } from "sonner";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 const qrSchema = z.object({
   token: z.string().length(6),
@@ -23,7 +22,6 @@ const QRCodeVerify = ({
   backupCodes,
   onDone,
 }: NonNullable<twoFactorData> & { onDone: () => void }) => {
-  const navigate = useNavigate();
   const [successfullyEnabled, setSuccessfullyEnabled] = useState(false);
   const form = useForm<QrForm>({
     resolver: zodResolver(qrSchema),
@@ -45,7 +43,6 @@ const QRCodeVerify = ({
         },
         onSuccess: () => {
           setSuccessfullyEnabled(true);
-          navigate(".", { replace: true });
         },
       }
     );
@@ -64,10 +61,10 @@ const QRCodeVerify = ({
               {code}
             </div>
           ))}
-          <Button variant="outline" onClick={onDone}>
-            Done
-          </Button>
         </div>
+        <Button variant="outline" onClick={onDone}>
+          Done
+        </Button>
       </>
     );
   }
@@ -78,7 +75,7 @@ const QRCodeVerify = ({
         Scan QR code with your authenticator app and enter the code below:
       </p>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleQrCodeVerify)}>
+        <form className="space-y-4" onSubmit={form.handleSubmit(handleQrCodeVerify)}>
           <TextInput form={form} name="token" label="Code" />
           <Button
             type="submit"
