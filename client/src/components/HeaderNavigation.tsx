@@ -8,6 +8,8 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "./ui/navigation-menu";
+import { Button } from "./ui/button";
+import { authClient } from "@/utils/auth-client";
 
 const navigationLinks = [
   {
@@ -72,7 +74,9 @@ const HeaderNavigation = () => {
                       <p className="text-xs font-semibold uppercase text-white/80">
                         Dashboard
                       </p>
-                      <h3 className="mt-2 text-2xl font-black">Control Center</h3>
+                      <h3 className="mt-2 text-2xl font-black">
+                        Control Center
+                      </h3>
                       <p className="mt-3 text-sm text-white/90">
                         Track occupancy, payments, and maintenance tasks with
                         real-time alerts.
@@ -102,6 +106,16 @@ const HeaderNavigation = () => {
                       </NavigationMenuLink>
                     </li>
                   ))}
+                  <NavigationMenuLink asChild>
+                    <Button
+                      onClick={() => authClient.signOut()}
+                      className="h-12 flex border border-white/10 bg-white/10 p-4 text-left text-white transition hover:border-white/30 hover:bg-white/20 items-start "
+                    >
+                      <p className="text-base font-semibold text-[#ffe1d6]">
+                        Sign Out
+                      </p>
+                    </Button>
+                  </NavigationMenuLink>
                 </ul>
               </div>
             </NavigationMenuContent>
