@@ -16,12 +16,15 @@ import { twoFactor } from "better-auth/plugins";
 export const auth: ReturnType<typeof betterAuth> = betterAuth({
 	appName: "Property Management",
 	database: pool,
+	trustedOrigins: ["http://localhost:5000", "http://localhost:5173"],
 	advanced: {
 		database: {
 			generateId: () => crypto.randomUUID(),
 		},
 	},
 	session: {
+		expiresIn: 60 * 60 * 24 * 7,
+		updateAge: 60 * 60 * 24,
 		cookieCache: {
 			enabled: true,
 			maxAge: 60 * 5, // 5 minutes
@@ -96,14 +99,35 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 		google: {
 			clientId: GOOGLE_CLIENT_ID,
 			clientSecret: GOOGLE_CLIENT_SECRET,
+			mapProfileToUser: (profile) => {
+				return {
+					country: profile.locale?.split("-")[1]?.toLowerCase() || "us",
+					currency: "USD",
+					vatProfile: 0
+				}
+			}
 		},
 		discord: {
 			clientId: DISCORD_CLIENT_ID,
 			clientSecret: DISCORD_CLIENT_SECRET,
+			mapProfileToUser: () => {
+				return {
+					country: "us",
+					currency: "USD",
+					vatProfile: 0
+				}
+			}
 		},
 		github: {
 			clientId: GITHUB_CLIENT_ID,
 			clientSecret: GITHUB_CLIENT_SECRET,
+			mapProfileToUser: () => {
+				return {
+					country: "us",
+					currency: "USD",
+					vatProfile: 0
+				}
+			}
 		},
 	},
 	hooks: {

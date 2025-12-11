@@ -18,6 +18,7 @@ type TextInputProps<T extends FieldValues> = {
   label: string;
   placeholder?: string;
   type?: "number" | "text" | "date" | "email";
+  autoComplete?: string;
 };
 
 const TextInput = <T extends FieldValues>({
@@ -26,6 +27,7 @@ const TextInput = <T extends FieldValues>({
   label,
   placeholder,
   type = "text",
+  autoComplete,
 }: TextInputProps<T>) => {
   return (
     <FormField
@@ -41,6 +43,7 @@ const TextInput = <T extends FieldValues>({
               className="h-12 rounded-lg border-gray-300 bg-white text-sm focus-visible:ring-1 focus-visible:ring-black"
               placeholder={placeholder}
               {...field}
+              autoComplete={autoComplete}
               type={type}
               onChange={
                 type === "number"
