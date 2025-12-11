@@ -32,11 +32,7 @@ const twoFactorAuthSchema = z.object({
 
 type twoFactorAuthForm = z.infer<typeof twoFactorAuthSchema>;
 
-const SecurityTab = ({
-  session,
-}: {
-  session: Session;
-}) => {
+const SecurityTab = ({ session }: { session: Session }) => {
   const [passkeys, setPasskeys] = useState<Passkey[]>([]);
   const isTwoFactorEnabled = session?.user.twoFactorEnabled;
   const navigate = useNavigate();
@@ -55,8 +51,8 @@ const SecurityTab = ({
 
     if (res.error) {
       toast.error(res.error.message || "Failed to enable 2FA");
-    }
-    {
+      return;
+    } else {
       setTwoFactorData(res.data);
       form.reset();
     }
@@ -72,7 +68,8 @@ const SecurityTab = ({
           toast.error(error.error.message || "Failed to disable 2FA");
         },
         onSuccess: () => {
-          form.reset(), navigate(0);
+          form.reset();
+          navigate(0);
         },
       }
     );
@@ -89,7 +86,7 @@ const SecurityTab = ({
     );
   }
 
-  if (!session) return null; // TODO: redirect to other page
+  if (!session) return <LoadingSwap isLoading={true} children={undefined} />;
 
   useEffect(() => {
     let isMounted = true;
@@ -113,7 +110,8 @@ const SecurityTab = ({
     loadPasskeys();
   }, []);
 
-  if (accounts === null) return; // TODO: redirect to other page
+  if (accounts === null)
+    return <LoadingSwap isLoading={true} children={undefined} />;
 
   const hasPasswordAccount = accounts.some(
     (a) => a.providerId === "credential"
@@ -161,8 +159,8 @@ const SecurityTab = ({
                 <form
                   onSubmit={form.handleSubmit(
                     isTwoFactorEnabled
-                      ? handleEnableTwoFactorAuth
-                      : handleDisableTwoFactorAuth
+                      ? handleDisableTwoFactorAuth
+                      : handleEnableTwoFactorAuth
                   )}
                 >
                   <CustomPasswordInput
@@ -177,7 +175,7 @@ const SecurityTab = ({
                     disabled={isSubmitting}
                   >
                     <LoadingSwap isLoading={isSubmitting}>
-                      {isTwoFactorEnabled ? "Enabled" : "Disabled"}
+                      {isTwoFactorEnabled ? "Disable 2FA" : "Enable 2FA"}
                     </LoadingSwap>
                   </Button>
                 </form>

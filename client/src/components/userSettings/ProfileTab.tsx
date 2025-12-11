@@ -24,7 +24,7 @@ const profileSchema = z.object({
   fullName: z.string().optional(),
   currency: z.string().optional(),
   country: z.string().optional(),
-  vatRate: z.coerce.number<number>().optional(),
+  vatProfile: z.coerce.number<number>().optional(),
 });
 
 type ProfileSchema = z.infer<typeof profileSchema>;
@@ -40,7 +40,7 @@ const ProfileTab = ({ user }: { user: Session }) => {
       fullName: userInfo.name,
       currency: userInfo.currency,
       country: userInfo.country,
-      vatRate: userInfo.vatProfile,
+      vatProfile: userInfo.vatProfile,
     },
   });
 
@@ -52,7 +52,7 @@ const ProfileTab = ({ user }: { user: Session }) => {
         name: data.fullName,
         currency: data.currency,
         country: data.country,
-        vatProfile: data.vatRate,
+        vatProfile: data.vatProfile,
       },
       {
         onSuccess: () => {
@@ -106,7 +106,7 @@ const ProfileTab = ({ user }: { user: Session }) => {
                 <div className="space-y-2">
                   <TextInput
                     form={form}
-                    name="vatRate"
+                    name="vatProfile"
                     label="Vat rate"
                     type="number"
                   />

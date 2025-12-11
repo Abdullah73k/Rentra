@@ -12,7 +12,8 @@ const PasskeyButton = () => {
       { autoFill: true },
       {
         onSuccess: () => {
-          refetch(), navigate("/properties/dashboard");
+          refetch();
+          navigate("/properties/dashboard");
         },
       }
     );
@@ -25,7 +26,8 @@ const PasskeyButton = () => {
       action={() =>
         authClient.signIn.passkey(undefined, {
           onSuccess: () => {
-            refetch(), navigate("/properties/dashboard");
+            refetch();
+            navigate("/properties/dashboard");
           },
         })
       }

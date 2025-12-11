@@ -15,7 +15,7 @@ const PreferencesTab = () => {
         <CardHeader>
           <CardTitle className="text-destructive">Danger Zone</CardTitle>
           <CardDescription className="text-destructive">
-            This action cant be undone
+            This action can't be undone
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -23,7 +23,7 @@ const PreferencesTab = () => {
             requireAreYouSure
             variant="destructive"
             className="w-full"
-            successMessage="Account deletion initiated. Please check you email to confirm."
+            successMessage="Account deletion initiated. Please check your email to confirm."
             action={() => authClient.deleteUser({ callbackURL: "/" })}
           >
             Delete Account Permanently

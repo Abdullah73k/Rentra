@@ -20,8 +20,6 @@ const DashboardPage: React.FC = () => {
     return null; // could render a spinner here
   }
 
-  console.log(session);
-
   const [properties, setProperties] = useState([
     {
       ...mockProperty,

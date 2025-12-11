@@ -107,14 +107,14 @@ const PasskeyManagement = ({ passkeys }: { passkeys: Passkey[] }) => {
         <DialogTrigger asChild>
           <Button className="gap-2 rounded-full">
             <Key className="h-4 w-4" />
-            NewPasskey
+            New Passkey
           </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Add new passkey</DialogTitle>
             <DialogDescription className="text-muted-foreground">
-              create a new passkey for secure, passwordless authentication
+              Create a new passkey for secure, passwordless authentication
             </DialogDescription>
           </DialogHeader>
           <Form {...form}>

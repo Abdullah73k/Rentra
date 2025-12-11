@@ -24,8 +24,6 @@ const SettingsPage: React.FC = () => {
     return null; // TODO: add loading screen here
   }
 
-  console.log(session?.user);
-
   return (
     <div className="min-h-screen bg-[#f8f8f8]">
       <div className="mx-auto">

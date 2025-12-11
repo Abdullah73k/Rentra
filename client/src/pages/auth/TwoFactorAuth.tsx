@@ -3,12 +3,21 @@ import TotpForm from "@/components/form/TotpForm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { authClient } from "@/utils/auth-client";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const TwoFactorAuth = () => {
   const navigate = useNavigate();
   const { data: session } = authClient.useSession();
-  if (session != null) navigate("/");
+
+  useEffect(() => {
+    if (session != null) {
+      navigate("/");
+    }
+  }, [session, navigate]);
+  if (session != null) {
+    return null; // TODO: show loading page or spinner
+  }
 
   return (
     <div className="my-6 px-4">
