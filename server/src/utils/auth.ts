@@ -24,7 +24,7 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 	},
 	session: {
 		expiresIn: 60 * 60 * 24 * 7,
-        updateAge: 60 * 60 * 24,
+		updateAge: 60 * 60 * 24,
 		cookieCache: {
 			enabled: true,
 			maxAge: 60 * 5, // 5 minutes
@@ -99,10 +99,10 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 		google: {
 			clientId: GOOGLE_CLIENT_ID,
 			clientSecret: GOOGLE_CLIENT_SECRET,
-			mapProfileToUser: () => {
+			mapProfileToUser: (profile) => {
 				return {
-					country: "",
-					currency: "",
+					country: profile.locale?.split("-")[1]?.toLowerCase() || "us",
+					currency: "USD",
 					vatProfile: 0
 				}
 			}
@@ -112,8 +112,8 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 			clientSecret: DISCORD_CLIENT_SECRET,
 			mapProfileToUser: () => {
 				return {
-					country: "",
-					currency: "",
+					country: "us",
+					currency: "USD",
 					vatProfile: 0
 				}
 			}
@@ -123,8 +123,8 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 			clientSecret: GITHUB_CLIENT_SECRET,
 			mapProfileToUser: () => {
 				return {
-					country: "",
-					currency: "",
+					country: "us",
+					currency: "USD",
 					vatProfile: 0
 				}
 			}
