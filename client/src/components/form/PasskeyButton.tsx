@@ -1,5 +1,5 @@
 import { authClient } from "@/utils/auth-client";
-import BetterAuthActionButton from "./BetterAuthActionButton";
+import BetterAuthActionButton from "./AuthActionButton";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 

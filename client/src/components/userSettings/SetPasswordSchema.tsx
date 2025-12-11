@@ -1,5 +1,5 @@
 import { authClient } from "@/utils/auth-client";
-import BetterAuthActionButton from "../form/BetterAuthActionButton";
+import BetterAuthActionButton from "../form/AuthActionButton";
 import { CardDescription } from "../ui/card";
 import type { Session } from "@/lib/types";
 

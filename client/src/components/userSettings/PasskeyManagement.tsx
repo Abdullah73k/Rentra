@@ -8,7 +8,7 @@ import TextInput from "../form/TextInput";
 import { type Passkey } from "better-auth/plugins/passkey";
 import { LoadingSwap } from "../ui/loading-swap";
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
-import BetterAuthActionButton from "../form/BetterAuthActionButton";
+import BetterAuthActionButton from "../form/AuthActionButton";
 import {
   Dialog,
   DialogContent,
