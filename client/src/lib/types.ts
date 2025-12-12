@@ -199,3 +199,41 @@ export type NavigationLink = {
   description: string;
   visibleTo: "all" | "unauthenticated" | "authenticated";
 };
+
+export type Session = {
+  user: {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    email: string;
+    emailVerified: boolean;
+    name: string;
+    image?: string | null | undefined;
+    country: string;
+    currency: string;
+    vatProfile: number;
+    twoFactorEnabled: boolean | null | undefined;
+  };
+  session: {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    userId: string;
+    expiresAt: Date;
+    token: string;
+    ipAddress?: string | null | undefined;
+    userAgent?: string | null | undefined;
+  };
+} | null
+export type Account = {
+  id: string;
+  providerId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  accountId: string;
+  scopes: string[];
+}[] | null
+export type twoFactorData = {
+  totpURI: string;
+  backupCodes: string[];
+} | null
