@@ -193,6 +193,12 @@ export interface AddTransactionModalProps {
   onSave: (transaction: Transaction) => void
   propertyId: string
 }
+export type NavigationLink = {
+  title: string;
+  href: string;
+  description: string;
+  visibleTo: "all" | "unauthenticated" | "authenticated";
+};
 
 export type Session = {
   user: {
