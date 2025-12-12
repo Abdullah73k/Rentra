@@ -10,6 +10,7 @@ import {
 import { Button } from "./ui/button";
 import { authClient } from "@/utils/auth-client";
 import type { NavigationLink } from "@/lib/types";
+import { Loader } from "lucide-react";
 
 const navigationLinks: NavigationLink[] = [
   {
@@ -40,7 +41,12 @@ const navigationLinks: NavigationLink[] = [
 
 const HeaderNavigation = () => {
   const navigate = useNavigate();
-  const { data: session } = authClient.useSession();
+  setTimeout(() => {}, 1000)
+  const { data: session, isPending } = authClient.useSession();
+
+  if(isPending){
+    return <Loader />
+  }
 
   const isAuthenticated = !!session;
 
