@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 import {
   NavigationMenu,
@@ -8,6 +8,8 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "./ui/navigation-menu";
+import { Button } from "./ui/button";
+import { authClient } from "@/utils/auth-client";
 
 const navigationLinks = [
   {
@@ -33,6 +35,7 @@ const navigationLinks = [
 ];
 
 const HeaderNavigation = () => {
+  const navigate = useNavigate();
   return (
     // header styling is the same, just made relative
     <header className="relative bg-[#f8f8f8] p-6 flex">
@@ -46,7 +49,7 @@ const HeaderNavigation = () => {
 
       {/* hamburger menu absolutely positioned at the top-right */}
       <NavigationMenu className="relative right-6 top-6">
-        <NavigationMenuList className="justify-end  ">
+        <NavigationMenuList className="justify-end ml-110">
           <NavigationMenuItem className="">
             <NavigationMenuTrigger className="flex items-center justify-between gap-3 rounded-2xl border border-grey-500/60 bg-white px-4 py-3 font-semibold uppercase tracking-wide text-[#2e1c17] shadow-sm transition hover:bg-[#ffffff] focus-visible:ring-grey-600/50 focus-visible:ring-offset-0 [&_svg]:hidden">
               <span className="sr-only">Toggle site navigation</span>
@@ -72,7 +75,9 @@ const HeaderNavigation = () => {
                       <p className="text-xs font-semibold uppercase text-white/80">
                         Dashboard
                       </p>
-                      <h3 className="mt-2 text-2xl font-black">Control Center</h3>
+                      <h3 className="mt-2 text-2xl font-black">
+                        Control Center
+                      </h3>
                       <p className="mt-3 text-sm text-white/90">
                         Track occupancy, payments, and maintenance tasks with
                         real-time alerts.
@@ -102,6 +107,26 @@ const HeaderNavigation = () => {
                       </NavigationMenuLink>
                     </li>
                   ))}
+                  <li className="h-12">
+                    <NavigationMenuLink asChild>
+                      <Button
+                        onClick={() =>
+                          authClient.signOut({
+                            fetchOptions: {
+                              onSuccess: () => {
+                                navigate("/");
+                              },
+                            },
+                          })
+                        }
+                        className="flex h-12 w-full items-start border border-white/10 bg-white/10 p-4 text-left text-white transition hover:border-white/30 hover:bg-white/20"
+                      >
+                        <p className="text-base font-semibold text-[#ffe1d6]">
+                          Sign Out
+                        </p>
+                      </Button>
+                    </NavigationMenuLink>
+                  </li>
                 </ul>
               </div>
             </NavigationMenuContent>
