@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 import {
   NavigationMenu,
@@ -35,6 +35,7 @@ const navigationLinks = [
 ];
 
 const HeaderNavigation = () => {
+  const navigate = useNavigate();
   return (
     // header styling is the same, just made relative
     <header className="relative bg-[#f8f8f8] p-6 flex">
@@ -47,8 +48,8 @@ const HeaderNavigation = () => {
       </div>
 
       {/* hamburger menu absolutely positioned at the top-right */}
-      <NavigationMenu className=" relative right-6 top-6">
-        <NavigationMenuList className="justify-end ml-110 ">
+      <NavigationMenu className="relative right-6 top-6">
+        <NavigationMenuList className="justify-end ml-110">
           <NavigationMenuItem className="">
             <NavigationMenuTrigger className="flex items-center justify-between gap-3 rounded-2xl border border-grey-500/60 bg-white px-4 py-3 font-semibold uppercase tracking-wide text-[#2e1c17] shadow-sm transition hover:bg-[#ffffff] focus-visible:ring-grey-600/50 focus-visible:ring-offset-0 [&_svg]:hidden">
               <span className="sr-only">Toggle site navigation</span>
@@ -106,16 +107,26 @@ const HeaderNavigation = () => {
                       </NavigationMenuLink>
                     </li>
                   ))}
-                  <NavigationMenuLink asChild>
-                    <Button
-                      onClick={() => authClient.signOut()}
-                      className="h-12 flex border border-white/10 bg-white/10 p-4 text-left text-white transition hover:border-white/30 hover:bg-white/20 items-start "
-                    >
-                      <p className="text-base font-semibold text-[#ffe1d6]">
-                        Sign Out
-                      </p>
-                    </Button>
-                  </NavigationMenuLink>
+                  <li className="h-12">
+                    <NavigationMenuLink asChild>
+                      <Button
+                        onClick={() =>
+                          authClient.signOut({
+                            fetchOptions: {
+                              onSuccess: () => {
+                                navigate("/");
+                              },
+                            },
+                          })
+                        }
+                        className="flex h-12 w-full items-start border border-white/10 bg-white/10 p-4 text-left text-white transition hover:border-white/30 hover:bg-white/20"
+                      >
+                        <p className="text-base font-semibold text-[#ffe1d6]">
+                          Sign Out
+                        </p>
+                      </Button>
+                    </NavigationMenuLink>
+                  </li>
                 </ul>
               </div>
             </NavigationMenuContent>
