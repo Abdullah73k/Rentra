@@ -1,25 +1,39 @@
-import React, { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
-import PropertyCard from "@/components/PropertyCard"
-import AddPropertyModal from "@/components/modals/addPropertyModal"
-import { mockProperty, mockPropertyInfo } from "@/lib/mock-data"
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import PropertyCard from "@/components/PropertyCard";
+import AddPropertyModal from "@/components/modals/addPropertyModal";
+import { mockProperty, mockPropertyInfo } from "@/lib/mock-data";
+import { authClient } from "@/utils/auth-client";
 
 const DashboardPage: React.FC = () => {
+  const navigate = useNavigate();
+
+  const { data: session, isPending } = authClient.useSession();
+
+  useEffect(() => {
+    if (!isPending && !session) navigate("/auth/login");
+  }, [isPending, session, navigate]);
+
+  if (isPending) {
+    return null; // could render a spinner here
+  }
+
   const [properties, setProperties] = useState([
     {
       ...mockProperty,
       info: mockPropertyInfo,
     },
-  ])
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  ]);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const handleAddProperty = (newProperty: any) => {
-    setProperties((prev) => [...prev, newProperty])
-    setIsAddModalOpen(false)
-  }
+    setProperties((prev) => [...prev, newProperty]);
+    setIsAddModalOpen(false);
+  };
 
-  const isEmpty = properties.length === 0
+  const isEmpty = properties.length === 0;
 
   return (
     <div className="min-h-screen bg-[#f8f8f8]">
@@ -37,11 +51,17 @@ const DashboardPage: React.FC = () => {
         {isEmpty ? (
           <div className="flex flex-col items-center justify-center py-24">
             <div className="text-center">
-              <h2 className="text-2xl font-semibold text-foreground mb-2">No properties yet</h2>
+              <h2 className="text-2xl font-semibold text-foreground mb-2">
+                No properties yet
+              </h2>
               <p className="text-muted-foreground mb-6">
                 Get started by adding your first property to your portfolio.
               </p>
-              <Button onClick={() => setIsAddModalOpen(true)} size="lg" className="gap-2">
+              <Button
+                onClick={() => setIsAddModalOpen(true)}
+                size="lg"
+                className="gap-2"
+              >
                 <Plus className="h-4 w-4" />
                 Add Your First Property
               </Button>
@@ -66,7 +86,7 @@ const DashboardPage: React.FC = () => {
         onSave={handleAddProperty}
       />
     </div>
-  )
-}
+  );
+};
 
-export default DashboardPage
+export default DashboardPage;

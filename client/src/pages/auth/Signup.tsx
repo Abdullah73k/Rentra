@@ -60,6 +60,9 @@ const SignUpPage: React.FC = () => {
           email: data.email,
           password: data.password,
           name: data.fullName,
+          country: data.country,
+          currency: data.currency,
+          vatProfile: data.vatRate,
           callbackURL: "/properties/dashboard",
         },
         {
@@ -116,13 +119,11 @@ const SignUpPage: React.FC = () => {
                 form={form}
                 name="password"
                 label="password"
-                placeholder="••••••••"
               />
               <PasswordInput
                 form={form}
                 name="ConfirmPassword"
                 label="Confirm Password"
-                placeholder="••••••••"
               />
               <SelectField
                 form={form}

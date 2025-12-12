@@ -1,7 +1,7 @@
 import type { ComponentProps } from "react";
 import { ActionButton } from "../ui/action-button";
 
-const BetterAuthActionButton = ({
+const AuthActionButton = ({
   action,
   successMessage,
   ...props
@@ -21,4 +21,4 @@ const BetterAuthActionButton = ({
   )
 };
 
-export default BetterAuthActionButton;
+export default AuthActionButton;
