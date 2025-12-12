@@ -1,7 +1,7 @@
 import type { SelectOptions } from "@/lib/types";
-import Github from "@/assets/svg/Github";
-import Discord from "@/assets/svg/Discord";
-import Google from "@/assets/svg/Google";
+import Github from "@/assets/svg/github";
+import Discord from "@/assets/svg/discord";
+import Google from "@/assets/svg/google";
 
 export const CURRENCY_OPTIONS: SelectOptions[] = [
   { value: "AED", label: "د.إ AED" },

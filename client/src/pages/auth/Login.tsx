@@ -1,18 +1,18 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import OAuthButtons from "@/components/form/OAuthButtons";
+import OAuthButtons from "@/components/form/o-auth-buttons";
 import { Form } from "@/components/ui/form";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import TextInput from "@/components/form/TextInput";
-import CustomPasswordInput from "@/components/form/PasswordInput";
+import TextInput from "@/components/form/text-input";
+import CustomPasswordInput from "@/components/form/password-input";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { authClient } from "@/utils/auth-client";
 import { toast } from "sonner";
 import { PasswordSchema } from "@/lib/schemas";
-import PasskeyButton from "@/components/form/PasskeyButton";
+import PasskeyButton from "@/components/form/passkey-button";
 
 const signInSchema = z.object({
   email: z.email(),

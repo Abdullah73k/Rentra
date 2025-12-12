@@ -2,19 +2,19 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import PasswordInput from "@/components/form/PasswordInput";
+import PasswordInput from "@/components/form/password-input";
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
-import TextInput from "@/components/form/TextInput";
+import TextInput from "@/components/form/text-input";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { authClient } from "@/utils/auth-client";
 import { toast } from "sonner";
-import VatInput from "@/components/form/VatInput";
-import SelectField from "@/components/form/SelectField";
+import VatInput from "@/components/form/vat-input";
+import SelectField from "@/components/form/select-field";
 import { COUNTRY_OPTIONS, CURRENCY_OPTIONS } from "@/constants/auth.constants";
-import OAuthButtons from "@/components/form/OAuthButtons";
+import OAuthButtons from "@/components/form/o-auth-buttons";
 import { PasswordSchema } from "@/lib/schemas";
 
 const signupSchema = z

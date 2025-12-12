@@ -12,6 +12,4 @@ COPY . .
 
 EXPOSE 5173
 
-ENTRYPOINT [ "pnpm" ]
-
-CMD [ "run", "dev" ]
+CMD [ "pnpm", "run", "dev" ]
