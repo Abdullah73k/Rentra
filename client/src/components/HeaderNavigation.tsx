@@ -1,5 +1,4 @@
 import { NavLink, useNavigate } from "react-router-dom";
-
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -16,26 +15,33 @@ const navigationLinks = [
     title: "Home",
     href: "/",
     description: "Overview of the platform and key product details.",
+    showWhenLoggedIn: true,
   },
   {
     title: "Sign up",
     href: "/auth/signup",
     description: "Create an account to start managing your properties.",
+    showWhenLoggedIn: false,
   },
   {
     title: "Login",
     href: "/auth/login",
     description: "Securely access your property management workspace.",
+    showWhenLoggedIn: false,
   },
   {
     title: "Profile",
     href: "/auth/settings",
     description: "Personalize preferences, billing data, and notifications.",
+    showWhenLoggedIn: true,
   },
 ];
 
 const HeaderNavigation = () => {
   const navigate = useNavigate();
+
+  const { data: session } = authClient.useSession();
+
   return (
     // header styling is the same, just made relative
     <header className="relative bg-[#f8f8f8] p-6 flex">
@@ -68,8 +74,8 @@ const HeaderNavigation = () => {
               <div className="grid gap-5 p-6 md:w-[460px] lg:w-[580px] lg:grid-cols-[0.65fr_1fr]  ">
                 <NavigationMenuLink asChild className="">
                   <NavLink
-                    to="/properties/dashboard"
-                    className="flex  h-full flex-col justify-between rounded-2xl bg-linear-to-br from-[#ff9770] via-[#fe7e6d] to-[#f04d64] p-6 text-left shadow-lg transition hover:shadow-2xl"
+                    to={!session ? "/auth/login" : "/properties/dashboard"}
+                    className="flex h-full flex-col justify-between rounded-2xl bg-linear-to-br from-[#ff9770] via-[#fe7e6d] to-[#f04d64] p-6 text-left shadow-lg transition hover:shadow-2xl"
                   >
                     <div>
                       <p className="text-xs font-semibold uppercase text-white/80">
@@ -90,43 +96,71 @@ const HeaderNavigation = () => {
                 </NavigationMenuLink>
 
                 <ul className="grid gap-2 text-sm">
-                  {navigationLinks.map((link) => (
-                    <li key={link.title}>
+                  {navigationLinks.map((link) => {
+                    if (!session) {
+                      if (link.href == "/auth/settings") {
+                        return;
+                      }
+                      return (
+                        <li key={link.title}>
+                          <NavigationMenuLink asChild>
+                            <NavLink
+                              to={link.href}
+                              className="block rounded-2xl border border-white/10 bg-white/10 p-4 text-left text-white transition hover:border-white/30 hover:bg-white/20"
+                            >
+                              <div className="text-base font-semibold text-[#ffe1d6]">
+                                {link.title}
+                              </div>
+                              <p className="mt-1 text-xs text-white/80">
+                                {link.description}
+                              </p>
+                            </NavLink>
+                          </NavigationMenuLink>
+                        </li>
+                      );
+                    }
+                    if (link.showWhenLoggedIn && session) {
+                      return (
+                        <li key={link.title}>
+                          <NavigationMenuLink asChild>
+                            <NavLink
+                              to={link.href}
+                              className="block rounded-2xl border border-white/10 bg-white/10 p-4 text-left text-white transition hover:border-white/30 hover:bg-white/20"
+                            >
+                              <div className="text-base font-semibold text-[#ffe1d6]">
+                                {link.title}
+                              </div>
+                              <p className="mt-1 text-xs text-white/80">
+                                {link.description}
+                              </p>
+                            </NavLink>
+                          </NavigationMenuLink>
+                        </li>
+                      );
+                    }
+                  })}
+                  {session && (
+                    <li className="h-12">
                       <NavigationMenuLink asChild>
-                        <NavLink
-                          to={link.href}
-                          className="block rounded-2xl border border-white/10 bg-white/10 p-4 text-left text-white transition hover:border-white/30 hover:bg-white/20"
+                        <Button
+                          onClick={() =>
+                            authClient.signOut({
+                              fetchOptions: {
+                                onSuccess: () => {
+                                  navigate("/");
+                                },
+                              },
+                            })
+                          }
+                          className="flex h-12 w-full items-start border border-white/10 bg-white/10 p-4 text-left text-white transition hover:border-white/30 hover:bg-white/20"
                         >
-                          <div className="text-base font-semibold text-[#ffe1d6]">
-                            {link.title}
-                          </div>
-                          <p className="mt-1 text-xs text-white/80">
-                            {link.description}
+                          <p className="text-base font-semibold text-[#ffe1d6]">
+                            Sign Out
                           </p>
-                        </NavLink>
+                        </Button>
                       </NavigationMenuLink>
                     </li>
-                  ))}
-                  <li className="h-12">
-                    <NavigationMenuLink asChild>
-                      <Button
-                        onClick={() =>
-                          authClient.signOut({
-                            fetchOptions: {
-                              onSuccess: () => {
-                                navigate("/");
-                              },
-                            },
-                          })
-                        }
-                        className="flex h-12 w-full items-start border border-white/10 bg-white/10 p-4 text-left text-white transition hover:border-white/30 hover:bg-white/20"
-                      >
-                        <p className="text-base font-semibold text-[#ffe1d6]">
-                          Sign Out
-                        </p>
-                      </Button>
-                    </NavigationMenuLink>
-                  </li>
+                  )}
                 </ul>
               </div>
             </NavigationMenuContent>
