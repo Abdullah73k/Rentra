@@ -1,5 +1,5 @@
 import type { Property, PropertyInfo } from "@/lib/types";
-import CustomCard from "../CustomCard";
+import CustomCard from "../custom-card";
 
 const PropertyDetailsCard = ({
   property,

@@ -1,9 +1,9 @@
 import { FURNISHING_TYPES, PROPERTY_STATUS } from "@/constants/form.constants";
-import TextInput from "../form/TextInput";
+import TextInput from "../form/text-input";
 import type { UseFormReturn } from "react-hook-form";
-import type { FormFields } from "../modals/addPropertyModal";
-import SelectField from "../form/SelectField";
-import NotesInput from "../form/NotesInput";
+import type { FormFields } from "../modals/add-property-modal";
+import SelectField from "../form/select-field";
+import NotesInput from "../form/notes-input";
 
 type PropertyInfoProps = {
   form: UseFormReturn<FormFields>;

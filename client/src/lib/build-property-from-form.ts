@@ -1,4 +1,4 @@
-import type { FormFields } from "@/components/modals/addPropertyModal";
+import type { FormFields } from "@/components/modals/add-property-modal";
 import { v4 as uuidv4 } from "uuid";
 
 export interface PropertyPayload {

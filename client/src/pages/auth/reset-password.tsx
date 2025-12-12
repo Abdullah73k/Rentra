@@ -1,4 +1,4 @@
-import CustomPasswordInput from "@/components/form/PasswordInput";
+import CustomPasswordInput from "@/components/form/password-input";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { LoadingSwap } from "@/components/ui/loading-swap";

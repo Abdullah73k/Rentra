@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom'
-import HeaderNavigation from '../components/HeaderNavigation'
+import HeaderNavigation from '../components/header-navigation'
 import { Toaster } from 'sonner'
 
 const MainLayout = () => {

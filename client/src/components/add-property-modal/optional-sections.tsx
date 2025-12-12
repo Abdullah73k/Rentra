@@ -6,11 +6,11 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Checkbox } from "../ui/checkbox"; // Assuming you have shadcn/ui Checkbox component
-import Lease from "./Lease";
-import Loan from "./Loan";
-import Tenant from "./Tenant";
+import Lease from "./lease";
+import Loan from "./loan";
+import Tenant from "./tenant";
 import type { UseFormReturn } from "react-hook-form";
-import type { FormFields } from "../modals/addPropertyModal";
+import type { FormFields } from "../modals/add-property-modal";
 
 type OptionalSectionsProps = {
   form: UseFormReturn<FormFields>;

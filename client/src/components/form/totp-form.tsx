@@ -6,7 +6,7 @@ import { authClient } from "@/utils/auth-client";
 import { useNavigate } from "react-router-dom";
 import z from "zod";
 import { LoadingSwap } from "../ui/loading-swap";
-import TextInput from "./TextInput";
+import TextInput from "./text-input";
 import { toast } from "sonner";
 
 const totpSchema = z.object({

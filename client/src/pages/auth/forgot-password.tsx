@@ -1,4 +1,4 @@
-import TextInput from "@/components/form/TextInput";
+import TextInput from "@/components/form/text-input";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { LoadingSwap } from "@/components/ui/loading-swap";

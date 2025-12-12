@@ -1,9 +1,9 @@
-import TextInput from "../form/TextInput";
+import TextInput from "../form/text-input";
 import { LEASE_FREQUENCIES } from "@/constants/form.constants";
-import type { FormFields } from "../modals/addPropertyModal";
+import type { FormFields } from "../modals/add-property-modal";
 import type { UseFormReturn } from "react-hook-form";
-import DateInput from "../form/DateInput";
-import SelectField from "../form/SelectField";
+import DateInput from "../form/date-input";
+import SelectField from "../form/select-field";
 
 type LeaseProps = {
   form: UseFormReturn<FormFields>;

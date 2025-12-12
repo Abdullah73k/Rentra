@@ -1,6 +1,6 @@
 import { Users } from "lucide-react";
 import { type Tenant } from "@/lib/types";
-import CustomCard from "../CustomCard";
+import CustomCard from "../custom-card";
 
 const TenantCard = ({ tenant }: { tenant: Tenant }) => {
   return (

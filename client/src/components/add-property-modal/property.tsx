@@ -1,9 +1,9 @@
 import { PROPERTY_PURPOSES, PROPERTY_TYPES } from "@/constants/form.constants";
-import TextInput from "../form/TextInput";
+import TextInput from "../form/text-input";
 import type { UseFormReturn } from "react-hook-form";
-import type { FormFields } from "../modals/addPropertyModal";
-import DateInput from "../form/DateInput";
-import SelectField from "../form/SelectField";
+import type { FormFields } from "../modals/add-property-modal";
+import DateInput from "../form/date-input";
+import SelectField from "../form/select-field";
 
 type PropertyProps = {
   form: UseFormReturn<FormFields>;

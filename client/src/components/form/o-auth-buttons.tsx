@@ -1,4 +1,4 @@
-import OauthButton from "./OauthButton";
+import OauthButton from "./oauth-button";
 import { OAuthProviders } from "@/constants/auth.constants";
 
 const OAuthButtons = () => {

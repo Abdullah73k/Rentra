@@ -1,6 +1,6 @@
 import { Banknote } from "lucide-react";
 import type { Loan } from "@/lib/types";
-import CustomCard from "../CustomCard";
+import CustomCard from "../custom-card";
 
 const LoanCard = ({ loan }: { loan: Loan }) => {
   return (

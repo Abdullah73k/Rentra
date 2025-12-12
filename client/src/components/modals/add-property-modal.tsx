@@ -8,10 +8,10 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import Property from "../addPropertyModal/Property";
-import PropertyInfo from "../addPropertyModal/PropertyInfo";
-import { buildPropertyFromForm } from "@/lib/buildPropertyFromForm";
-import OptionalSections from "../addPropertyModal/OptionalSections";
+import Property from "../add-property-modal/property";
+import PropertyInfo from "../add-property-modal/property-info";
+import { buildPropertyFromForm } from "@/lib/build-property-from-form";
+import OptionalSections from "../add-property-modal/optional-sections";
 import { Form } from "../ui/form";
 import { z } from "zod";
 import {

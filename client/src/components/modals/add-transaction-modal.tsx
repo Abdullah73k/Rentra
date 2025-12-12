@@ -16,14 +16,14 @@ import type {
   AddTransactionFormData,
   AddTransactionModalProps,
 } from "@/lib/types";
-import { buildTransactionFromForm } from "@/lib/buildTransactionFromForm";
+import { buildTransactionFromForm } from "@/lib/build-transaction-from-form";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "../ui/form";
-import TextInput from "../form/TextInput";
-import SelectField from "../form/SelectField";
-import NotesInput from "../form/NotesInput";
+import TextInput from "../form/text-input";
+import SelectField from "../form/select-field";
+import NotesInput from "../form/notes-input";
 
 // TODO: make validation more sophisticated when integrating with backend
 const schema = z.object({

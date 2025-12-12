@@ -1,6 +1,6 @@
 import type { UseFormReturn } from "react-hook-form";
-import TextInput from "../form/TextInput";
-import type { FormFields } from "../modals/addPropertyModal";
+import TextInput from "../form/text-input";
+import type { FormFields } from "../modals/add-property-modal";
 
 type LoanProps = {
   form: UseFormReturn<FormFields>;

@@ -11,20 +11,20 @@ import { Button } from "../ui/button";
 import type { Account, Session, twoFactorData } from "@/lib/types";
 import { authClient } from "@/utils/auth-client";
 import { useEffect, useState } from "react";
-import SetPasswordSchema from "./SetPasswordSchema";
-import ChangePasswordForm from "./ChangePasswordForm";
+import SetPasswordSchema from "./set-password-schema";
+import ChangePasswordForm from "./change-password-form";
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "../ui/form";
 import { PasswordSchema } from "@/lib/schemas";
-import CustomPasswordInput from "../form/PasswordInput";
+import CustomPasswordInput from "../form/password-input";
 import { LoadingSwap } from "../ui/loading-swap";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import QRCodeVerify from "./QRCodeVerify";
+import QRCodeVerify from "./qr-code-verify";
 import { type Passkey } from "better-auth/plugins/passkey";
-import PasskeyManagement from "./PasskeyManagement";
+import PasskeyManagement from "./passkey-management";
 
 const twoFactorAuthSchema = z.object({
   password: PasswordSchema,

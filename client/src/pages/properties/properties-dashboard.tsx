@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import PropertyCard from "@/components/PropertyCard";
-import AddPropertyModal from "@/components/modals/addPropertyModal";
+import PropertyCard from "@/components/property-card";
+import AddPropertyModal from "@/components/modals/add-property-modal";
 import { mockProperty, mockPropertyInfo } from "@/lib/mock-data";
 import { authClient } from "@/utils/auth-client";
 

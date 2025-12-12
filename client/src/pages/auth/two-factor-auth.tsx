@@ -1,5 +1,5 @@
-import BackupCodeForm from "@/components/form/BackupCodeForm";
-import TotpForm from "@/components/form/TotpForm";
+import BackupCodeForm from "@/components/form/backup-code-form";
+import TotpForm from "@/components/form/totp-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { authClient } from "@/utils/auth-client";

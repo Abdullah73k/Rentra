@@ -4,11 +4,11 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import { Button } from "../ui/button";
 import { Form } from "../ui/form";
-import TextInput from "../form/TextInput";
+import TextInput from "../form/text-input";
 import { type Passkey } from "better-auth/plugins/passkey";
 import { LoadingSwap } from "../ui/loading-swap";
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
-import BetterAuthActionButton from "../form/AuthActionButton";
+import BetterAuthActionButton from "../form/auth-action-button";
 import {
   Dialog,
   DialogContent,

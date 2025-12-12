@@ -1,11 +1,11 @@
 import React from "react";
-import PropertyInfoCard from "./PropertyInfoCard";
+import PropertyInfoCard from "./property-info-card";
 import type { PropertyOverviewProps } from "@/lib/types";
-import TenantCard from "./TenantCard";
-import LeaseCard from "./LeaseCard";
-import LoanCard from "./LoanCard";
-import AddNewField from "./AddNewField";
-import PropertyDetailsCard from "./PropertyDetailsCard";
+import TenantCard from "./tenant-card";
+import LeaseCard from "./lease-card";
+import LoanCard from "./loan-card";
+import AddNewField from "./add-new-field";
+import PropertyDetailsCard from "./property-details-card";
 
 const PropertyOverview: React.FC<PropertyOverviewProps> = ({
   property,

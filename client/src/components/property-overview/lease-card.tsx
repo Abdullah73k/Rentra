@@ -1,6 +1,6 @@
 import { FileText } from "lucide-react";
 import type { Lease } from "@/lib/types";
-import CustomCard from "../CustomCard";
+import CustomCard from "../custom-card";
 
 const LeaseCard = ({ lease }: { lease: Lease }) => {
   return (

@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { Form } from "../ui/form";
-import TextInput from "../form/TextInput";
+import TextInput from "../form/text-input";
 import { Button } from "../ui/button";
 import { LoadingSwap } from "../ui/loading-swap";
 import QRCode from "react-qr-code";

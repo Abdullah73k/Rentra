@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import BetterAuthActionButton from "./AuthActionButton";
+import BetterAuthActionButton from "./auth-action-button";
 import { authClient } from "@/utils/auth-client";
 
 const OauthButton = ({

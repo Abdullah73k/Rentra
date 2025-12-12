@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import BetterAuthActionButton from "../form/AuthActionButton";
+import BetterAuthActionButton from "../form/auth-action-button";
 import { authClient } from "@/utils/auth-client";
 
 const PreferencesTab = () => {

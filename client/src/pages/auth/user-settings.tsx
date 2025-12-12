@@ -3,10 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import type { UserSettingsTab } from "@/lib/types";
-import LeftSidebar from "@/components/userSettings/LeftSidebar";
-import ProfileTab from "@/components/userSettings/ProfileTab";
-import SecurityTab from "@/components/userSettings/SecurityTab";
-import PreferencesTab from "@/components/userSettings/PreferencesTab";
+import LeftSidebar from "@/components/user-settings/left-sidebar";
+import ProfileTab from "@/components/user-settings/profile-tab";
+import SecurityTab from "@/components/user-settings/security-tab";
+import PreferencesTab from "@/components/user-settings/preferences-tab";
 import { authClient } from "@/utils/auth-client";
 
 const SettingsPage: React.FC = () => {
