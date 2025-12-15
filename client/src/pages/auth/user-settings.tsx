@@ -7,17 +7,18 @@ import LeftSidebar from "@/components/user-settings/left-sidebar";
 import ProfileTab from "@/components/user-settings/profile-tab";
 import SecurityTab from "@/components/user-settings/security-tab";
 import PreferencesTab from "@/components/user-settings/preferences-tab";
-import { authClient } from "@/utils/auth-client";
+import { useAuthStore } from "@/stores/auth.store";
 
 const SettingsPage: React.FC = () => {
+  const {session, isPending, isAuthenticated} = useAuthStore((state) => state);
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState<UserSettingsTab>("profile");
 
-  const { data: session, isPending } = authClient.useSession();
+  // const { data: session, isPending } = authClient.useSession();
 
   useEffect(() => {
-    if (!isPending && !session) navigate("/auth/login");
+    if (!isPending && !isAuthenticated) navigate("/auth/login");
   }, [isPending, session, navigate]);
 
   if (isPending) {
