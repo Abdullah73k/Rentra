@@ -5,19 +5,20 @@ import { Plus } from "lucide-react";
 import PropertyCard from "@/components/property-card";
 import AddPropertyModal from "@/components/modals/add-property-modal";
 import { mockProperty, mockPropertyInfo } from "@/lib/mock-data";
-import { authClient } from "@/utils/auth-client";
+import { useAuthStore } from "@/stores/auth.store";
 
 const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
 
-  const { data: session, isPending } = authClient.useSession();
+  const session = useAuthStore((s) => s.session);
+  const isPending = useAuthStore((s) => s.isPending);
 
   useEffect(() => {
     if (!isPending && !session) navigate("/auth/login");
   }, [isPending, session, navigate]);
 
   if (isPending) {
-    return null; // could render a spinner here
+    return null; // TODO: render a spinner or loading screen
   }
 
   const [properties, setProperties] = useState([

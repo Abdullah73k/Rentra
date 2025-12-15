@@ -2,13 +2,13 @@ import BackupCodeForm from "@/components/form/backup-code-form";
 import TotpForm from "@/components/form/totp-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { authClient } from "@/utils/auth-client";
+import { useAuthStore } from "@/stores/auth.store";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const TwoFactorAuth = () => {
   const navigate = useNavigate();
-  const { data: session } = authClient.useSession();
+  const session = useAuthStore((s) => s.session);
 
   useEffect(() => {
     if (session != null) {
