@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import PropertyCard from "@/components/property-card";
@@ -8,14 +8,10 @@ import { mockProperty, mockPropertyInfo } from "@/lib/mock-data";
 import { useAuthStore } from "@/stores/auth.store";
 
 const DashboardPage: React.FC = () => {
-  const navigate = useNavigate();
-
   const session = useAuthStore((s) => s.session);
   const isPending = useAuthStore((s) => s.isPending);
 
-  useEffect(() => {
-    if (!isPending && !session) navigate("/auth/login");
-  }, [isPending, session, navigate]);
+  if (!session) return <Navigate to="/auth/login" replace />;
 
   if (isPending) {
     return null; // TODO: render a spinner or loading screen
