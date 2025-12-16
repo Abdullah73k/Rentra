@@ -224,7 +224,7 @@ export type Session = {
     ipAddress?: string | null | undefined;
     userAgent?: string | null | undefined;
   };
-} | null
+}
 export type Account = {
   id: string;
   providerId: string;

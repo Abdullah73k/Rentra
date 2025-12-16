@@ -11,6 +11,7 @@ import { Button } from "./ui/button";
 import { authClient } from "@/utils/auth-client";
 import type { NavigationLink } from "@/lib/types";
 import { Loader } from "lucide-react";
+import { useAuthStore } from "@/stores/auth.store";
 
 const navigationLinks: NavigationLink[] = [
   {
@@ -41,14 +42,13 @@ const navigationLinks: NavigationLink[] = [
 
 const HeaderNavigation = () => {
   const navigate = useNavigate();
-  setTimeout(() => {}, 1000)
-  const { data: session, isPending } = authClient.useSession();
-
-  if(isPending){
-    return <Loader />
-  }
-
+  const session = useAuthStore((s) => s.session);
+  const isPending = useAuthStore((s) => s.isPending);
   const isAuthenticated = !!session;
+
+  if (isPending) {
+    return <Loader />;
+  }
 
   const shouldShowLink = (link: NavigationLink): boolean => {
     switch (link.visibleTo) {
@@ -93,7 +93,9 @@ const HeaderNavigation = () => {
               <div className="grid gap-5 p-6 md:w-[460px] lg:w-[580px] lg:grid-cols-[0.65fr_1fr]">
                 <NavigationMenuLink asChild>
                   <NavLink
-                    to={isAuthenticated ? "/properties/dashboard" : "/auth/login"}
+                    to={
+                      isAuthenticated ? "/properties/dashboard" : "/auth/login"
+                    }
                     className="flex h-full flex-col justify-between rounded-2xl bg-linear-to-br from-[#ff9770] via-[#fe7e6d] to-[#f04d64] p-6 text-left shadow-lg transition hover:shadow-2xl"
                   >
                     <div>
