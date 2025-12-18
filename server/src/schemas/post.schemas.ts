@@ -22,7 +22,7 @@ export const propertySchema = z.object({
 	acquisitionDate: ReusableTypes.date,
 	currentValue: ReusableTypes.decimal,
 	photos: ReusableTypes.stringArray,
-	sold: z.coerce.boolean<"true" | "false">(),
+	sold: z.boolean(),
 });
 
 export const propertyInfoSchema = z.object({
@@ -86,12 +86,12 @@ export const transactionSchema = z.object({
 	propertyId: ReusableTypes.uuid,
 	leaseId: ReusableTypes.uuid.optional(),
 	type: z.enum(["income", "expense"]),
-	subcategory: z.string().optional(),
+	subcategory: ReusableTypes.optionalString,
 	amount: ReusableTypes.decimal,
 	currency: ReusableTypes.currency,
-	taxRate: z.coerce.number<string>().min(0).max(1),
-	taxAmount: z.coerce.number<string>().min(0),
-	fxRateToBase: z.coerce.number<string>().min(0).max(9999999999.999999),
+	taxRate: z.number().min(0).max(1),
+	taxAmount: z.number().min(0),
+	fxRateToBase: z.number().min(0).max(9999999999.999999),
 	from: z.string().min(1),
 	to: z.string().min(1),
 	method: z.enum([
