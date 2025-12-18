@@ -1,11 +1,12 @@
 import { expect, describe, it } from "vitest";
 import { validateUUID } from "../../utils/validation.utils.js";
+import { randomUUID } from "node:crypto";
 
 
 describe("validateUUID", () => {
 	// Case 1: Testing the Valid Input
 	it("should return success: true for a valid UUID", () => {
-		const validId = "550e8400-e29b-41d4-a716-446655440000";
+		const validId = randomUUID();
 
 		const result = validateUUID(validId);
 
