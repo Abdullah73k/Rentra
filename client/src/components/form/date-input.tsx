@@ -65,7 +65,7 @@ const DateInput = <T extends FieldValues>({
                   mode="single"
                   selected={isValidDate ? dateValue : undefined}
                   onSelect={(date) => {
-                    field.onChange(date ? date.toISOString() : null);
+                    field.onChange(date ? format(date, "yyyy-MM-dd") : null);
                   }}
                   autoFocus
                 />
