@@ -42,5 +42,4 @@ export const propertyDataSchema = z
 		loan: loanSchema,
 		tenant: tenantSchema,
 		lease: leaseSchema,
-	})
-	.partial();
+	});
