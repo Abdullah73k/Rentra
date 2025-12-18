@@ -140,7 +140,7 @@ export const ADD_PROPERTY_DEFAULT_VALUES: {
     status: "available",
     furnished: "furnished",
     parking: "",
-    lockerNumber: [],
+    lockerNumber: [""],
     notes: "",
   },
   optionalSections: {

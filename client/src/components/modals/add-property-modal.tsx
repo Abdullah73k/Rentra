@@ -19,6 +19,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ADD_PROPERTY_DEFAULT_VALUES } from "@/constants/form.constants";
 import { useMutation } from "@tanstack/react-query";
+import { createNewProperty } from "@/utils/http";
 
 export type FormFields = z.infer<typeof schema>;
 interface AddPropertyModalProps {
@@ -40,26 +41,22 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
     defaultValues: ADD_PROPERTY_DEFAULT_VALUES,
   });
 
-  // useMutation({
-  //   mutationFn: () => {
-
-  //   }
-  // })
+  const { mutate } = useMutation({
+    mutationFn: createNewProperty
+  })
 
   const handleSave = async () => {
     const isValid = await form.trigger();
     console.log(isValid);
 
-    if (!isValid) return;
+    // if (!isValid) return;
 
     const values = form.getValues();
 
     const property = buildPropertyFromForm(values);
     console.log(property);
 
-    onSave(property);
-    form.reset();
-    setStep(1);
+    mutate(property)
   };
 
   const watchedProperty = form.watch("property");

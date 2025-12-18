@@ -1,3 +1,6 @@
+import type z from "zod"
+import type { propertyDataSchema } from "./schemas"
+
 // Property Management Types
 export type PropertyPurpose = "residential" | "commercial" | "investment" | "vacation"
 export type PropertyType = "apartment" | "house" | "condo" | "office" | "retail" | "land"
@@ -237,3 +240,4 @@ export type twoFactorData = {
   totpURI: string;
   backupCodes: string[];
 } | null
+export type NewPropertyBuildType = z.infer<typeof propertyDataSchema>

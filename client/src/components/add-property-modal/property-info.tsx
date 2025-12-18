@@ -4,12 +4,16 @@ import type { UseFormReturn } from "react-hook-form";
 import type { FormFields } from "../modals/add-property-modal";
 import SelectField from "../form/select-field";
 import NotesInput from "../form/notes-input";
+import { useState } from "react";
 
 type PropertyInfoProps = {
   form: UseFormReturn<FormFields>;
 };
 
 const PropertyInfo = ({ form }: PropertyInfoProps) => {
+  const [] = useState("")
+
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">

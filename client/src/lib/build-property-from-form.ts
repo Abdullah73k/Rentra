@@ -1,15 +1,12 @@
 import type { FormFields } from "@/components/modals/add-property-modal";
 import { v4 as uuidv4 } from "uuid";
-import type z from "zod";
-import type { propertyDataSchema } from "./schemas";
 import { isCompleteLease, isCompleteLoan, isCompleteTenant } from "@/utils/property.utils";
+import type { NewPropertyBuildType } from "./types";
 
 export interface PropertyPayload {
   // TODO: type this properly later
   [key: string]: any;
 }
-
-type NewPropertyBuildType = z.infer<typeof propertyDataSchema>
 
 export function buildPropertyFromForm(formValues: FormFields): Omit<NewPropertyBuildType, "optionalSections"> {
   const { property, propertyInfo, optionalSections, tenant, lease, loan } = formValues;
