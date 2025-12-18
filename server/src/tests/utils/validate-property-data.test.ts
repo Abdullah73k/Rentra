@@ -94,9 +94,11 @@ export const createValidPATCHData = (
 
 describe("validatePropertyData", () => {
 	describe("patch", () => {
-		// testMissingObjectKey(createValidPATCHData, () =>
-		// 	validatePropertyData(createValidPATCHData(), true)
-		// );
+		testMissingObjectKey(
+			() => createValidPATCHData(),
+			validatePropertyData,
+			true
+		);
 
 		it("should return success: false for empty patch object", () => {
 			// We use 'as any' because we intentionally want to test invalid input
@@ -120,39 +122,20 @@ describe("validatePropertyData", () => {
 			const result = validatePropertyData(validPatchData, patch);
 
 			expect(result.success).toBe(true);
-			// if (result.success) {
-			// 	// Optional: Check that we got some errors back
-			// 	expect(result.data).toBe(validPatchData);
-			// }
 		});
 	});
 
 	describe("post", () => {
-		// const propertyKeys = Object.keys(createValidPOSTData().property);
 
-		// propertyKeys.forEach((key) => {
-		// 	it(`should fail when required field '${key}' from property object is missing`, () => {
-		// 		const data = createValidPOSTData();
-		// 		delete data.property[key]; // Deterministically delete ONE key
-
-		// 		// If it's an optional key, we expect success. If required, failure.
-		// 		// You'd need logic here to know which is which, or just test the known required ones.
-		// 		// const isOptional = ['sold'].includes(key);
-
-		// 		const result = validatePropertyData(data);
-		// 		expect(result.success).toBe(false);
-		// 	});
-		// });
-
-		// testMissingObjectKey(
-		// 	() =>
-		// 		createValidPOSTData({
-		// 			loan: { ...loanData() },
-		// 			tenant: { ...tenantData() },
-		// 			lease: { ...leaseData() },
-		// 		}),
-		// 	validatePropertyData
-		// );
+		testMissingObjectKey(
+			() =>
+				createValidPOSTData({
+					loan: { ...loanData() },
+					tenant: { ...tenantData() },
+					lease: { ...leaseData() },
+				}),
+			validatePropertyData
+		);
 
 		it("false for empty post object", () => {
 			const invalidPostData = {} as any;
