@@ -33,7 +33,9 @@
     "@types/express": "^5.0.3",
     "@types/nodemailer": "^7.0.3",
     "@types/pg": "^8.15.5",
+    "@types/supertest": "^6.0.3",
     "nodemon": "^3.1.10",
+    "supertest": "^7.1.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2",
     "vitest": "^4.0.15"
