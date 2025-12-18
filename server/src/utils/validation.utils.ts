@@ -2,7 +2,6 @@ import * as POST from "../schemas/post.schemas.js";
 import * as PATCH from "../schemas/patch.schemas.js";
 import { z } from "zod";
 import * as API from "../types/api.types.js";
-import * as DB from "../types/db.types.js";
 
 export function validateUUID(userId: string) {
 	const schema = z.uuid();
@@ -10,8 +9,7 @@ export function validateUUID(userId: string) {
 	return result;
 }
 export function validatePropertyData<
-	T extends API.POSTPropertyData | API.PATCHPropertyData,
-	U extends DB.POSTPropertyData | DB.PATCHPropertyData
+	T extends API.POSTPropertyData | API.PATCHPropertyData
 >(data: T, patch: boolean = false) {
 	const schema = patch ? PATCH.propertyDataSchema : POST.propertyDataSchema;
 	const result = schema.safeParse(data);
@@ -26,14 +24,13 @@ export function validatePropertyData<
 	}
 	const validatedData = {
 		success: true as const,
-		data: result.data as U,
+		data: result.data as T,
 	};
 	return validatedData;
 }
 
 export function validateTransactionDetails<
-	T extends API.POSTTransaction | API.PATCHTransaction,
-	U extends DB.CreateTransaction | DB.Transaction
+	T extends API.POSTTransaction | API.PATCHTransaction
 >(transaction: T, patch: boolean = false) {
 	const schema = patch ? PATCH.transactionSchema : POST.transactionSchema;
 
@@ -50,7 +47,7 @@ export function validateTransactionDetails<
 		return errorObj;
 	}
 
-	const validatedData = { success: true as const, data: result.data as U };
+	const validatedData = { success: true as const, data: result.data as T };
 	return validatedData;
 }
 
