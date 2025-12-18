@@ -1,7 +1,7 @@
 import type { FormFields } from "@/components/modals/add-property-modal";
-import { v4 as uuidv4 } from "uuid";
 import { isCompleteLease, isCompleteLoan, isCompleteTenant } from "@/utils/property.utils";
 import type { NewPropertyBuildType } from "./types";
+import { useAuthStore } from "@/stores/auth.store";
 
 export interface PropertyPayload {
   // TODO: type this properly later
@@ -10,7 +10,12 @@ export interface PropertyPayload {
 
 export function buildPropertyFromForm(formValues: FormFields): Omit<NewPropertyBuildType, "optionalSections"> {
   const { property, propertyInfo, optionalSections, tenant, lease, loan } = formValues;
-  const userId = uuidv4(); // TODO: get actual userId
+  const session = useAuthStore.getState().session
+  if (!session) {
+    throw new Error("Invalid session")
+  }
+
+  const userId = session.user.id
 
   const newPropertyBuild: Omit<NewPropertyBuildType, "optionalSections"> = {
     property: {

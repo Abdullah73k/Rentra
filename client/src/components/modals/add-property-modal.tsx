@@ -41,8 +41,8 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
   });
 
   const { mutate } = useMutation({
-    mutationFn: createNewProperty
-  })
+    mutationFn: createNewProperty,
+  });
 
   const handleSave = async () => {
     const isValid = await form.trigger();
@@ -51,11 +51,15 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
     // if (!isValid) return;
 
     const values = form.getValues();
+    try {
+      const property = buildPropertyFromForm(values);
+      console.log(property);
 
-    const property = buildPropertyFromForm(values);
-    console.log(property);
-
-    mutate(property)
+      mutate(property);
+    } catch (error) {
+      console.log(error);
+      
+    }
   };
 
   const watchedProperty = form.watch("property");
