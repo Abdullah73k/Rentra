@@ -1,7 +1,3 @@
-import dotenv from "dotenv";
-
-dotenv.config();
-
 import express, { type Express, type Request, type Response } from "express";
 import cors from "cors";
 import propertiesRouter from "./routes/properties.routes.js";
