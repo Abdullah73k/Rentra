@@ -49,7 +49,7 @@ const PropertyInfo = ({ form }: PropertyInfoProps) => {
       </div>
       <SelectField
         form={form}
-        name="propertyInfo.furnishing"
+        name="propertyInfo.furnished"
         label="Furnishing *"
         options={FURNISHING_TYPES}
       />
@@ -59,6 +59,11 @@ const PropertyInfo = ({ form }: PropertyInfoProps) => {
         name="propertyInfo.parking"
         label="Parking"
         placeholder="Covered Parking - Spot B12"
+      />
+      <TextInput
+        form={form}
+        name="propertyInfo.lockerNumber"
+        label="Locker Number *"
       />
 
       <NotesInput form={form} name="propertyInfo.notes" />

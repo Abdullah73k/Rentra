@@ -14,26 +14,11 @@ import { buildPropertyFromForm } from "@/lib/build-property-from-form";
 import OptionalSections from "../add-property-modal/optional-sections";
 import { Form } from "../ui/form";
 import { z } from "zod";
-import {
-  LeaseSchema,
-  LoanSchema,
-  OptionalSectionsSchema,
-  PropertyInfoSchema,
-  PropertySchema,
-  TenantSchema,
-} from "@/lib/schemas";
+import { propertyDataSchema as schema } from "@/lib/schemas";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ADD_PROPERTY_DEFAULT_VALUES } from "@/constants/form.constants";
-
-const schema = z.object({
-  property: PropertySchema,
-  propertyInfo: PropertyInfoSchema,
-  optionalSections: OptionalSectionsSchema,
-  tenant: TenantSchema.optional(),
-  lease: LeaseSchema.optional(),
-  loan: LoanSchema.optional(),
-});
+import { useMutation } from "@tanstack/react-query";
 
 export type FormFields = z.infer<typeof schema>;
 interface AddPropertyModalProps {
@@ -55,12 +40,23 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
     defaultValues: ADD_PROPERTY_DEFAULT_VALUES,
   });
 
+  // useMutation({
+  //   mutationFn: () => {
+
+  //   }
+  // })
+
   const handleSave = async () => {
     const isValid = await form.trigger();
+    console.log(isValid);
+
     if (!isValid) return;
 
     const values = form.getValues();
+
     const property = buildPropertyFromForm(values);
+    console.log(property);
+
     onSave(property);
     form.reset();
     setStep(1);
@@ -76,8 +72,7 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
     watchedProperty?.purchasePrice !== undefined &&
     watchedProperty?.closingCosts !== undefined &&
     watchedProperty?.currentValue !== undefined &&
-    !!watchedProperty?.acquisitionDate &&
-    !!watchedProperty?.valuationDate;
+    !!watchedProperty?.acquisitionDate;
 
   const watchedPropertyInfo = form.watch("propertyInfo");
   const isStep2Valid =
@@ -86,7 +81,7 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
     watchedPropertyInfo?.bathrooms !== undefined &&
     watchedPropertyInfo?.sizeSqm !== undefined &&
     !!watchedPropertyInfo?.status &&
-    !!watchedPropertyInfo?.furnishing;
+    !!watchedPropertyInfo?.furnished;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

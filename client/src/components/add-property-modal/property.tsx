@@ -73,11 +73,7 @@ const Property = ({ form }: PropertyProps) => {
           name="property.acquisitionDate"
           label="Acquisition Date *"
         />
-        <DateInput
-          form={form}
-          name="property.valuationDate"
-          label="Valuation Date *"
-        />
+        {/* TODO: add a photo input here */}
       </div>
 
       <div className="grid grid-cols-2 gap-4">
@@ -87,6 +83,13 @@ const Property = ({ form }: PropertyProps) => {
           label="Current Value *"
           placeholder="0"
           type="number"
+        />
+        <SelectField
+          form={form}
+          name="property.sold"
+          label="Sold *"
+          placeholder="Select"
+          options={["Yes", "No"]}
         />
       </div>
     </div>
