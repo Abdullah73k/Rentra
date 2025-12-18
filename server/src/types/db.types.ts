@@ -10,6 +10,7 @@ import {
 	TENANT_COLUMNS,
 	TRANSACTION_COLUMNS,
 } from "../constants/db-table-columns.constants.js";
+import type { PATCHPropertyData, POSTPropertyData } from "./api.types.js";
 
 export type TableObjects =
 	| Lease
@@ -59,10 +60,6 @@ export const Ids = [
 
 export type Ids = (typeof Ids)[number];
 
-// export type Property = z.output<typeof propertySchema>;
-
-export type POSTPropertyData = z.output<typeof POST.propertyDataSchema>;
-export type PATCHPropertyData = z.output<typeof PATCH.propertyDataSchema>;
 
 // transformed from http req into proper format to be stored in DB (transformed by zod)
 export type Property = NonNullable<PATCHPropertyData["property"]>;

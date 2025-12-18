@@ -3,10 +3,8 @@ import { StatusCodes } from "../../constants/statusCodes.constants.js";
 import {
 	validateUUID,
 	validatePropertyData,
-	pruneUndefined,
 } from "../../utils/validation.utils.js";
 import * as API from "../../types/api.types.js";
-import * as DB from "../../types/db.types.js";
 import { PropertyService } from "../../services/property.services.js";
 import { ValidationError } from "../../errors/validation.errors.js";
 
@@ -53,8 +51,7 @@ export const postPropertyData = async (
 	const propertyData = req.body;
 
 	const result = validatePropertyData<
-		API.POSTPropertyData,
-		DB.POSTPropertyData
+		API.POSTPropertyData
 	>(propertyData);
 
 	if (!result.success)
