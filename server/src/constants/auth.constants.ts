@@ -1,7 +1,3 @@
-import { config } from "dotenv";
-
-config()
-
 export const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET ?? ""
 export const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID ?? ""
 export const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET ?? ""

@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "vitest",
-    "dev": "nodemon ",
+    "dev": "doppler run -- nodemon ",
     "build": "tsc",
     "start": "node dist/index.js"
   },
@@ -21,7 +21,6 @@
     "axios": "^1.12.2",
     "better-auth": "^1.3.33",
     "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "express-rate-limit": "^8.1.0",
     "nodemailer": "^7.0.10",
@@ -33,7 +32,9 @@
     "@types/express": "^5.0.3",
     "@types/nodemailer": "^7.0.3",
     "@types/pg": "^8.15.5",
+    "@types/supertest": "^6.0.3",
     "nodemon": "^3.1.10",
+    "supertest": "^7.1.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2",
     "vitest": "^4.0.15"
