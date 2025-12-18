@@ -32,7 +32,6 @@ interface AddPropertyModalProps {
 const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
   isOpen,
   onClose,
-  onSave,
 }) => {
   const [step, setStep] = useState(1);
 
