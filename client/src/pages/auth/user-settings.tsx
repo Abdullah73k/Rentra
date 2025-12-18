@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import type { UserSettingsTab } from "@/lib/types";
@@ -7,22 +7,18 @@ import LeftSidebar from "@/components/user-settings/left-sidebar";
 import ProfileTab from "@/components/user-settings/profile-tab";
 import SecurityTab from "@/components/user-settings/security-tab";
 import PreferencesTab from "@/components/user-settings/preferences-tab";
-import { authClient } from "@/utils/auth-client";
+import { useAuthStore } from "@/stores/auth.store";
 
 const SettingsPage: React.FC = () => {
-  const navigate = useNavigate();
+  const session = useAuthStore((s) => s.session);
+  const isPending = useAuthStore((s) => s.isPending);
 
   const [activeTab, setActiveTab] = useState<UserSettingsTab>("profile");
-
-  const { data: session, isPending } = authClient.useSession();
-
-  useEffect(() => {
-    if (!isPending && !session) navigate("/auth/login");
-  }, [isPending, session, navigate]);
 
   if (isPending) {
     return null; // TODO: add loading screen here
   }
+  if (!session) return <Navigate to="/auth/login" replace />;
 
   return (
     <div className="min-h-screen bg-[#f8f8f8]">
