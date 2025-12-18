@@ -5,16 +5,16 @@ import { PropertyRepository } from "../repositories/property.repositories.js";
 import { PropertyInfoRepository } from "../repositories/propertyInfo.repositories.js";
 import { TenantRepository } from "../repositories/tenant.repositories.js";
 import { TransactionRepository } from "../repositories/transaction.repositories.js";
-import * as DB from "../types/db.types.js";
+import * as API from "../types/api.types.js";
 import { queryInTransaction } from "../utils/service.utils.js";
 import { pool } from "../configs/pg.config.js";
 
 export const PropertyService = {
-	async create(data: DB.POSTPropertyData) {
+	async create(data: API.POSTPropertyData) {
 		const client = await pool.connect();
 
 		const queryFn = async (
-			propertyData: DB.POSTPropertyData,
+			propertyData: API.POSTPropertyData,
 			client: PoolClient
 		) => {
 			const property = await PropertyRepository.createProperty(
