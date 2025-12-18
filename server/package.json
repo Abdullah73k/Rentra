@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "vitest",
-    "dev": "nodemon ",
+    "dev": "doppler run -- nodemon ",
     "build": "tsc",
     "start": "node dist/index.js"
   },
