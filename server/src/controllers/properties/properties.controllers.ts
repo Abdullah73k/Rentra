@@ -3,7 +3,6 @@ import { StatusCodes } from "../../constants/statusCodes.constants.js";
 import {
 	validateUUID,
 	validatePropertyData,
-	pruneUndefined,
 } from "../../utils/validation.utils.js";
 import * as API from "../../types/api.types.js";
 import { PropertyService } from "../../services/property.services.js";
