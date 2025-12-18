@@ -16,8 +16,8 @@ const PropertyInfo = ({ form }: PropertyInfoProps) => {
   const [LockerNumArray, setLockerNumArray] = useState<string[]>([]);
 
   useEffect(() => {
-    form.setValue("propertyInfo.lockerNumber", LockerNumArray)
-  }, [LockerNumArray, form])
+    form.setValue("propertyInfo.lockerNumber", LockerNumArray);
+  }, [LockerNumArray, form]);
 
   return (
     <div className="space-y-4">
@@ -87,11 +87,11 @@ const PropertyInfo = ({ form }: PropertyInfoProps) => {
                   setCurrentLockerNum(e.target.value);
                 }}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
+                  if (e.key === "Enter") {
                     e.preventDefault();
-                    if(currentLockerNum) {
-                        setLockerNumArray((prev) => [...prev, currentLockerNum]);
-                        setCurrentLockerNum("");
+                    if (currentLockerNum) {
+                      setLockerNumArray((prev) => [...prev, currentLockerNum]);
+                      setCurrentLockerNum("");
                     }
                   }
                 }}
@@ -103,7 +103,7 @@ const PropertyInfo = ({ form }: PropertyInfoProps) => {
                 onClick={() => {
                   if (!currentLockerNum) return;
                   setLockerNumArray((prev) => [...prev, currentLockerNum]);
-                  setCurrentLockerNum(""); // Optional UX improvement: clear input after add
+                  setCurrentLockerNum("");
                 }}
               >
                 Add
@@ -115,7 +115,7 @@ const PropertyInfo = ({ form }: PropertyInfoProps) => {
               <div className="flex flex-wrap gap-2 pt-2 border-t">
                 {LockerNumArray.map((lockerNum, index) => (
                   <div
-                    key={lockerNum}
+                    key={`${lockerNum}-${index}`}
                     className="inline-flex items-center gap-2 rounded-full border border-transparent bg-secondary px-3 py-1 text-sm font-medium text-secondary-foreground hover:bg-secondary/80"
                   >
                     <span>{lockerNum}</span>
@@ -149,11 +149,11 @@ const PropertyInfo = ({ form }: PropertyInfoProps) => {
                 ))}
               </div>
             )}
-            
+
             {LockerNumArray.length === 0 && (
-                <p className="text-[0.8rem] text-muted-foreground italic">
-                    No lockers added yet.
-                </p>
+              <p className="text-[0.8rem] text-muted-foreground italic">
+                No lockers added yet.
+              </p>
             )}
           </div>
         </div>

@@ -4,6 +4,7 @@ import type { UseFormReturn } from "react-hook-form";
 import type { FormFields } from "../modals/add-property-modal";
 import DateInput from "../form/date-input";
 import SelectField from "../form/select-field";
+import { COUNTRY_OPTIONS, CURRENCY_OPTIONS } from "@/constants/auth.constants";
 
 type PropertyProps = {
   form: UseFormReturn<FormFields>;
@@ -36,17 +37,19 @@ const Property = ({ form }: PropertyProps) => {
       />
 
       <div className="grid grid-cols-2 gap-4">
-        <TextInput
+        <SelectField
           form={form}
           name="property.country"
           label="Country *"
           placeholder="United Arab Emirates"
+          options={COUNTRY_OPTIONS}
         />
-        <TextInput
+        <SelectField
           form={form}
           name="property.currency"
           label="Currency *"
           placeholder="AED"
+          options={CURRENCY_OPTIONS}
         />
       </div>
 
