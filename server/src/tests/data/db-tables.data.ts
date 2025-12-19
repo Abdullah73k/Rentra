@@ -16,7 +16,7 @@ export const tenantData = (overrides?: Partial<DB.Tenant>) =>
 	({
 		propertyId: randomUUID(),
 		name: "Jane Doe",
-		phone: 1234567890,
+		phone: "1234567890",
 		email: "jane@example.com",
 		...overrides,
 	} as DB.Tenant);
