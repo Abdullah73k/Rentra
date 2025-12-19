@@ -13,11 +13,11 @@ type PropertyInfoProps = {
 
 const PropertyInfo = ({ form }: PropertyInfoProps) => {
   const [currentLockerNum, setCurrentLockerNum] = useState("");
-  const [LockerNumArray, setLockerNumArray] = useState<string[]>([]);
+  const [lockerNumArray, setLockerNumArray] = useState<string[]>([]);
 
   useEffect(() => {
-    form.setValue("propertyInfo.lockerNumber", LockerNumArray);
-  }, [LockerNumArray, form]);
+    form.setValue("propertyInfo.lockerNumber", lockerNumArray);
+  }, [lockerNumArray, form]);
 
   return (
     <div className="space-y-4">
@@ -111,9 +111,9 @@ const PropertyInfo = ({ form }: PropertyInfoProps) => {
             </div>
 
             {/* Tags Display Area */}
-            {LockerNumArray.length > 0 && (
+            {lockerNumArray.length > 0 && (
               <div className="flex flex-wrap gap-2 pt-2 border-t">
-                {LockerNumArray.map((lockerNum, index) => (
+                {lockerNumArray.map((lockerNum, index) => (
                   <div
                     key={`${lockerNum}-${index}`}
                     className="inline-flex items-center gap-2 rounded-full border border-transparent bg-secondary px-3 py-1 text-sm font-medium text-secondary-foreground hover:bg-secondary/80"
@@ -150,7 +150,7 @@ const PropertyInfo = ({ form }: PropertyInfoProps) => {
               </div>
             )}
 
-            {LockerNumArray.length === 0 && (
+            {lockerNumArray.length === 0 && (
               <p className="text-[0.8rem] text-muted-foreground italic">
                 No lockers added yet.
               </p>

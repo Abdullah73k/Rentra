@@ -12,17 +12,15 @@ export async function createNewProperty(propertyData: Omit<NewPropertyBuildType,
             "Content-Type": "application/json",
         },
     })
-    console.log(res);
-    
+    console.log(res); // TODO: remove when getting ready for production
 
     if (!res.ok) {
-        const error = new Error("An error occurred while creating the event");
+        const error = new Error("An error occurred while creating the property");
         throw error;
     }
 
-    const { event } = await res.json();
-    console.log(event);
-    
+    const { property } = await res.json();
+    console.log(property);// TODO: remove when getting ready for production
 
-    return event;
+    return property;
 }

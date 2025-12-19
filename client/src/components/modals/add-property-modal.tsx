@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -20,13 +20,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ADD_PROPERTY_DEFAULT_VALUES } from "@/constants/form.constants";
 import { useMutation } from "@tanstack/react-query";
 import { createNewProperty } from "@/utils/http";
+import { useAuthStore } from "@/stores/auth.store";
 
 export type FormFields = z.infer<typeof schema>;
 interface AddPropertyModalProps {
   isOpen: boolean;
   onClose: () => void;
-  // keep `any` here so you can wire it to your own Property type / DB schema later
-  onSave: (property: any) => void;
 }
 
 const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
@@ -35,10 +34,20 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
 }) => {
   const [step, setStep] = useState(1);
 
+  const session = useAuthStore((s) => s.session);
+
   const form = useForm<FormFields>({
     resolver: zodResolver(schema),
     defaultValues: ADD_PROPERTY_DEFAULT_VALUES,
   });
+
+  useEffect(() => {
+    if (session?.user.id) {
+      form.setValue("property.userId", session.user.id, {
+        shouldValidate: true,
+      });
+    }
+  }, [session?.user.id, form]);
 
   const { mutate } = useMutation({
     mutationFn: createNewProperty,
@@ -46,19 +55,23 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
 
   const handleSave = async () => {
     const isValid = await form.trigger();
+    console.log(form.getValues());
+
     console.log(isValid);
 
-    // if (!isValid) return;
+    if (!isValid) return;
 
     const values = form.getValues();
     try {
       const property = buildPropertyFromForm(values);
-      console.log(property);
+      console.log(property); // TODO: remove when getting ready for production
 
       mutate(property);
     } catch (error) {
-      console.log(error);
-      
+      console.error(error);
+      window.alert(
+        "An unexpected error occurred while saving the property. Please try again."
+      );
     }
   };
 

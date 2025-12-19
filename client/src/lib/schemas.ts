@@ -131,7 +131,7 @@ export const loanSchema = z.object({
 
 export const tenantSchema = z.object({
     name: z.string().min(1),
-    phone: z.number().optional(),
+    phone: z.string().optional(),
     email: z.email(),
 });
 

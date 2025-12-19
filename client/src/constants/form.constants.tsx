@@ -1,5 +1,6 @@
 import type { propertyInfoSchema, propertySchema } from "@/lib/schemas";
 import type { AddPropertyFormData, AddTransactionFormData } from "@/lib/types";
+import { useAuthStore } from "@/stores/auth.store";
 import z from "zod";
 
 export const PROPERTY_PURPOSES = ["personal", "investment"];
@@ -109,6 +110,8 @@ export const PAYMENT_METHODS = [
   { value: "credit_card", label: "Credit Card" },
 ];
 
+const session = useAuthStore.getState().session
+
 export const ADD_PROPERTY_DEFAULT_VALUES: {
   property: z.infer<typeof propertySchema>;
   propertyInfo: z.infer<typeof propertyInfoSchema>;
@@ -119,7 +122,7 @@ export const ADD_PROPERTY_DEFAULT_VALUES: {
   };
 } = {
   property: {
-    userId: "",
+    userId: session?.user.id || "",
     purpose: "personal",
     type: "house",
     address: "",
@@ -140,7 +143,7 @@ export const ADD_PROPERTY_DEFAULT_VALUES: {
     status: "available",
     furnished: "furnished",
     parking: "",
-    lockerNumber: [""],
+    lockerNumber: [],
     notes: "",
   },
   optionalSections: {

@@ -7,7 +7,6 @@ import {
 import * as API from "../../types/api.types.js";
 import { PropertyService } from "../../services/property.services.js";
 import { ValidationError } from "../../errors/validation.errors.js";
-import { log } from "console";
 
 export const getUserPropertyData = async (
 	req: Request<{ propertyId: string }, {}, {}, {}>,
@@ -54,8 +53,7 @@ export const postPropertyData = async (
 	const result = validatePropertyData<
 		API.POSTPropertyData
 	>(propertyData);
-	console.log(result);
-	
+	console.log(result); // TODO: remove later when getting ready for production
 
 	if (!result.success)
 		throw new ValidationError("Invalid property data", result.errors);

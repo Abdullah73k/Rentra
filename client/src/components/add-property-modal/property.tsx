@@ -92,7 +92,10 @@ const Property = ({ form }: PropertyProps) => {
           name="property.sold"
           label="Sold *"
           placeholder="Select"
-          options={["Yes", "No"]}
+          options={[
+            { label: "Yes", value: true },
+            { label: "No", value: false },
+          ]}
         />
       </div>
     </div>

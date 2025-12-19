@@ -1,4 +1,4 @@
-import type z from "zod"
+import { z } from "zod"
 import type { propertyDataSchema } from "./schemas"
 
 // Property Management Types
@@ -114,7 +114,7 @@ export interface Passkey {
   lastUsed?: string
 }
 export interface SelectOptions {
-  value: string;
+  value: string | boolean;
   label: string;
 }
 
