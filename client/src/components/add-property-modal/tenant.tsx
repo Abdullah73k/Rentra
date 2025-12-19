@@ -12,19 +12,19 @@ const Tenant = ({ form }: TenantProps) => {
       <h3 className="font-semibold text-foreground">Tenant Information</h3>
       <TextInput
         form={form}
-        name="tenant.tenantName"
+        name="tenant.name"
         label="Name *"
         placeholder="John Doe"
       />
       <TextInput
         form={form}
-        name="tenant.tenantPhone"
+        name="tenant.phone"
         label="Phone"
         placeholder="+1 (555) 123-4567"
       />
       <TextInput
         form={form}
-        name="tenant.tenantEmail"
+        name="tenant.email"
         label="Email *"
         placeholder="john@example.com"
         type="email"

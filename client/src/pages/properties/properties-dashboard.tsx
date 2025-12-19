@@ -17,18 +17,13 @@ const DashboardPage: React.FC = () => {
     return null; // TODO: render a spinner or loading screen
   }
 
-  const [properties, setProperties] = useState([
+  const [properties] = useState([
     {
       ...mockProperty,
       info: mockPropertyInfo,
     },
   ]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-
-  const handleAddProperty = (newProperty: any) => {
-    setProperties((prev) => [...prev, newProperty]);
-    setIsAddModalOpen(false);
-  };
 
   const isEmpty = properties.length === 0;
 
@@ -80,7 +75,6 @@ const DashboardPage: React.FC = () => {
       <AddPropertyModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        onSave={handleAddProperty}
       />
     </div>
   );

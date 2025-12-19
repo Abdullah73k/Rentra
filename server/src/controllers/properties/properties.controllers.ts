@@ -53,6 +53,7 @@ export const postPropertyData = async (
 	const result = validatePropertyData<
 		API.POSTPropertyData
 	>(propertyData);
+	console.log(result); // TODO: remove later when getting ready for production
 
 	if (!result.success)
 		throw new ValidationError("Invalid property data", result.errors);

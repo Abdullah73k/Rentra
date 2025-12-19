@@ -1,3 +1,6 @@
+import { z } from "zod"
+import type { propertyDataSchema } from "./schemas"
+
 // Property Management Types
 export type PropertyPurpose = "residential" | "commercial" | "investment" | "vacation"
 export type PropertyType = "apartment" | "house" | "condo" | "office" | "retail" | "land"
@@ -111,7 +114,7 @@ export interface Passkey {
   lastUsed?: string
 }
 export interface SelectOptions {
-  value: string;
+  value: string | boolean;
   label: string;
 }
 
@@ -237,3 +240,4 @@ export type twoFactorData = {
   totpURI: string;
   backupCodes: string[];
 } | null
+export type NewPropertyBuildType = z.infer<typeof propertyDataSchema>

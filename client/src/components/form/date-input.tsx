@@ -31,36 +31,50 @@ const DateInput = <T extends FieldValues>({
     <FormField
       control={form.control}
       name={name}
-      render={({ field }) => (
-        <FormItem className="flex flex-col">
-          <FormLabel>{label}</FormLabel>
-          <Popover>
-            <PopoverTrigger asChild>
-              <FormControl>
-                <Button
-                  variant="outline"
-                  className="w-full justify-start text-left font-normal"
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {field.value
-                    ? format(field.value as Date, "PPP")
-                    : "Pick a date"}
-                </Button>
-              </FormControl>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={field.value as Date | undefined}
-                // Just pass the Date object directly
-                onSelect={field.onChange}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
-          <FormMessage />
-        </FormItem>
-      )}
+      render={({ field }) => {
+        const value = field.value as unknown;
+
+        const dateValue =
+          value instanceof Date
+            ? value
+            : typeof value === "string" && value
+            ? new Date(value)
+            : undefined;
+
+        const isValidDate =
+          dateValue instanceof Date && !isNaN(dateValue.getTime());
+        return (
+          <FormItem className="flex flex-col">
+            <FormLabel>{label}</FormLabel>
+            <Popover>
+              <PopoverTrigger asChild>
+                <FormControl>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start text-left font-normal"
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {field.value
+                      ? format(field.value as Date, "PPP")
+                      : "Pick a date"}
+                  </Button>
+                </FormControl>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={isValidDate ? dateValue : undefined}
+                  onSelect={(date) => {
+                    field.onChange(date ? format(date, "yyyy-MM-dd") : null);
+                  }}
+                  autoFocus
+                />
+              </PopoverContent>
+            </Popover>
+            <FormMessage />
+          </FormItem>
+        );
+      }}
     />
   );
 };

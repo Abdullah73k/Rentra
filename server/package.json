@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "vitest",
-    "dev": "doppler run -- nodemon ",
+    "dev": "pnpm i && doppler run -- nodemon ",
     "build": "tsc",
     "start": "node dist/index.js"
   },
