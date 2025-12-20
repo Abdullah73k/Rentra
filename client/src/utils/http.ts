@@ -22,3 +22,17 @@ export async function createNewProperty(propertyData: Omit<NewPropertyBuildType,
         throw new Error("An error occurred while creating the property");
     }
 }
+
+export async function fetchProperties(userId: string): Promise<{}[]> {
+    try {
+        const res = await axios.get(`${API_URL}/api/properties/all/${userId}`);
+        console.log(res); // TODO: remove when getting ready for production
+
+        const { properties } = res.data;
+        console.log(properties); // TODO: remove when getting ready for production
+
+        return properties;
+    } catch (error) {
+        throw new Error("An error occurred while fetching properties");
+    }
+}

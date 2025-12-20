@@ -6,6 +6,8 @@ import PropertyCard from "@/components/property-card";
 import AddPropertyModal from "@/components/modals/add-property-modal";
 import { mockProperty, mockPropertyInfo } from "@/lib/mock-data";
 import { useAuthStore } from "@/stores/auth.store";
+import { useQuery } from "@tanstack/react-query";
+import { fetchProperties } from "@/utils/http";
 
 const DashboardPage: React.FC = () => {
   const session = useAuthStore((s) => s.session);
@@ -17,12 +19,18 @@ const DashboardPage: React.FC = () => {
     return null; // TODO: render a spinner or loading screen
   }
 
+  const { data } = useQuery({
+    queryKey: ["properties"],
+    queryFn: () => fetchProperties(session.user.id)
+  })
+
   const [properties] = useState([
     {
       ...mockProperty,
       info: mockPropertyInfo,
     },
   ]);
+
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const isEmpty = properties.length === 0;
