@@ -8,7 +8,7 @@ import ProfileTab from "@/components/user-settings/profile-tab";
 import SecurityTab from "@/components/user-settings/security-tab";
 import PreferencesTab from "@/components/user-settings/preferences-tab";
 import { useAuthStore } from "@/stores/auth.store";
-import watercolorHouse from "../../assets/pictures/watercolorHouse.png";
+import watercolorHouse from "@/assets/pictures/watercolorHouse.png";
 
 const SettingsPage: React.FC = () => {
   const session = useAuthStore((s) => s.session);
