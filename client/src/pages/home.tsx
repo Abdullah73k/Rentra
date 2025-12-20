@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 export default function Page() {
+  const navigate = useNavigate()
   return (
     <div className="min-h-screen bg-[#f8f8f8]">
       <main className="relative px-6 pt-12">
@@ -23,7 +25,7 @@ export default function Page() {
 
           <div className="mt-24 flex justify-between">
             <div className="max-w-md">
-              <Button variant="outline" className="rounded-full border-2 px-8">
+              <Button variant="outline" className="rounded-full border-2 px-8" onClick={() => navigate("/properties/dashboard")}>
                 <span className="relative">
                   MANAGE YOUR PROPERTIES
                   <div
