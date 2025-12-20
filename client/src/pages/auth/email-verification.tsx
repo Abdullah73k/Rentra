@@ -8,7 +8,7 @@ const EmailVerification = () => {
 
   if (!email) {
     return (
-      <div className="space-y-4" role="alert">
+      <div className="space-y-4 bg-[#f8f8f8]" role="alert">
         <h2 className="text-lg font-semibold">Verification Error</h2>
         <p className="text-sm text-muted-foreground mt-2">
           Sorry, something went wrong with the verification. Please try again.
