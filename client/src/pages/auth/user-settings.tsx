@@ -23,7 +23,7 @@ const SettingsPage: React.FC = () => {
     <div className="min-h-screen bg-[#f8f8f8]">
       <div className="mx-auto">
         {/* Header */}
-        <div className="border-b border-border px-6 py-6 bg-white">
+        <div className="border-b border-border px-6 py-6 bg-[#f8f8f8]">
           <Link to="/properties/dashboard">
             <Button variant="ghost" className="mb-4 gap-2">
               <ArrowLeft className="h-4 w-4" />
