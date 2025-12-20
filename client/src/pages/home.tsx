@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 export default function Page() {
+  const navigate = useNavigate()
   return (
     <div className="min-h-screen bg-[#f8f8f8]">
       <main className="relative px-6 pt-12">
@@ -14,18 +16,18 @@ export default function Page() {
 
         <div className="relative">
           <h1 className="max-w-3xl text-6xl font-light leading-tight tracking-tight">
-            WE CREATE
+            WE SIMPLIFY
             <br />
-            BEST DIGITAL
+            PROPERTY
             <br />
-            PRODUCTS.
+            MANAGEMENT.
           </h1>
 
           <div className="mt-24 flex justify-between">
             <div className="max-w-md">
-              <Button variant="outline" className="rounded-full border-2 px-8">
+              <Button variant="outline" className="rounded-full border-2 px-8" onClick={() => navigate("/properties/dashboard")}>
                 <span className="relative">
-                  DISCUSS THE PROJECT
+                  MANAGE YOUR PROPERTIES
                   <div
                     className="absolute -left-4 -right-4 -top-4 -bottom-4 animate-spin-slow 
                                rounded-full border border-black opacity-50"
@@ -33,9 +35,9 @@ export default function Page() {
                 </span>
               </Button>
               <p className="mt-8 text-sm leading-relaxed text-gray-600">
-                WE ARE THE LEADERS IN WEB & MOBILE
+                WE HELP PROPERTY OWNERS TRACK, MANAGE, AND GROW
                 <br />
-                DESIGN AND DEVELOPMENT INDUSTRY.
+                THEIR REAL ESTATE — ALL IN ONE PLACE.
               </p>
             </div>
 
@@ -48,9 +50,9 @@ export default function Page() {
           </div>
 
           <p className="mt-24 max-w-xl text-sm leading-relaxed text-gray-600">
-            We create quality content and cool ideas. We create websites,
-            applications, 3D design, motion design and animation. We bring the
-            most daring ideas to life
+            We design a clean, reliable platform for managing properties,
+            tenants, income, expenses, and performance. No spreadsheets. No
+            guesswork. Just clarity.
           </p>
         </div>
       </main>
