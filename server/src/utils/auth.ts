@@ -1,5 +1,4 @@
 import { betterAuth, type BetterAuthPlugin } from "better-auth";
-import { pool } from "../configs/pg.config.js";
 import {
 	GOOGLE_CLIENT_ID,
 	GOOGLE_CLIENT_SECRET,
@@ -12,10 +11,11 @@ import { sendEmail } from "./auth.utils.js";
 import { createAuthMiddleware } from "better-auth/api";
 import { passkey } from "better-auth/plugins/passkey";
 import { twoFactor } from "better-auth/plugins";
+import { dbConnection } from "./db-connects.utils.js";
 
 export const auth: ReturnType<typeof betterAuth> = betterAuth({
 	appName: "Property Management",
-	database: pool,
+	database: dbConnection(),
 	trustedOrigins: ["http://localhost:5000", "http://localhost:5173"],
 	advanced: {
 		database: {

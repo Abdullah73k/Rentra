@@ -7,7 +7,7 @@ import { TenantRepository } from "../repositories/tenant.repositories.js";
 import { TransactionRepository } from "../repositories/transaction.repositories.js";
 import * as API from "../types/api.types.js";
 import { queryInTransaction } from "../utils/service.utils.js";
-import { pool } from "../configs/pg.config.js";
+import { pool } from "../db/configs/pg.config.js";
 
 export const PropertyService = {
 	async create(data: API.POSTPropertyData) {
