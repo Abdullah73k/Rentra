@@ -159,6 +159,15 @@ export async function getRowsFromTableWithId<T extends DB.TableObjects>({
 
 	return query.rows;
 }
+
+export async function deleteRowFromTableWithIdDrizzle<
+	T extends PgTableWithColumns<any>
+>(table: T, id: string, client?: PoolClient) {
+	const pool = dbConnection(client);
+	const query = await pool.delete(table).where(eq(table.id, id));
+	return query;
+}
+
 // TODO: must add validation in repo for table and idName cuz sql injection
 export async function deleteRowFromTableWithId({
 	table,
@@ -175,6 +184,14 @@ export async function deleteRowFromTableWithId({
 		values: [id],
 	});
 
+	return query;
+}
+
+export async function updateRowFromTableWithIdDrizzle<
+	T extends PgTableWithColumns<any>
+>(table: T, values: any[], id: string, client?: PoolClient) {
+	const pool = dbConnection(client);
+	const query = await pool.update(table).set(values).where(eq(table.id, id));
 	return query;
 }
 
