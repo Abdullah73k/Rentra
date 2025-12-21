@@ -89,9 +89,24 @@ export const transactionSchema = z.object({
 	subcategory: ReusableTypes.optionalString,
 	amount: ReusableTypes.decimal,
 	currency: ReusableTypes.currency,
-	taxRate: z.number().min(0).max(1),
-	taxAmount: z.number().min(0),
-	fxRateToBase: z.number().min(0).max(9999999999.999999),
+	taxRate: z
+		.string()
+		.regex(
+			/^\d{1,3}(\.\d{1,2})?$/,
+			"Invalid tax rate format (max 3 digits, 2 decimals)"
+		),
+	taxAmount: z
+		.string()
+		.regex(
+			/^\d{1,8}(\.\d{1,2})?$/,
+			"Invalid tax amount format (max 8 digits, 2 decimals)"
+		),
+	fxRateToBase: z
+		.string()
+		.regex(
+			/^\d{1,4}(\.\d{1,6})?$/,
+			"Invalid fx rate format (max 4 digits, 6 decimals)"
+		),
 	from: z.string().min(1),
 	to: z.string().min(1),
 	method: z.enum([
