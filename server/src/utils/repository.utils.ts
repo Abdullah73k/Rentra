@@ -1,45 +1,26 @@
 import * as DB from "../types/db.types.js";
 import { DBError } from "../errors/db.errors.js";
 import { StatusCodes } from "../constants/statusCodes.constants.js";
-import { ValidationError } from "../errors/validation.errors.js";
 import { dbConnection } from "./db-connects.utils.js";
 import type { PoolClient } from "../utils/service.utils.js";
-import type {
-	AnyPgTable,
-	PgTable,
-	PgTableWithColumns,
-} from "drizzle-orm/pg-core";
-import { eq, type InferInsertModel, type InferSelectModel } from "drizzle-orm";
+import type { PgTable, PgTableWithColumns } from "drizzle-orm/pg-core";
+import { eq, type InferInsertModel } from "drizzle-orm";
+import type { property } from "../db/schemas/property.db.js";
+import type { propertyInfo } from "../db/schemas/property-info.db.js";
+import type { loan } from "../db/schemas/loan.db.js";
+import type { lease } from "../db/schemas/lease.db.js";
+import type { tenant } from "../db/schemas/tenant.db.js";
+import type { transaction } from "../db/schemas/transaction.db.js";
 
 // TODO: Add undefined type union for get db operation
 
-type InsertIntoTable = {
-	table: DB.DatabaseTables;
-	keys: string[];
-	colValidation: DB.ColumnValidation;
-	columns: string;
-	queryPlaceholders: string;
-	values: any[];
-	client: PoolClient | undefined;
-};
-
-type QueryConfig = {
-	table: DB.DatabaseTables;
-	id: string;
-	idName: DB.Ids;
-	client: PoolClient | undefined;
-};
-
-type UpdateQuery = {
-	table: DB.DatabaseTables;
-	columnsAndPlaceholders: string;
-	keys: string[];
-	colValidation: DB.ColumnValidation;
-	values: any[];
-	id: string;
-	idName: DB.Ids;
-	client: PoolClient | undefined;
-};
+type InferSelect =
+	| typeof property.$inferSelect
+	| typeof propertyInfo.$inferSelect
+	| typeof loan.$inferSelect
+	| typeof lease.$inferSelect
+	| typeof tenant.$inferSelect
+	| typeof transaction.$inferSelect;
 
 export async function executeDataBaseOperation<T>(
 	dataBaseFn: () => Promise<T>,
@@ -79,20 +60,7 @@ function generateQueryPlaceholders(length: number) {
 	return queryPlaceholders;
 }
 
-export function buildUpdateSet(table: Record<string, any>) {
-	const keys = Object.keys(table);
-
-	// SET:  column1 = $2, column2 = $3, ...
-	const setString = keys
-		.map((key, index) => `${key} = $${index + 2}`)
-		.join(", ");
-
-	const values = keys.map((key) => table[key]);
-
-	return { setString, values, keys };
-}
-
-export async function insertIntoTableDrizzle<T extends PgTable>(
+export async function insertIntoTable<T extends PgTable>(
 	table: T,
 	data: InferInsertModel<T>,
 	client?: PoolClient
@@ -102,37 +70,11 @@ export async function insertIntoTableDrizzle<T extends PgTable>(
 	return query;
 }
 
-export async function insertIntoTable<T extends DB.TableObjects>({
-	table,
-	keys,
-	colValidation,
-	columns,
-	queryPlaceholders,
-	values,
-	client,
-}: InsertIntoTable) {
-	if (
-		!DB.DatabaseTables.includes(table) ||
-		!keys.every((key) => (colValidation as readonly string[]).includes(key))
-	)
-		throw new ValidationError("Invalid data, query unsafe");
-
-	const db = dbConnection(client);
-	const query = await db.query<T>({
-		text: `
-                INSERT INTO ${table} (${columns})
-                VALUES (${queryPlaceholders})
-                RETURNING *
-                `,
-		values,
-	});
-
-	return query.rows[0];
-}
-
-export async function getRowsFromTableWithIdDrizzle<
-	T extends PgTableWithColumns<any>
->(table: T, id: string, client?: PoolClient) {
+export async function getRowsFromTableWithId<T extends PgTableWithColumns<any>>(
+	table: T,
+	id: string,
+	client?: PoolClient
+) {
 	const pool = dbConnection(client);
 	const query = await pool
 		.select()
@@ -141,26 +83,7 @@ export async function getRowsFromTableWithIdDrizzle<
 	return query;
 }
 
-// TODO: must add validation in repo for table and idName cuz sql injection
-export async function getRowsFromTableWithId<T extends DB.TableObjects>({
-	table,
-	id,
-	idName,
-	client,
-}: QueryConfig) {
-	if (!DB.DatabaseTables.includes(table) || !DB.Ids.includes(idName))
-		throw new ValidationError("Invalid field name, query unsafe");
-
-	const db = dbConnection(client);
-	const query = await db.query<T>({
-		text: `SELECT * FROM ${table} WHERE ${idName} = $1`,
-		values: [id],
-	});
-
-	return query.rows;
-}
-
-export async function deleteRowFromTableWithIdDrizzle<
+export async function deleteRowFromTableWithId<
 	T extends PgTableWithColumns<any>
 >(table: T, id: string, client?: PoolClient) {
 	const pool = dbConnection(client);
@@ -168,60 +91,10 @@ export async function deleteRowFromTableWithIdDrizzle<
 	return query;
 }
 
-// TODO: must add validation in repo for table and idName cuz sql injection
-export async function deleteRowFromTableWithId({
-	table,
-	id,
-	idName,
-	client,
-}: QueryConfig) {
-	if (!DB.DatabaseTables.includes(table) || !DB.Ids.includes(idName))
-		throw new ValidationError("Invalid field name, query unsafe");
-
-	const db = dbConnection(client);
-	const query = await db.query({
-		text: `DELETE FROM ${table} WHERE ${idName} = $1`,
-		values: [id],
-	});
-
-	return query;
-}
-
-export async function updateRowFromTableWithIdDrizzle<
+export async function updateRowFromTableWithId<
 	T extends PgTableWithColumns<any>
->(table: T, values: any[], id: string, client?: PoolClient) {
+>(table: T, values: DB.TableObjects, id: string, client?: PoolClient) {
 	const pool = dbConnection(client);
 	const query = await pool.update(table).set(values).where(eq(table.id, id));
-	return query;
-}
-
-export async function updateRowFromTableWithId<T extends DB.TableObjects>({
-	table,
-	columnsAndPlaceholders,
-	values,
-	keys,
-	colValidation,
-	id,
-	idName,
-	client,
-}: UpdateQuery) {
-	if (
-		!DB.DatabaseTables.includes(table) ||
-		!DB.Ids.includes(idName) ||
-		!keys.every((key) => (colValidation as readonly string[]).includes(key))
-	)
-		throw new ValidationError("Invalid field name, query unsafe");
-
-	const db = dbConnection(client);
-	const query = await db.query<T>({
-		text: `
-		UPDATE ${table}
-		SET ${columnsAndPlaceholders}
-		WHERE ${idName} = $1
-		RETURNING *
-		`,
-		values: [id, ...values],
-	});
-
 	return query;
 }
