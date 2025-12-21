@@ -5,9 +5,11 @@ import { ValidationError } from "../errors/validation.errors.js";
 import { dbConnection } from "./db-connects.utils.js";
 import type { PoolClient } from "../utils/service.utils.js";
 import type {
+	AnyPgTable,
 	PgTable,
+	PgTableWithColumns,
 } from "drizzle-orm/pg-core";
-import { type InferInsertModel } from "drizzle-orm";
+import { eq, type InferInsertModel, type InferSelectModel } from "drizzle-orm";
 
 // TODO: Add undefined type union for get db operation
 
@@ -126,6 +128,17 @@ export async function insertIntoTable<T extends DB.TableObjects>({
 	});
 
 	return query.rows[0];
+}
+
+export async function getRowsFromTableWithIdDrizzle<
+	T extends PgTableWithColumns<any>
+>(table: T, id: string, client?: PoolClient) {
+	const pool = dbConnection(client);
+	const query = await pool
+		.select()
+		.from(table as PgTable)
+		.where(eq(table.id, id));
+	return query;
 }
 
 // TODO: must add validation in repo for table and idName cuz sql injection
