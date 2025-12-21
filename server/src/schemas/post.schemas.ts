@@ -37,7 +37,7 @@ export const propertyInfoSchema = z.object({
 		"off_market",
 		"reserved",
 	]),
-	furnished: z.enum(["furnished", "semi-furnished", "unfurnished"]),
+	furnishing: z.enum(["furnished", "semi-furnished", "unfurnished"]),
 	parking: ReusableTypes.optionalString,
 	lockerNumber: ReusableTypes.stringArray,
 	notes: ReusableTypes.optionalString,
