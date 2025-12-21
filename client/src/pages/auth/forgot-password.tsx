@@ -50,11 +50,7 @@ const ForgotPassword = () => {
 
   return (
     <div className="min-h-screen bg-[#f8f8f8]">
-      <main className="relative flex min-h-[calc(100vh-88px)] items-center justify-center px-6">
-        <div
-          className="absolute right-[10%] top-[20%] h-[300px] w-[300px] animate-pulse rounded-full bg-linear-to-br from-pink-400 via-orange-300 to-yellow-200 opacity-70 blur-3xl"
-          aria-hidden="true"
-        />
+      <main className="relative flex items-center justify-center px-6">
 
         <div className="relative w-full max-w-md space-y-8">
           <div className="space-y-2">
@@ -86,7 +82,7 @@ const ForgotPassword = () => {
                 </Button>
                 <Button
                   type="submit"
-                  className="h-12 w-[80%] bg-black text-sm font-medium text-white hover:bg-black/90"
+                  className="h-12 bg-black text-sm font-medium text-white hover:bg-black/90"
                   disabled={isSubmitting}
                 >
                   <LoadingSwap isLoading={isSubmitting}>

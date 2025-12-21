@@ -37,6 +37,7 @@ const ResetPassword = () => {
       await authClient.resetPassword(
         {
           newPassword: data.password,
+          token
         },
         {
           onSuccess: () => {
@@ -58,10 +59,6 @@ const ResetPassword = () => {
     return (
       <div className="min-h-screen bg-[#f8f8f8]">
         <main className="relative flex min-h-[calc(100vh-88px)] items-center justify-center px-6">
-          <div
-            className="absolute right-[10%] top-[20%] h-[300px] w-[300px] animate-pulse rounded-full bg-linear-to-br from-pink-400 via-orange-300 to-yellow-200 opacity-70 blur-3xl"
-            aria-hidden="true"
-          />
 
           <div className="relative w-full max-w-md space-y-8">
             <div className="space-y-2">
