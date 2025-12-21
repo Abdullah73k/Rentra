@@ -21,27 +21,28 @@ const TwoFactorAuth = () => {
 
   return (
     <div className="bg-[#f8f8f8] my-6 px-4">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">
-            Two-Factor Authentication
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="totp">
-            <TabsList className="grid w-full grid-cols-2 mb-8">
+      <CardHeader className="text-center">
+        <CardTitle className="text-2xl font-bold">
+          Two-Factor Authentication
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Tabs defaultValue="totp">
+          <div className="w-full flex justify-center">
+            <TabsList className="w-2/7 mb-8">
               <TabsTrigger value="totp">Authenticator</TabsTrigger>
               <TabsTrigger value="backup">Backup Code</TabsTrigger>
             </TabsList>
+          </div>
+          <TabsContent value="totp">
+            <TotpForm />
+          </TabsContent>
 
-            <TabsContent value="totp">
-              <TotpForm />
-            </TabsContent>
-
-            <TabsContent value="backup">
-              <BackupCodeForm />
-            </TabsContent>
-          </Tabs>
-        </CardContent>
+          <TabsContent value="backup">
+            <BackupCodeForm />
+          </TabsContent>
+        </Tabs>
+      </CardContent>
     </div>
   );
 };
