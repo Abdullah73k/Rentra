@@ -3,7 +3,11 @@ import { DBError } from "../errors/db.errors.js";
 import { StatusCodes } from "../constants/statusCodes.constants.js";
 import { ValidationError } from "../errors/validation.errors.js";
 import { dbConnection } from "./db-connects.utils.js";
-import type { PoolClient } from "pg";
+import type { PoolClient } from "../utils/service.utils.js";
+import type {
+	PgTable,
+} from "drizzle-orm/pg-core";
+import { type InferInsertModel } from "drizzle-orm";
 
 // TODO: Add undefined type union for get db operation
 
@@ -84,6 +88,16 @@ export function buildUpdateSet(table: Record<string, any>) {
 	const values = keys.map((key) => table[key]);
 
 	return { setString, values, keys };
+}
+
+export async function insertIntoTableDrizzle<T extends PgTable>(
+	table: T,
+	data: InferInsertModel<T>,
+	client?: PoolClient
+) {
+	const pool = dbConnection(client);
+	const query = await pool.insert(table).values(data).returning();
+	return query;
 }
 
 export async function insertIntoTable<T extends DB.TableObjects>({
