@@ -65,7 +65,11 @@ const EmailVerification = () => {
             callbackURL: "/",
           });
         }}
-      ></BetterAuthActionButton>
+      >
+        {timeToNextResend > 0
+          ? `Resend in ${timeToNextResend}s`
+          : "Resend Email"}
+      </BetterAuthActionButton>
     </div>
   );
 };

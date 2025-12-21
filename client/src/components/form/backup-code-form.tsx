@@ -50,7 +50,7 @@ const BackupCodeForm = () => {
               Enter Backup Code
             </h1>
             <p className="text-sm text-gray-600">
-              Enter one of you saved backup codes
+              Enter one of your saved backup codes
             </p>
           </div>
           <Form {...form}>
