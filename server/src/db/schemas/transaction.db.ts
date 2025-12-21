@@ -49,14 +49,17 @@ export const transaction = pgTable(
 		taxRate: numeric("taxRate", { precision: 5, scale: 2 }).notNull(),
 		taxAmount: numeric("taxAmount", { precision: 10, scale: 2 }).notNull(),
 
-		fxRateToBase: numeric("fxRateToBase", { precision: 10, scale: 6 }).notNull(),
+		fxRateToBase: numeric("fxRateToBase", {
+			precision: 10,
+			scale: 6,
+		}).notNull(),
 
 		from: text("from").notNull(),
 		to: text("to").notNull(),
 
 		method: transactionMethodEnum("method").notNull(),
 
-		date: date("date").notNull(),
+		date: date("date", { mode: "string" }).notNull(),
 		notes: text("notes"),
 
 		createdAt: timestamp("createdAt", { withTimezone: true })
