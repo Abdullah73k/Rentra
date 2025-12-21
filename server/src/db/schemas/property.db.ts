@@ -48,12 +48,12 @@ export const property = pgTable("Property", {
 	country: text("country").notNull(),
 	currency: char("currency", { length: 3 }).notNull(),
 
-	purchasePrice: numeric("purchasePrice", { precision: 12, scale: 2 }),
-	closingCosts: numeric("closingCosts", { precision: 12, scale: 2 }),
-	acquisitionDate: date("acquisitionDate", { mode: "string" }),
+	purchasePrice: numeric("purchasePrice", { precision: 12, scale: 2 }).notNull(),
+	closingCosts: numeric("closingCosts", { precision: 12, scale: 2 }).notNull(),
+	acquisitionDate: date("acquisitionDate", { mode: "string" }).notNull(),
 
-	currentValue: numeric("currentValue", { precision: 12, scale: 2 }),
-	valuationDate: date("valuationDate", { mode: "string" }),
+	currentValue: numeric("currentValue", { precision: 12, scale: 2 }).notNull(),
+	valuationDate: date("valuationDate", { mode: "string" }).notNull(),
 
 	photos: text("photos")
 		.array()

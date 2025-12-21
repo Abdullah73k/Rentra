@@ -21,6 +21,7 @@ export const propertySchema = z.object({
 	closingCosts: ReusableTypes.decimal,
 	acquisitionDate: ReusableTypes.date,
 	currentValue: ReusableTypes.decimal,
+	valuationDate: ReusableTypes.date,
 	photos: ReusableTypes.stringArray,
 	sold: z.boolean(),
 });
