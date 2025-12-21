@@ -1,4 +1,3 @@
-import type { PoolClient } from "pg";
 import { LeaseRepository } from "../repositories/lease.repositories.js";
 import { LoanRepository } from "../repositories/loan.repositories.js";
 import { PropertyRepository } from "../repositories/property.repositories.js";
@@ -6,13 +5,11 @@ import { PropertyInfoRepository } from "../repositories/propertyInfo.repositorie
 import { TenantRepository } from "../repositories/tenant.repositories.js";
 import { TransactionRepository } from "../repositories/transaction.repositories.js";
 import * as API from "../types/api.types.js";
-import { queryInTransaction } from "../utils/service.utils.js";
+import { queryInTransaction, type PoolClient } from "../utils/service.utils.js";
 import { pool } from "../db/configs/pg.config.js";
 
 export const PropertyService = {
 	async create(data: API.POSTPropertyData) {
-		const client = await pool.connect();
-
 		const queryFn = async (
 			propertyData: API.POSTPropertyData,
 			client: PoolClient
@@ -23,6 +20,7 @@ export const PropertyService = {
 			);
 			const propertyInfo = await PropertyInfoRepository.createPropertyInfo(
 				propertyData.propertyInfo,
+				property[0]!.id,
 				client
 			);
 			const loan = propertyData.loan
@@ -46,7 +44,6 @@ export const PropertyService = {
 		const query = await queryInTransaction(
 			queryFn,
 			data,
-			client,
 			"Insert property data failed transaction"
 		);
 
@@ -87,7 +84,6 @@ export const PropertyService = {
 		const result = await queryInTransaction(
 			queryFn,
 			propertyId,
-			client,
 			"Could not fetch all property data"
 		);
 		return result;

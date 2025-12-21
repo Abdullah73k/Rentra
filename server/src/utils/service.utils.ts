@@ -1,22 +1,27 @@
-import type { PoolClient } from "pg";
 import { DBError } from "../errors/db.errors.js";
 import { ValidationError } from "../errors/validation.errors.js";
+import { pool } from "../db/configs/drizzle.config.js";
+import type { PgTransaction } from "drizzle-orm/pg-core";
+import type { NodePgQueryResultHKT } from "drizzle-orm/node-postgres";
+import type { ExtractTablesWithRelations } from "drizzle-orm";
+
+export type PoolClient = PgTransaction<
+	NodePgQueryResultHKT,
+	Record<string, never>,
+	ExtractTablesWithRelations<Record<string, never>>
+>;
 
 export async function queryInTransaction<T, U>(
 	queryFn: (data: T, client: PoolClient) => Promise<U>,
 	data: T,
-	client: PoolClient,
 	errMsg: string
 ) {
-
 	try {
-		await client.query("BEGIN");
-		const query = await queryFn(data, client);
-		await client.query("COMMIT");
-
-		return query;
+		return await pool.transaction(async (txn) => {
+			const result = await queryFn(data, txn);
+			return result;
+		});
 	} catch (error) {
-		await client.query("ROLLBACK");
 		console.log("DB transaction unknown error: ", error);
 		if (error instanceof DBError) {
 			console.error(error.message, error);
@@ -27,7 +32,5 @@ export async function queryInTransaction<T, U>(
 			throw new ValidationError(error.message);
 		}
 		throw Error("Unknown server error, query transaction failed");
-	} finally {
-		client.release();
 	}
 }

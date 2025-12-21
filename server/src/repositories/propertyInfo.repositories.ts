@@ -4,6 +4,7 @@ import {
 	generateCreateQueryColsAndValues,
 	getRowsFromTableWithId,
 	insertIntoTable,
+	insertIntoTableDrizzle,
 	updateRowFromTableWithId,
 } from "../utils/repository.utils.js";
 import * as DB from "../types/db.types.js";
@@ -14,27 +15,33 @@ import {
 	failedDbUpdateMessage,
 } from "../utils/failed-db-messages.utils.js";
 import { PROPERTY_INFO_COLUMNS } from "../constants/db-table-columns.constants.js";
-import type { PoolClient } from "pg";
+import type { PoolClient } from "../utils/service.utils.js";
+import { propertyInfo } from "../db/schemas/property-info.db.js";
 
 export const PropertyInfoRepository = {
 	async createPropertyInfo(
-		propertyInfo: DB.CreatePropertyInfo,
+		propertyInfoObject: DB.CreatePropertyInfo,
+		propertyId: string,
 		client?: PoolClient
 	) {
 		const { values, queryPlaceholders, columns, keys } =
-			generateCreateQueryColsAndValues(propertyInfo);
+			generateCreateQueryColsAndValues(propertyInfoObject);
 
 		const query = await executeDataBaseOperation(
 			() =>
-				insertIntoTable<DB.PropertyInfo>({
-					table: "PropertyInfo",
-					columns,
-					keys,
-					colValidation: PROPERTY_INFO_COLUMNS,
-					queryPlaceholders,
-					values,
-					client,
+				insertIntoTableDrizzle(propertyInfo, {
+					propertyId,
+					...propertyInfoObject,
 				}),
+			// insertIntoTable<DB.PropertyInfo>({
+			// 	table: "PropertyInfo",
+			// 	columns,
+			// 	keys,
+			// 	colValidation: PROPERTY_INFO_COLUMNS,
+			// 	queryPlaceholders,
+			// 	values,
+			// 	client,
+			// }),
 			StatusCodes.BAD_REQUEST,
 			failedDbInsertMessage(columns, "PropertyInfo")
 		);

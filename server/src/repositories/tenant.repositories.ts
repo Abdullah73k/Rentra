@@ -14,7 +14,7 @@ import {
 	insertIntoTable,
 	updateRowFromTableWithId,
 } from "../utils/repository.utils.js";
-import type { PoolClient } from "pg";
+import type { PoolClient } from "../utils/service.utils.js";
 
 export const TenantRepository = {
 	async createTenant(tenant: DB.CreateTenant, client?: PoolClient) {
