@@ -1,6 +1,6 @@
 import BackupCodeForm from "@/components/form/backup-code-form";
 import TotpForm from "@/components/form/totp-form";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuthStore } from "@/stores/auth.store";
 import { useEffect } from "react";
@@ -21,7 +21,6 @@ const TwoFactorAuth = () => {
 
   return (
     <div className="bg-[#f8f8f8] my-6 px-4">
-      <Card className="w-full max-w-md mx-auto">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">
             Two-Factor Authentication
@@ -43,7 +42,6 @@ const TwoFactorAuth = () => {
             </TabsContent>
           </Tabs>
         </CardContent>
-      </Card>
     </div>
   );
 };

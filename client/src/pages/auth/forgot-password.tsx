@@ -40,23 +40,27 @@ const ForgotPassword = () => {
         }
       );
       console.log(res);
-      
     } catch (error) {
       console.error(error);
-      
+
       toast.error("Failed to send password reset email");
     }
   }
 
   return (
     <div className="min-h-screen bg-[#f8f8f8]">
-      <main className="relative flex items-center justify-center px-6">
-
+      <main className="relative flex min-h-[calc(100vh-88px)] items-center justify-center px-6">
+        <div
+          className="absolute right-[10%] top-[20%] h-[300px] w-[300px] animate-pulse rounded-full bg-linear-to-br from-pink-400 via-orange-300 to-yellow-200 opacity-70 blur-3xl"
+          aria-hidden="true"
+        />
+  
         <div className="relative w-full max-w-md space-y-8">
           <div className="space-y-2">
-            <h1 className="text-5xl font-light tracking-tight">
-              Forgot Password
-            </h1>
+            <h1 className="text-5xl font-light tracking-tight">Forgot Password</h1>
+            <p className="text-sm text-gray-600">
+              Enter your email
+            </p>
           </div>
           <Form {...form}>
             <form
