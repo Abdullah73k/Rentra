@@ -16,22 +16,28 @@ import {
 } from "../utils/repository.utils.js";
 import type { PoolClient } from "../utils/service.utils.js";
 
+import { tenant } from "../db/schemas/tenant.db.js";
+
 export const TenantRepository = {
-	async createTenant(tenant: DB.CreateTenant, client?: PoolClient) {
+	async createTenant(
+		tenantObject: DB.CreateTenant,
+		propertyId: string,
+		client?: PoolClient
+	) {
 		const { values, queryPlaceholders, columns, keys } =
-			generateCreateQueryColsAndValues(tenant);
+			generateCreateQueryColsAndValues(tenantObject);
 
 		const query = await executeDataBaseOperation(
-			() =>
-				insertIntoTable<DB.Tenant>({
-					table: "Tenant",
-					columns,
-					keys,
-					colValidation: TENANT_COLUMNS,
-					queryPlaceholders,
-					values,
-					client,
-				}),
+			() => insertIntoTable(tenant, { ...tenantObject, propertyId }, client),
+			// 	insertIntoTable<DB.Tenant>({
+			// 		table: "Tenant",
+			// 		columns,
+			// 		keys,
+			// 		colValidation: TENANT_COLUMNS,
+			// 		queryPlaceholders,
+			// 		values,
+			// 		client,
+			// 	}),
 			StatusCodes.BAD_REQUEST,
 			failedDbInsertMessage(columns, "Tenant")
 		);
@@ -40,38 +46,44 @@ export const TenantRepository = {
 	},
 	async getTenant(propertyId: string, client?: PoolClient) {
 		const query = await executeDataBaseOperation(
-			() =>
-				getRowsFromTableWithId<DB.Tenant>({
-					table: "Tenant",
-					id: propertyId,
-					idName: "propertyId",
-					client,
-				}),
+			() => getRowsFromTableWithId(tenant, propertyId, client),
+			// 	getRowsFromTableWithId<DB.Tenant>({
+			// 		table: "Tenant",
+			// 		id: propertyId,
+			// 		idName: "propertyId",
+			// 		client,
+			// 	}),
 			StatusCodes.BAD_REQUEST,
 			failedDbGetMessage("Tenant")
 		);
 
 		return query;
 	},
-	async updateTenant(tenant: DB.Tenant, client?: PoolClient) {
-		const dbFn = async (tenant: DB.Tenant, client?: PoolClient) => {
-			const { setString, values, keys } = buildUpdateSet(tenant);
-			const query = await updateRowFromTableWithId<DB.Tenant>({
-				table: "Tenant",
-				columnsAndPlaceholders: setString,
-				values,
-				keys,
-				colValidation: TENANT_COLUMNS,
-				id: tenant.id,
-				idName: "id",
-				client,
-			});
+	async updateTenant(tenantObject: DB.Tenant, client?: PoolClient) {
+		const dbFn = async (tenantObject: DB.Tenant, client?: PoolClient) => {
+			const { setString, values, keys } = buildUpdateSet(tenantObject);
+			const query = await updateRowFromTableWithId(
+				tenant,
+				tenantObject,
+				tenantObject.id,
+				client
+			);
+			// const query = await updateRowFromTableWithId<DB.Tenant>({
+			// 	table: "Tenant",
+			// 	columnsAndPlaceholders: setString,
+			// 	values,
+			// 	keys,
+			// 	colValidation: TENANT_COLUMNS,
+			// 	id: tenant.id,
+			// 	idName: "id",
+			// 	client,
+			// });
 
 			return query;
 		};
 
 		const query = await executeDataBaseOperation(
-			() => dbFn(tenant, client),
+			() => dbFn(tenantObject, client),
 			StatusCodes.BAD_REQUEST,
 			failedDbUpdateMessage("Tenant")
 		);

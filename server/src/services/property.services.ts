@@ -24,13 +24,26 @@ export const PropertyService = {
 				client
 			);
 			const loan = propertyData.loan
-				? await LoanRepository.createLoan(propertyData.loan, client)
+				? await LoanRepository.createLoan(
+						propertyData.loan,
+						property[0]!.id,
+						client
+				  )
 				: undefined;
 			const tenant = propertyData.tenant
-				? await TenantRepository.createTenant(propertyData.tenant, client)
+				? await TenantRepository.createTenant(
+						propertyData.tenant,
+						property[0]!.id,
+						client
+				  )
 				: undefined;
 			const lease = propertyData.lease
-				? await LeaseRepository.createLease(propertyData.lease, client)
+				? await LeaseRepository.createLease(
+						propertyData.lease,
+						property[0]!.id,
+						tenant![0]!.id,
+						client
+				  )
 				: undefined;
 			return {
 				property,

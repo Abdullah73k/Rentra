@@ -4,7 +4,6 @@ import {
 	generateCreateQueryColsAndValues,
 	getRowsFromTableWithId,
 	insertIntoTable,
-	insertIntoTableDrizzle,
 	updateRowFromTableWithId,
 } from "../utils/repository.utils.js";
 import * as DB from "../types/db.types.js";
@@ -29,7 +28,7 @@ export const PropertyInfoRepository = {
 
 		const query = await executeDataBaseOperation(
 			() =>
-				insertIntoTableDrizzle(propertyInfo, {
+				insertIntoTable(propertyInfo, {
 					propertyId,
 					...propertyInfoObject,
 				}),
@@ -50,38 +49,41 @@ export const PropertyInfoRepository = {
 	},
 	async getPropertyInfo(propertyId: string, client?: PoolClient) {
 		const query = await executeDataBaseOperation(
-			() =>
-				getRowsFromTableWithId<DB.PropertyInfo>({
-					table: "PropertyInfo",
-					id: propertyId,
-					idName: "propertyId",
-					client,
-				}),
+			() => getRowsFromTableWithId(propertyInfo, propertyId, client),
+			// getRowsFromTableWithId<DB.PropertyInfo>({
+			// 	table: "PropertyInfo",
+			// 	id: propertyId,
+			// 	idName: "propertyId",
+			// 	client,
+				// }),
 			StatusCodes.BAD_REQUEST,
 			failedDbGetMessage("PropertyInfo")
 		);
 
 		return query;
 	},
-	async updatePropertyInfo(propertyInfo: DB.PropertyInfo, client?: PoolClient) {
-		const dbFn = async (propertyInfo: DB.PropertyInfo, client?: PoolClient) => {
-			const { setString, values, keys } = buildUpdateSet(propertyInfo);
-			const query = await updateRowFromTableWithId<DB.PropertyInfo>({
-				table: "PropertyInfo",
-				columnsAndPlaceholders: setString,
-				values,
-				keys,
-				colValidation: PROPERTY_INFO_COLUMNS,
-				id: propertyInfo.id,
-				idName: "id",
-				client,
-			});
+	async updatePropertyInfo(propertyInfoObject: DB.PropertyInfo, client?: PoolClient) {
+		const dbFn = async (propertyInfoObject: DB.PropertyInfo, client?: PoolClient) => {
+			const { setString, values, keys } = buildUpdateSet(propertyInfoObject);
+
+			const query = await updateRowFromTableWithId(propertyInfo, propertyInfoObject, propertyInfoObject.id, client);
+
+			// const query = await updateRowFromTableWithId<DB.PropertyInfo>({
+			// 	table: "PropertyInfo",
+			// 	columnsAndPlaceholders: setString,
+			// 	values,
+			// 	keys,
+			// 	colValidation: PROPERTY_INFO_COLUMNS,
+			// 	id: propertyInfo.id,
+			// 	idName: "id",
+			// 	client,
+			// });
 
 			return query;
 		};
 
 		const query = await executeDataBaseOperation(
-			() => dbFn(propertyInfo, client),
+			() => dbFn(propertyInfoObject, client),
 			StatusCodes.BAD_REQUEST,
 			failedDbUpdateMessage("PropertyInfo")
 		);

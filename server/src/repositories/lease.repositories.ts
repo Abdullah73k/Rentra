@@ -16,22 +16,34 @@ import {
 	updateRowFromTableWithId,
 } from "../utils/repository.utils.js";
 
+import { lease } from "../db/schemas/lease.db.js";
+
 export const LeaseRepository = {
-	async createLease(lease: DB.CreateLease, client?: PoolClient) {
+	async createLease(
+		leaseObject: DB.CreateLease,
+		propertyId: string,
+		tenantId: string,
+		client?: PoolClient
+	) {
 		const { values, queryPlaceholders, columns, keys } =
-			generateCreateQueryColsAndValues(lease);
+			generateCreateQueryColsAndValues(leaseObject);
 
 		const query = await executeDataBaseOperation(
 			() =>
-				insertIntoTable<DB.Lease>({
-					table: "Lease",
-					columns,
-					keys,
-					colValidation: LEASE_COLUMNS,
-					queryPlaceholders,
-					client,
-					values,
-				}),
+				insertIntoTable(
+					lease,
+					{ ...leaseObject, propertyId, tenantId },
+					client
+				),
+			// 	insertIntoTable<DB.Lease>({
+			// 		table: "Lease",
+			// 		columns,
+			// 		keys,
+			// 		colValidation: LEASE_COLUMNS,
+			// 		queryPlaceholders,
+			// 		client,
+			// 		values,
+			// 	}),
 			StatusCodes.BAD_REQUEST,
 			failedDbInsertMessage(columns, "Lease")
 		);
@@ -40,38 +52,44 @@ export const LeaseRepository = {
 	},
 	async getLease(propertyId: string, client?: PoolClient) {
 		const query = await executeDataBaseOperation(
-			() =>
-				getRowsFromTableWithId<DB.Lease>({
-					table: "Lease",
-					id: propertyId,
-					idName: "propertyId",
-					client,
-				}),
+			() => getRowsFromTableWithId(lease, propertyId, client),
+			// 	getRowsFromTableWithId<DB.Lease>({
+			// 		table: "Lease",
+			// 		id: propertyId,
+			// 		idName: "propertyId",
+			// 		client,
+			// 	}),
 			StatusCodes.BAD_REQUEST,
 			failedDbGetMessage("Lease")
 		);
 
 		return query;
 	},
-	async updateLease(lease: DB.Lease, client?: PoolClient) {
-		const dbFn = async (lease: DB.Lease, client?: PoolClient) => {
-			const { setString, values, keys } = buildUpdateSet(lease);
-			const query = await updateRowFromTableWithId<DB.Lease>({
-				table: "Lease",
-				columnsAndPlaceholders: setString,
-				keys,
-				colValidation: LEASE_COLUMNS,
-				values,
-				id: lease.id,
-				idName: "id",
-				client,
-			});
+	async updateLease(leaseObject: DB.Lease, client?: PoolClient) {
+		const dbFn = async (leaseObject: DB.Lease, client?: PoolClient) => {
+			const { setString, values, keys } = buildUpdateSet(leaseObject);
+			const query = await updateRowFromTableWithId(
+				lease,
+				leaseObject,
+				leaseObject.id,
+				client
+			);
+			// const query = await updateRowFromTableWithId<DB.Lease>({
+			// 	table: "Lease",
+			// 	columnsAndPlaceholders: setString,
+			// 	keys,
+			// 	colValidation: LEASE_COLUMNS,
+			// 	values,
+			// 	id: lease.id,
+			// 	idName: "id",
+			// 	client,
+			// });
 
 			return query;
 		};
 
 		const query = await executeDataBaseOperation(
-			() => dbFn(lease, client),
+			() => dbFn(leaseObject, client),
 			StatusCodes.BAD_REQUEST,
 			failedDbUpdateMessage("Lease")
 		);

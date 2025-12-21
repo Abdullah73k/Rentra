@@ -16,7 +16,6 @@ import {
 	generateCreateQueryColsAndValues,
 	getRowsFromTableWithId,
 	insertIntoTable,
-	insertIntoTableDrizzle,
 	updateRowFromTableWithId,
 } from "../utils/repository.utils.js";
 import { property } from "../db/schemas/property.db.js";
@@ -27,7 +26,7 @@ export const PropertyRepository = {
 			generateCreateQueryColsAndValues(propertyObject);
 
 		const query = await executeDataBaseOperation(
-			() => insertIntoTableDrizzle(property, propertyObject),
+			() => insertIntoTable(property, propertyObject),
 			// insertIntoTable<DB.Property>({
 			// 	table: "Property",
 			// 	keys,
@@ -45,13 +44,13 @@ export const PropertyRepository = {
 	},
 	async getProperties(userId: string, client?: PoolClient) {
 		const query = await executeDataBaseOperation(
-			() =>
-				getRowsFromTableWithId<DB.Property>({
-					table: "Property",
-					id: userId,
-					idName: "userId",
-					client,
-				}),
+			() => getRowsFromTableWithId(property, userId, client),
+				// getRowsFromTableWithId<DB.Property>({
+				// 	table: "Property",
+				// 	id: userId,
+				// 	idName: "userId",
+				// 	client,
+				// }),
 			StatusCodes.BAD_REQUEST,
 			failedDbGetMessage("Property")
 		);
@@ -60,36 +59,38 @@ export const PropertyRepository = {
 	},
 	async deleteProperty(propertyId: string, client?: PoolClient) {
 		await executeDataBaseOperation(
-			() =>
-				deleteRowFromTableWithId({
-					table: "Property",
-					id: propertyId,
-					idName: "id",
-					client,
-				}),
+			() => deleteRowFromTableWithId(property, propertyId, client),
+			// deleteRowFromTableWithId({
+			// 	table: "Property",
+			// 	id: propertyId,
+			// 	idName: "id",
+			// 	client,
+			// }),
 			StatusCodes.BAD_REQUEST,
 			failedDbDeleteMessage("Property")
 		);
 	},
-	async updateProperty(property: DB.Property, client?: PoolClient) {
-		const dbFn = async (property: DB.Property, client?: PoolClient) => {
-			const { setString, values, keys } = buildUpdateSet(property);
-			const query = await updateRowFromTableWithId<DB.Property>({
-				table: "Property",
-				columnsAndPlaceholders: setString,
-				values,
-				keys,
-				colValidation: PROPERTY_COLUMNS,
-				client,
-				id: property.id,
-				idName: "id",
-			});
+	async updateProperty(propertyObject: DB.Property, client?: PoolClient) {
+		const dbFn = async (propertyObject: DB.Property, client?: PoolClient) => {
+			const { setString, values, keys } = buildUpdateSet(propertyObject);
+
+			const query = await updateRowFromTableWithId(property, propertyObject, propertyObject.id, client);
+			// const query = await updateRowFromTableWithId<DB.Property>({
+			// 	table: "Property",
+			// 	columnsAndPlaceholders: setString,
+			// 	values,
+			// 	keys,
+			// 	colValidation: PROPERTY_COLUMNS,
+			// 	client,
+			// 	id: property.id,
+			// 	idName: "id",
+			// });
 
 			return query;
 		};
 
 		const query = await executeDataBaseOperation(
-			() => dbFn(property, client),
+			() => dbFn(propertyObject, client),
 			StatusCodes.BAD_REQUEST,
 			failedDbUpdateMessage("Property")
 		);

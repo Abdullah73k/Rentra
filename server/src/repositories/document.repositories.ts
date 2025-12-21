@@ -9,22 +9,24 @@ import {
 } from "../utils/repository.utils.js";
 import type { PoolClient } from "../utils/service.utils.js";
 
+import { documents } from "../db/schemas/document.db.js";
+
 export const DocumentRepository = {
 	async createDocument(document: DB.CreateDocument, client?: PoolClient) {
 		const { values, queryPlaceholders, columns, keys } =
 			generateCreateQueryColsAndValues(document);
 
 		const query = await executeDataBaseOperation(
-			() =>
-				insertIntoTable<DB.Document>({
-					table: "Documents",
-					columns,
-					keys,
-					colValidation: DOCUMENT_COLUMNS,
-					queryPlaceholders,
-					values,
-					client,
-				}),
+			() => insertIntoTable(documents, document),
+			// 	insertIntoTable<DB.Document>({
+			// 		table: "Documents",
+			// 		columns,
+			// 		keys,
+			// 		colValidation: DOCUMENT_COLUMNS,
+			// 		queryPlaceholders,
+			// 		values,
+			// 		client,
+			// 	}),
 			StatusCodes.BAD_REQUEST,
 			failedDbInsertMessage(columns, "Documents")
 		);
