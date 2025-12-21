@@ -69,8 +69,10 @@ const ProfileTab = ({ user }: { user: Session }) => {
   }
 
   return (
-    <div className="space-y-6 bg-[#f8f8f8]">
-      <Card>
+    <div className="space-y-6 ">
+      <Card
+        className="glass-card"
+      >
         <CardHeader>
           <CardTitle>Personal Information</CardTitle>
           <CardDescription>Update your personal details</CardDescription>
