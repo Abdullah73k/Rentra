@@ -15,8 +15,9 @@ import { twoFactor } from "better-auth/plugins";
 
 export const auth: ReturnType<typeof betterAuth> = betterAuth({
 	appName: "Property Management",
+	baseURL: "http://localhost:4000",
 	database: pool,
-	trustedOrigins: ["http://localhost:5000", "http://localhost:5173"],
+	trustedOrigins: ["http://localhost:4000", "http://localhost:5173"],
 	advanced: {
 		database: {
 			generateId: () => crypto.randomUUID(),

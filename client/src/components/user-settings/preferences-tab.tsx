@@ -13,8 +13,8 @@ const PreferencesTab = () => {
     <div className="space-y-6">
       <Card className="border border-destructive">
         <CardHeader>
-          <CardTitle className="text-destructive">Danger Zone</CardTitle>
-          <CardDescription className="text-destructive">
+          <CardTitle>Danger Zone</CardTitle>
+          <CardDescription>
             This action can't be undone
           </CardDescription>
         </CardHeader>

@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
 import { authClient } from "@/utils/auth-client";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
+import BetterAuthActionButton from "@/components/form/auth-action-button";
 
 const EmailVerification = () => {
   const { email } = useParams();
@@ -54,23 +54,22 @@ const EmailVerification = () => {
         link to verify
       </p>
 
-      {/* TODO: change to better auth action button when merged with main */}
-      <Button
+      <BetterAuthActionButton
         variant="outline"
         className="w-full"
         disabled={timeToNextResend > 0}
-        onClick={() => {
+        action={() => {
           startEmailVerificationCountdown();
-          authClient.sendVerificationEmail({
+          return authClient.sendVerificationEmail({
             email,
             callbackURL: "/",
           });
         }}
       >
         {timeToNextResend > 0
-          ? `Resend Email (${timeToNextResend})`
+          ? `Resend in ${timeToNextResend}s`
           : "Resend Email"}
-      </Button>
+      </BetterAuthActionButton>
     </div>
   );
 };

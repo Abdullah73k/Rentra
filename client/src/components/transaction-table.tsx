@@ -25,7 +25,7 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
   }
 
   return (
-    <Card>
+    <Card className="glass-card">
       <div className="overflow-x-auto">
         <Table>
           <TableHeader>
