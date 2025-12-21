@@ -20,7 +20,7 @@ const TwoFactorAuth = () => {
   }
 
   return (
-    <div className="my-6 px-4">
+    <div className="bg-[#f8f8f8] my-6 px-4">
       <Card className="w-full max-w-md mx-auto">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">

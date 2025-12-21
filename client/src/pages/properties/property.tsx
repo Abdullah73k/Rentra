@@ -15,6 +15,7 @@ import {
 } from "@/lib/mock-data";
 import type { Transaction } from "@/lib/types";
 import PropertyOverview from "@/components/property-overview/property-overview";
+import watercolorHouse from "@/assets/pictures/watercolorHouse.png";
 
 export default function PropertyDetailPage() {
   // const { id } = useParams()
@@ -39,11 +40,22 @@ export default function PropertyDetailPage() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
+      className="w-full"
     >
-      <div className="min-h-screen bg-[#f8f8f8]">
-        <div className="mx-auto max-w-7xl">
+      <div
+        aria-hidden="true"
+        className="relative min-h-full h-360"
+        style={{
+          backgroundImage: `url(${watercolorHouse})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      />
+      <div className="absolute inset-0 bg-[#f8f8f8]/40 h-360 w-full">
+        <div className="mx-auto w-full ">
           {/* Header */}
-          <div className="border-b border-border px-6 py-6">
+          <div className="border-b border-border w-full px-6 py-6 bg-[#f8f8f8]">
             <Link to="/properties/dashboard">
               <Button variant="ghost" className="mb-4 gap-2">
                 <ArrowLeft className="h-4 w-4" />
@@ -99,8 +111,8 @@ export default function PropertyDetailPage() {
           />
 
           {/* Transactions Section */}
-          <div className="p-6">
-            <div className="flex items-center justify-between mb-6">
+          <div className="p-6 ">
+            <div className="flex items-center justify-between mb-6 ">
               <h2 className="text-2xl font-semibold text-foreground">
                 Transactions
               </h2>
