@@ -7,7 +7,6 @@ import {
 import * as API from "../../types/api.types.js";
 import { TransactionService } from "../../services/transaction.services.js";
 import { ValidationError } from "../../errors/validation.errors.js";
-
 export const postCreateTransaction = async (
 	req: Request<{}, {}, { transactionDetails: API.POSTTransaction }, {}>,
 	res: Response
@@ -77,9 +76,11 @@ export const patchTransaction = async (
 		...transactionData,
 	};
 
-	const transactionDataResult = validateTransactionDetails<
-		API.PATCHTransaction
-	>(combinedTransactionData, true);
+	const transactionDataResult =
+		validateTransactionDetails<API.PATCHTransaction>(
+			combinedTransactionData,
+			true
+		);
 
 	if (!transactionDataResult.success)
 		throw new ValidationError(
@@ -89,7 +90,10 @@ export const patchTransaction = async (
 
 	const validatedTransactionData = transactionDataResult.data;
 
-	const response = await TransactionService.update(validatedTransactionData);
+	const response = await TransactionService.update({
+		...validatedTransactionData,
+		id: transactionId,
+	});
 
 	return res.status(StatusCodes.SUCCESS).json({
 		error: false,
