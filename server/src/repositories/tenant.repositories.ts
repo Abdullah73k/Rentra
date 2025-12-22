@@ -7,7 +7,6 @@ import {
 } from "../utils/failed-db-messages.utils.js";
 import {
 	executeDataBaseOperation,
-	generateCreateQueryColsAndValues,
 	getRowsFromTableWithId,
 	insertIntoTable,
 	updateRowFromTableWithId,
@@ -22,13 +21,10 @@ export const TenantRepository = {
 		propertyId: string,
 		client?: PoolClient
 	) {
-		const { values, queryPlaceholders, columns, keys } =
-			generateCreateQueryColsAndValues(tenantObject);
-
 		const query = await executeDataBaseOperation(
 			() => insertIntoTable(tenant, { ...tenantObject, propertyId }, client),
 			StatusCodes.BAD_REQUEST,
-			failedDbInsertMessage(columns, "Tenant")
+			failedDbInsertMessage("Tenant")
 		);
 
 		return query;

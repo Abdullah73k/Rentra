@@ -10,7 +10,6 @@ import {
 import {
 	deleteRowFromTableWithId,
 	executeDataBaseOperation,
-	generateCreateQueryColsAndValues,
 	getRowsFromTableWithId,
 	insertIntoTable,
 	updateRowFromTableWithId,
@@ -23,13 +22,10 @@ export const TransactionRepository = {
 		transactionObject: DB.CreateTransaction,
 		client?: PoolClient
 	) {
-		const { values, queryPlaceholders, columns, keys } =
-			generateCreateQueryColsAndValues(transactionObject);
-
 		const query = await executeDataBaseOperation(
 			() => insertIntoTable(transaction, transactionObject, client),
 			StatusCodes.BAD_REQUEST,
-			failedDbInsertMessage(columns, "Transaction")
+			failedDbInsertMessage("Transaction")
 		);
 
 		return query;

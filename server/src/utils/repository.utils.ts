@@ -35,35 +35,10 @@ export async function executeDataBaseOperation<T>(
 	}
 }
 
-export function generateCreateQueryColsAndValues<T extends DB.TableObjects>(
-	object: T
-) {
-	const keys = Object.keys(object);
-	const columns = keys.join(", ");
-	const values = Object.values(object);
-
-	const queryPlaceholders = generateQueryPlaceholders(keys.length);
-
-	return {
-		keys,
-		columns,
-		values,
-		queryPlaceholders,
-	};
-}
-
-function generateQueryPlaceholders(length: number) {
-	let placeholder = [];
-	for (let i = 1; i <= length; i++) placeholder.push(i);
-	const queryPlaceholders = placeholder.join(", ");
-
-	return queryPlaceholders;
-}
-
 export async function insertIntoTable<T extends PgTable>(
 	table: T,
 	data: InferInsertModel<T>,
-	client?: PoolClient
+	client: PoolClient | undefined
 ) {
 	const pool = dbConnection(client);
 	const query = await pool.insert(table).values(data).returning();
@@ -73,7 +48,7 @@ export async function insertIntoTable<T extends PgTable>(
 export async function getRowsFromTableWithId<T extends PgTableWithColumns<any>>(
 	table: T,
 	id: string,
-	client?: PoolClient
+	client: PoolClient | undefined
 ) {
 	const pool = dbConnection(client);
 	const query = await pool
@@ -85,7 +60,7 @@ export async function getRowsFromTableWithId<T extends PgTableWithColumns<any>>(
 
 export async function deleteRowFromTableWithId<
 	T extends PgTableWithColumns<any>
->(table: T, id: string, client?: PoolClient) {
+>(table: T, id: string, client: PoolClient | undefined) {
 	const pool = dbConnection(client);
 	const query = await pool.delete(table).where(eq(table.id, id));
 	return query;
@@ -93,7 +68,12 @@ export async function deleteRowFromTableWithId<
 
 export async function updateRowFromTableWithId<
 	T extends PgTableWithColumns<any>
->(table: T, values: DB.TableObjects, id: string, client?: PoolClient) {
+>(
+	table: T,
+	values: DB.TableObjects,
+	id: string,
+	client: PoolClient | undefined
+) {
 	const pool = dbConnection(client);
 	const query = await pool.update(table).set(values).where(eq(table.id, id));
 	return query;

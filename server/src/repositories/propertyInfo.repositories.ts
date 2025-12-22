@@ -1,6 +1,5 @@
 import {
 	executeDataBaseOperation,
-	generateCreateQueryColsAndValues,
 	getRowsFromTableWithId,
 	insertIntoTable,
 	updateRowFromTableWithId,
@@ -21,9 +20,6 @@ export const PropertyInfoRepository = {
 		propertyId: string,
 		client?: PoolClient
 	) {
-		const { values, queryPlaceholders, columns, keys } =
-			generateCreateQueryColsAndValues(propertyInfoObject);
-
 		const query = await executeDataBaseOperation(
 			() =>
 				insertIntoTable(
@@ -35,7 +31,7 @@ export const PropertyInfoRepository = {
 					client
 				),
 			StatusCodes.BAD_REQUEST,
-			failedDbInsertMessage(columns, "PropertyInfo")
+			failedDbInsertMessage("PropertyInfo")
 		);
 
 		return query;

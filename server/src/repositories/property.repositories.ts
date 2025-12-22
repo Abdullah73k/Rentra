@@ -11,7 +11,6 @@ import {
 import {
 	deleteRowFromTableWithId,
 	executeDataBaseOperation,
-	generateCreateQueryColsAndValues,
 	getRowsFromTableWithId,
 	insertIntoTable,
 	updateRowFromTableWithId,
@@ -20,13 +19,10 @@ import { property } from "../db/schemas/property.db.js";
 
 export const PropertyRepository = {
 	async createProperty(propertyObject: DB.CreateProperty, client?: PoolClient) {
-		const { columns, values, queryPlaceholders, keys } =
-			generateCreateQueryColsAndValues(propertyObject);
-
 		const query = await executeDataBaseOperation(
 			() => insertIntoTable(property, propertyObject, client),
 			StatusCodes.BAD_REQUEST,
-			failedDbInsertMessage(columns, "Property")
+			failedDbInsertMessage("Property")
 		);
 
 		return query;
