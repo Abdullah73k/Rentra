@@ -13,17 +13,6 @@ import { tenant } from "../db/schemas/tenant.db.js";
 import { transaction } from "../db/schemas/transaction.db.js";
 import { documents } from "../db/schemas/document.db.js";
 
-// TODO: Add undefined type union for get db operation
-
-type InferSelect =
-	| typeof property.$inferSelect
-	| typeof propertyInfo.$inferSelect
-	| typeof loan.$inferSelect
-	| typeof lease.$inferSelect
-	| typeof tenant.$inferSelect
-	| typeof transaction.$inferSelect
-	| typeof documents.$inferSelect;
-
 export async function executeDataBaseOperation<T>(
 	dataBaseFn: () => Promise<T>,
 	statusCode: StatusCodes,
@@ -95,15 +84,77 @@ export async function deleteRowFromTableWithId<
 	return query;
 }
 
-export async function updateRowFromTableWithId<
-	T extends PgTableWithColumns<any>
->(
-	table: T,
-	values: DB.TableObjects,
-	id: string,
-	client: PoolClient | undefined
-) {
-	const pool = dbConnection(client);
-	const query = await pool.update(table).set(values).where(eq(table.id, id));
-	return query;
-}
+export const updateRowFromTableWithId = {
+	async property(
+		id: string,
+		values: DB.Property,
+		client: PoolClient | undefined
+	) {
+		const pool = dbConnection(client);
+		return await pool
+			.update(property)
+			.set(values)
+			.where(eq(property.id, id))
+			.returning();
+	},
+	async propertyInfo(
+		id: string,
+		values: DB.PropertyInfo,
+		client: PoolClient | undefined
+	) {
+		const pool = dbConnection(client);
+		return await pool
+			.update(propertyInfo)
+			.set(values)
+			.where(eq(propertyInfo.propertyId, id))
+			.returning();
+	},
+	async loan(id: string, values: DB.Loan, client: PoolClient | undefined) {
+		const pool = dbConnection(client);
+		return await pool
+			.update(loan)
+			.set(values)
+			.where(eq(loan.propertyId, id))
+			.returning();
+	},
+	async lease(id: string, values: DB.Lease, client: PoolClient | undefined) {
+		const pool = dbConnection(client);
+		return await pool
+			.update(lease)
+			.set(values)
+			.where(eq(lease.propertyId, id))
+			.returning();
+	},
+	async tenant(id: string, values: DB.Tenant, client: PoolClient | undefined) {
+		const pool = dbConnection(client);
+		return await pool
+			.update(tenant)
+			.set(values)
+			.where(eq(tenant.propertyId, id))
+			.returning();
+	},
+	async transaction(
+		id: string,
+		values: DB.Transaction,
+		client: PoolClient | undefined
+	) {
+		const pool = dbConnection(client);
+		return await pool
+			.update(transaction)
+			.set(values)
+			.where(eq(transaction.id, id))
+			.returning();
+	},
+	async document(
+		id: string,
+		values: DB.Document,
+		client: PoolClient | undefined
+	) {
+		const pool = dbConnection(client);
+		return await pool
+			.update(documents)
+			.set(values)
+			.where(eq(documents.propertyId, id))
+			.returning();
+	},
+};

@@ -50,9 +50,7 @@ export const postPropertyData = async (
 ) => {
 	const propertyData = req.body;
 
-	const result = validatePropertyData<
-		API.POSTPropertyData
-	>(propertyData);
+	const result = validatePropertyData<API.POSTPropertyData>(propertyData);
 
 	if (!result.success)
 		throw new ValidationError("Invalid property data", result.errors);
@@ -83,12 +81,6 @@ export const deleteUserProperty = async (
 		error: false,
 		message: "Successfully deleted property",
 	});
-
-	// I need to handle this with error middleware
-	// return res.status(StatusCodes.NOT_FOUND).json({
-	// 	error: true,
-	// 	message: "Property doesn't exist",
-	// });
 };
 
 // TODO: decide on how to update
@@ -116,11 +108,11 @@ export const patchPropertyData = async (
 
 	const validatedPropertyInfo = propertyInfoResult.data;
 
-	// use cleaned data to update db
+	const response = await PropertyService.update(validatedPropertyInfo);
 
 	return res.status(StatusCodes.CREATED).json({
 		error: false,
 		message: "Property updated",
-		data: [], // data should not be cleaned data but the object returned by the data base
+		data: response, // data should not be cleaned data but the object returned by the data base
 	});
 };

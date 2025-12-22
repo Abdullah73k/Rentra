@@ -46,6 +46,7 @@ export const PropertyInfoRepository = {
 		return query;
 	},
 	async updatePropertyInfo(
+		propertyId: string,
 		propertyInfoObject: DB.PropertyInfo,
 		client?: PoolClient
 	) {
@@ -53,10 +54,9 @@ export const PropertyInfoRepository = {
 			propertyInfoObject: DB.PropertyInfo,
 			client?: PoolClient
 		) => {
-			const query = await updateRowFromTableWithId(
-				propertyInfo,
+			const query = await updateRowFromTableWithId.propertyInfo(
+				propertyId,
 				propertyInfoObject,
-				propertyInfoObject.id,
 				client
 			);
 

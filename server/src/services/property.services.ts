@@ -69,7 +69,6 @@ export const PropertyService = {
 		await PropertyRepository.deleteProperty(propertyId);
 	},
 	async getAllData(propertyId: string) {
-
 		const queryFn = async (propertyId: string, client: PoolClient) => {
 			const propertyInfo = await PropertyInfoRepository.getPropertyInfo(
 				propertyId,
@@ -99,5 +98,48 @@ export const PropertyService = {
 		);
 		return result;
 	},
-	async update() {},
+	async update(data: API.PATCHPropertyData) {
+		const queryFn = async (data: API.PATCHPropertyData, client: PoolClient) => {
+			const propertyId = data.property.id;
+			const property = await PropertyRepository.updateProperty(
+				propertyId,
+				data.property,
+				client
+			);
+			const propertyInfo = await PropertyInfoRepository.updatePropertyInfo(
+				propertyId,
+				data.propertyInfo,
+				client
+			);
+			const loan = await LoanRepository.updateLoan(
+				propertyId,
+				data.loan,
+				client
+			);
+			const tenant = await TenantRepository.updateTenant(
+				propertyId,
+				data.tenant,
+				client
+			);
+			const lease = await LeaseRepository.updateLease(
+				propertyId,
+				data.lease,
+				client
+			);
+			return {
+				property,
+				propertyInfo,
+				loan,
+				tenant,
+				lease,
+			};
+		};
+
+		const query = await queryInTransaction(
+			queryFn,
+			data,
+			"Update property failed transaction"
+		);
+		return query;
+	},
 };

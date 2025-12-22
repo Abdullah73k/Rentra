@@ -32,7 +32,7 @@ export const PropertyRepository = {
 			() => getRowsFromTableWithId.property(userId, client),
 			StatusCodes.BAD_REQUEST,
 			failedDbGetMessage("Property")
-		);	
+		);
 
 		return query;
 	},
@@ -43,12 +43,15 @@ export const PropertyRepository = {
 			failedDbDeleteMessage("Property")
 		);
 	},
-	async updateProperty(propertyObject: DB.Property, client?: PoolClient) {
+	async updateProperty(
+		propertyId: string,
+		propertyObject: DB.Property,
+		client?: PoolClient
+	) {
 		const dbFn = async (propertyObject: DB.Property, client?: PoolClient) => {
-			const query = await updateRowFromTableWithId(
-				property,
+			const query = await updateRowFromTableWithId.property(
+				propertyId,
 				propertyObject,
-				propertyObject.id,
 				client
 			);
 

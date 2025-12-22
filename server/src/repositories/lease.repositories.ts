@@ -44,12 +44,15 @@ export const LeaseRepository = {
 
 		return query;
 	},
-	async updateLease(leaseObject: DB.Lease, client?: PoolClient) {
+	async updateLease(
+		propertyId: string,
+		leaseObject: DB.Lease,
+		client?: PoolClient
+	) {
 		const dbFn = async (leaseObject: DB.Lease, client?: PoolClient) => {
-			const query = await updateRowFromTableWithId(
-				lease,
+			const query = await updateRowFromTableWithId.lease(
+				propertyId,
 				leaseObject,
-				leaseObject.id,
 				client
 			);
 

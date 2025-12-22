@@ -38,12 +38,15 @@ export const TenantRepository = {
 
 		return query;
 	},
-	async updateTenant(tenantObject: DB.Tenant, client?: PoolClient) {
+	async updateTenant(
+		propertyId: string,
+		tenantObject: DB.Tenant,
+		client?: PoolClient
+	) {
 		const dbFn = async (tenantObject: DB.Tenant, client?: PoolClient) => {
-			const query = await updateRowFromTableWithId(
-				tenant,
+			const query = await updateRowFromTableWithId.tenant(
+				propertyId,
 				tenantObject,
-				tenantObject.id,
 				client
 			);
 			return query;

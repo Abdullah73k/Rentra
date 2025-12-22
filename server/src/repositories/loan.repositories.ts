@@ -38,12 +38,15 @@ export const LoanRepository = {
 
 		return query;
 	},
-	async updateLoan(loanObject: DB.Loan, client?: PoolClient) {
+	async updateLoan(
+		propertyId: string,
+		loanObject: DB.Loan,
+		client?: PoolClient
+	) {
 		const dbFn = async (loanObject: DB.Loan, client?: PoolClient) => {
-			const query = await updateRowFromTableWithId(
-				loan,
+			const query = await updateRowFromTableWithId.loan(
+				propertyId,
 				loanObject,
-				loanObject.id,
 				client
 			);
 			return query;

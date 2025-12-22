@@ -54,10 +54,9 @@ export const TransactionRepository = {
 			transactionObject: DB.Transaction,
 			client?: PoolClient
 		) => {
-			const query = await updateRowFromTableWithId(
-				transaction,
-				transactionObject,
+			const query = await updateRowFromTableWithId.transaction(
 				transactionObject.id,
+				transactionObject,
 				client
 			);
 
