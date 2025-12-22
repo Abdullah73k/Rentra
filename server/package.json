@@ -1,45 +1,45 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "type": "module",
-  "scripts": {
-    "test": "vitest",
-    "dev": "doppler run -- nodemon ",
-    "build": "tsc",
-    "start": "node dist/index.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.26.0",
-  "dependencies": {
-    "@supabase/supabase-js": "^2.75.0",
-    "@types/node": "^24.6.0",
-    "@zod/core": "^0.11.6",
-    "axios": "^1.12.2",
-    "better-auth": "^1.3.33",
-    "cors": "^2.8.5",
-    "drizzle-orm": "^0.45.1",
-    "express": "^5.1.0",
-    "express-rate-limit": "^8.1.0",
-    "nodemailer": "^7.0.10",
-    "pg": "^8.16.3",
-    "zod": "^4.1.12"
-  },
-  "devDependencies": {
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.3",
-    "@types/nodemailer": "^7.0.3",
-    "@types/pg": "^8.15.5",
-    "@types/supertest": "^6.0.3",
-    "drizzle-kit": "^0.31.8",
-    "nodemon": "^3.1.10",
-    "supertest": "^7.1.4",
-    "ts-node": "^10.9.2",
-    "tsx": "^4.21.0",
-    "typescript": "^5.9.2",
-    "vitest": "^4.0.15"
-  }
+	"name": "backend",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"test": "doppler run -- vitest",
+		"dev": "doppler run -- nodemon ",
+		"build": "tsc",
+		"start": "node dist/index.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"packageManager": "pnpm@10.26.0",
+	"dependencies": {
+		"@supabase/supabase-js": "^2.75.0",
+		"@types/node": "^24.6.0",
+		"@zod/core": "^0.11.6",
+		"axios": "^1.12.2",
+		"better-auth": "^1.3.33",
+		"cors": "^2.8.5",
+		"drizzle-orm": "^0.45.1",
+		"express": "^5.1.0",
+		"express-rate-limit": "^8.1.0",
+		"nodemailer": "^7.0.10",
+		"pg": "^8.16.3",
+		"zod": "^4.1.12"
+	},
+	"devDependencies": {
+		"@types/cors": "^2.8.19",
+		"@types/express": "^5.0.3",
+		"@types/nodemailer": "^7.0.3",
+		"@types/pg": "^8.15.5",
+		"@types/supertest": "^6.0.3",
+		"drizzle-kit": "^0.31.8",
+		"nodemon": "^3.1.10",
+		"supertest": "^7.1.4",
+		"ts-node": "^10.9.2",
+		"tsx": "^4.21.0",
+		"typescript": "^5.9.2",
+		"vitest": "^4.0.15"
+	}
 }
