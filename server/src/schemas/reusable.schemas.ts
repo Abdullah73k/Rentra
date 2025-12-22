@@ -12,5 +12,6 @@ export const ReusableTypes = {
 	positiveInt2: z.number().int().min(0).max(32767),
 	stringArray: z.array(z.string()),
 	optionalString: z.string().optional(),
+	dayOfMonth: z.number().int().min(1).max(31),
 	currency: z.string().length(3).uppercase(),
 };

@@ -28,7 +28,7 @@ export const PROPERTY_INFO_COLUMNS = [
 	"sizeSqm",
 	"status",
 	"furnished",
-	"lockerNumber",
+	"lockerNumbers",
 	"id",
 	"propertyId",
 	"parking",

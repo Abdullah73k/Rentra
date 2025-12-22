@@ -40,7 +40,7 @@ export const propertyInfoSchema = z.object({
 	]),
 	furnishing: z.enum(["furnished", "semi-furnished", "unfurnished"]),
 	parking: ReusableTypes.optionalString,
-	lockerNumber: ReusableTypes.stringArray,
+	lockerNumbers: ReusableTypes.stringArray,
 	notes: ReusableTypes.optionalString,
 });
 
@@ -79,7 +79,7 @@ export const leaseSchema = z.object({
 		"annually",
 		"bi-annually",
 	]),
-	paymentDay: ReusableTypes.positiveInt2,
+	paymentDay: ReusableTypes.dayOfMonth,
 	deposit: ReusableTypes.decimal,
 });
 
