@@ -6,7 +6,6 @@ import { TenantRepository } from "../repositories/tenant.repositories.js";
 import { TransactionRepository } from "../repositories/transaction.repositories.js";
 import * as API from "../types/api.types.js";
 import { queryInTransaction, type PoolClient } from "../utils/service.utils.js";
-import { pool } from "../db/configs/pg.config.js";
 
 export const PropertyService = {
 	async create(data: API.POSTPropertyData) {
@@ -70,7 +69,6 @@ export const PropertyService = {
 		await PropertyRepository.deleteProperty(propertyId);
 	},
 	async getAllData(propertyId: string) {
-		const client = await pool.connect();
 
 		const queryFn = async (propertyId: string, client: PoolClient) => {
 			const propertyInfo = await PropertyInfoRepository.getPropertyInfo(
