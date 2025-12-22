@@ -16,6 +16,8 @@ import {
 import type { Transaction } from "@/lib/types";
 import PropertyOverview from "@/components/property-overview/property-overview";
 import watercolorHouse from "@/assets/pictures/watercolorHouse.png";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import PropertyDashboard from "@/components/property-dashboard";
 
 export default function PropertyDetailPage() {
   // const { id } = useParams()
@@ -101,32 +103,64 @@ export default function PropertyDetailPage() {
             </div>
           </div>
 
-          {/* Overview Section */}
-          <PropertyOverview
-            property={property}
-            propertyInfo={propertyInfo}
-            tenant={tenant}
-            lease={lease}
-            loan={loan}
-          />
+          <div className="px-6 bg-[#f8f8f8] min-h-screen">
+            <Tabs defaultValue="info" className="w-full">
+              <div className="border-b border-border">
+                <TabsList className="bg-transparent h-auto p-0 gap-6">
+                  <TabsTrigger
+                    value="info"
+                    className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-2 py-3"
+                  >
+                    Info
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="dashboard"
+                    className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-2 py-3"
+                  >
+                    Dashboard
+                  </TabsTrigger>
+                </TabsList>
+              </div>
 
-          {/* Transactions Section */}
-          <div className="p-6 ">
-            <div className="flex items-center justify-between mb-6 ">
-              <h2 className="text-2xl font-semibold text-foreground">
-                Transactions
-              </h2>
+              <TabsContent value="info" className="pt-6">
+                {/* Overview Section */}
+                <PropertyOverview
+                  property={property}
+                  propertyInfo={propertyInfo}
+                  tenant={tenant}
+                  lease={lease}
+                  loan={loan}
+                />
 
-              <Button
-                onClick={() => setIsAddTransactionOpen(true)}
-                className="gap-2"
-              >
-                <Plus className="h-4 w-4" />
-                Add Transaction
-              </Button>
-            </div>
+                {/* Transactions Section */}
+                <div className="p-6 ">
+                  <div className="flex items-center justify-between mb-6 ">
+                    <h2 className="text-2xl font-semibold text-foreground">
+                      Transactions
+                    </h2>
 
-            <TransactionsTable transactions={transactions} />
+                    <Button
+                      onClick={() => setIsAddTransactionOpen(true)}
+                      className="gap-2"
+                    >
+                      <Plus className="h-4 w-4" />
+                      Add Transaction
+                    </Button>
+                  </div>
+
+                  <TransactionsTable transactions={transactions} />
+                </div>
+              </TabsContent>
+
+              <TabsContent value="dashboard">
+                <PropertyDashboard
+                  property={property}
+                  propertyInfo={propertyInfo}
+                  loan={loan}
+                  transactions={transactions}
+                />
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
 
