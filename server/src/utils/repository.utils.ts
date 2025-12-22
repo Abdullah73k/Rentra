@@ -50,34 +50,40 @@ export async function insertIntoTable<T extends PgTable>(
 export const getRowsFromTableWithId = {
 	async property(id: string, client: PoolClient | undefined) {
 		const pool = dbConnection(client);
-		return await pool.select().from(property).where(eq(property.id, id));
+		return await pool.select().from(property).where(eq(property.userId, id));
 	},
 	async propertyInfo(id: string, client: PoolClient | undefined) {
 		const pool = dbConnection(client);
 		return await pool
 			.select()
 			.from(propertyInfo)
-			.where(eq(propertyInfo.id, id));
+			.where(eq(propertyInfo.propertyId, id));
 	},
 	async loan(id: string, client: PoolClient | undefined) {
 		const pool = dbConnection(client);
-		return await pool.select().from(loan).where(eq(loan.id, id));
+		return await pool.select().from(loan).where(eq(loan.propertyId, id));
 	},
 	async lease(id: string, client: PoolClient | undefined) {
 		const pool = dbConnection(client);
-		return await pool.select().from(lease).where(eq(lease.id, id));
+		return await pool.select().from(lease).where(eq(lease.propertyId, id));
 	},
 	async tenant(id: string, client: PoolClient | undefined) {
 		const pool = dbConnection(client);
-		return await pool.select().from(tenant).where(eq(tenant.id, id));
+		return await pool.select().from(tenant).where(eq(tenant.propertyId, id));
 	},
 	async transaction(id: string, client: PoolClient | undefined) {
 		const pool = dbConnection(client);
-		return await pool.select().from(transaction).where(eq(transaction.id, id));
+		return await pool
+			.select()
+			.from(transaction)
+			.where(eq(transaction.propertyId, id));
 	},
 	async document(id: string, client: PoolClient | undefined) {
 		const pool = dbConnection(client);
-		return await pool.select().from(documents).where(eq(documents.id, id));
+		return await pool
+			.select()
+			.from(documents)
+			.where(eq(documents.propertyId, id));
 	},
 };
 
