@@ -1,5 +1,4 @@
-import type { PoolClient } from "pg";
-import { LOAN_COLUMNS } from "../constants/db-table-columns.constants.js";
+import type { PoolClient } from "../utils/service.utils.js";
 import { StatusCodes } from "../constants/statusCodes.constants.js";
 import * as DB from "../types/db.types.js";
 import {
@@ -8,70 +7,50 @@ import {
 	failedDbUpdateMessage,
 } from "../utils/failed-db-messages.utils.js";
 import {
-	buildUpdateSet,
 	executeDataBaseOperation,
-	generateCreateQueryColsAndValues,
 	getRowsFromTableWithId,
 	insertIntoTable,
 	updateRowFromTableWithId,
 } from "../utils/repository.utils.js";
 
-export const LoanRepository = {
-	async createLoan(loan: DB.CreateLoan, client?: PoolClient) {
-		const { values, queryPlaceholders, columns, keys } =
-			generateCreateQueryColsAndValues(loan);
+import { loan } from "../db/schemas/loan.db.js";
 
+export const LoanRepository = {
+	async createLoan(
+		loanObject: DB.CreateLoan,
+		propertyId: string,
+		client?: PoolClient
+	) {
 		const query = await executeDataBaseOperation(
-			() =>
-				insertIntoTable<DB.Loan>({
-					table: "Loan",
-					columns,
-					keys,
-					colValidation: LOAN_COLUMNS,
-					queryPlaceholders,
-					client,
-					values,
-				}),
+			() => insertIntoTable(loan, { ...loanObject, propertyId }, client),
 			StatusCodes.BAD_REQUEST,
-			failedDbInsertMessage(columns, "Loan")
+			failedDbInsertMessage("Loan")
 		);
 
 		return query;
 	},
 	async getLoan(propertyId: string, client?: PoolClient) {
 		const query = await executeDataBaseOperation(
-			() =>
-				getRowsFromTableWithId<DB.Loan>({
-					table: "Loan",
-					id: propertyId,
-					idName: "propertyId",
-					client,
-				}),
+			() => getRowsFromTableWithId.loan(propertyId, client),
 			StatusCodes.BAD_REQUEST,
 			failedDbGetMessage("Loan")
 		);
 
 		return query;
 	},
-	async updateLoan(loan: DB.Loan, client?: PoolClient) {
-		const dbFn = async (loan: DB.Loan, client?: PoolClient) => {
-			const { setString, values, keys } = buildUpdateSet(loan);
-			const query = await updateRowFromTableWithId<DB.Loan>({
-				table: "Loan",
-				columnsAndPlaceholders: setString,
-				keys,
-				colValidation: LOAN_COLUMNS,
-				values,
-				id: loan.id,
-				client,
-				idName: "id",
-			});
-
+	async updateLoan(loanObject: DB.Loan, client?: PoolClient) {
+		const dbFn = async (loanObject: DB.Loan, client?: PoolClient) => {
+			const query = await updateRowFromTableWithId(
+				loan,
+				loanObject,
+				loanObject.id,
+				client
+			);
 			return query;
 		};
 
 		const query = await executeDataBaseOperation(
-			() => dbFn(loan, client),
+			() => dbFn(loanObject, client),
 			StatusCodes.BAD_REQUEST,
 			failedDbUpdateMessage("Loan")
 		);

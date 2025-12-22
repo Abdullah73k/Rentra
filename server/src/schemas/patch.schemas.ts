@@ -35,11 +35,10 @@ export const transactionSchema = POST.transactionSchema.extend({
 	id: ReusableTypes.uuid,
 });
 
-export const propertyDataSchema = z
-	.object({
-		property: propertySchema,
-		propertyInfo: propertyInfoSchema,
-		loan: loanSchema,
-		tenant: tenantSchema,
-		lease: leaseSchema,
-	});
+export const propertyDataSchema = z.object({
+	property: propertySchema,
+	propertyInfo: propertyInfoSchema,
+	loan: loanSchema,
+	tenant: tenantSchema,
+	lease: leaseSchema,
+});

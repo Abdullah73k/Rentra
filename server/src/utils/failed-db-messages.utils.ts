@@ -1,10 +1,9 @@
 import * as DB from "../types/db.types.js";
 
 export const failedDbInsertMessage = (
-	cols: string,
 	table: DB.DatabaseTables
 ) => {
-	return `Failed to insert ${cols} into ${table} table`;
+	return `Failed to insert into ${table} table`;
 };
 
 export const failedDbGetMessage = (table: DB.DatabaseTables) => {
