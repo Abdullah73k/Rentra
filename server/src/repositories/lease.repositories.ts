@@ -37,7 +37,7 @@ export const LeaseRepository = {
 	},
 	async getLease(propertyId: string, client?: PoolClient) {
 		const query = await executeDataBaseOperation(
-			() => getRowsFromTableWithId(lease, propertyId, client),
+			() => getRowsFromTableWithId.lease(propertyId, client),
 			StatusCodes.BAD_REQUEST,
 			failedDbGetMessage("Lease")
 		);

@@ -5,12 +5,13 @@ import { dbConnection } from "./db-connects.utils.js";
 import type { PoolClient } from "../utils/service.utils.js";
 import type { PgTable, PgTableWithColumns } from "drizzle-orm/pg-core";
 import { eq, type InferInsertModel } from "drizzle-orm";
-import type { property } from "../db/schemas/property.db.js";
-import type { propertyInfo } from "../db/schemas/property-info.db.js";
-import type { loan } from "../db/schemas/loan.db.js";
-import type { lease } from "../db/schemas/lease.db.js";
-import type { tenant } from "../db/schemas/tenant.db.js";
-import type { transaction } from "../db/schemas/transaction.db.js";
+import { property } from "../db/schemas/property.db.js";
+import { propertyInfo } from "../db/schemas/property-info.db.js";
+import { loan } from "../db/schemas/loan.db.js";
+import { lease } from "../db/schemas/lease.db.js";
+import { tenant } from "../db/schemas/tenant.db.js";
+import { transaction } from "../db/schemas/transaction.db.js";
+import { documents } from "../db/schemas/document.db.js";
 
 // TODO: Add undefined type union for get db operation
 
@@ -20,7 +21,8 @@ type InferSelect =
 	| typeof loan.$inferSelect
 	| typeof lease.$inferSelect
 	| typeof tenant.$inferSelect
-	| typeof transaction.$inferSelect;
+	| typeof transaction.$inferSelect
+	| typeof documents.$inferSelect;
 
 export async function executeDataBaseOperation<T>(
 	dataBaseFn: () => Promise<T>,
@@ -45,18 +47,39 @@ export async function insertIntoTable<T extends PgTable>(
 	return query;
 }
 
-export async function getRowsFromTableWithId<T extends PgTableWithColumns<any>>(
-	table: T,
-	id: string,
-	client: PoolClient | undefined
-) {
-	const pool = dbConnection(client);
-	const query = await pool
-		.select()
-		.from(table as PgTable)
-		.where(eq(table.id, id));
-	return query;
-}
+export const getRowsFromTableWithId = {
+	async property(id: string, client: PoolClient | undefined) {
+		const pool = dbConnection(client);
+		return await pool.select().from(property).where(eq(property.id, id));
+	},
+	async propertyInfo(id: string, client: PoolClient | undefined) {
+		const pool = dbConnection(client);
+		return await pool
+			.select()
+			.from(propertyInfo)
+			.where(eq(propertyInfo.id, id));
+	},
+	async loan(id: string, client: PoolClient | undefined) {
+		const pool = dbConnection(client);
+		return await pool.select().from(loan).where(eq(loan.id, id));
+	},
+	async lease(id: string, client: PoolClient | undefined) {
+		const pool = dbConnection(client);
+		return await pool.select().from(lease).where(eq(lease.id, id));
+	},
+	async tenant(id: string, client: PoolClient | undefined) {
+		const pool = dbConnection(client);
+		return await pool.select().from(tenant).where(eq(tenant.id, id));
+	},
+	async transaction(id: string, client: PoolClient | undefined) {
+		const pool = dbConnection(client);
+		return await pool.select().from(transaction).where(eq(transaction.id, id));
+	},
+	async document(id: string, client: PoolClient | undefined) {
+		const pool = dbConnection(client);
+		return await pool.select().from(documents).where(eq(documents.id, id));
+	},
+};
 
 export async function deleteRowFromTableWithId<
 	T extends PgTableWithColumns<any>

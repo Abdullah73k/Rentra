@@ -29,10 +29,10 @@ export const PropertyRepository = {
 	},
 	async getProperties(userId: string, client?: PoolClient) {
 		const query = await executeDataBaseOperation(
-			() => getRowsFromTableWithId(property, userId, client),
+			() => getRowsFromTableWithId.property(userId, client),
 			StatusCodes.BAD_REQUEST,
 			failedDbGetMessage("Property")
-		);
+		);	
 
 		return query;
 	},

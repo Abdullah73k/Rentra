@@ -39,7 +39,7 @@ export const TransactionRepository = {
 	},
 	async getTransaction(propertyId: string, client?: PoolClient) {
 		const query = await executeDataBaseOperation(
-			() => getRowsFromTableWithId(transaction, propertyId, client),
+			() => getRowsFromTableWithId.transaction(propertyId, client),
 			StatusCodes.BAD_REQUEST,
 			failedDbGetMessage("Transaction")
 		);

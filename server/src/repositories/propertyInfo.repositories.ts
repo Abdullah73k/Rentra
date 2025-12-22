@@ -38,7 +38,7 @@ export const PropertyInfoRepository = {
 	},
 	async getPropertyInfo(propertyId: string, client?: PoolClient) {
 		const query = await executeDataBaseOperation(
-			() => getRowsFromTableWithId(propertyInfo, propertyId, client),
+			() => getRowsFromTableWithId.propertyInfo(propertyId, client),
 			StatusCodes.BAD_REQUEST,
 			failedDbGetMessage("PropertyInfo")
 		);

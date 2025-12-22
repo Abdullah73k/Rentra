@@ -31,7 +31,7 @@ export const LoanRepository = {
 	},
 	async getLoan(propertyId: string, client?: PoolClient) {
 		const query = await executeDataBaseOperation(
-			() => getRowsFromTableWithId(loan, propertyId, client),
+			() => getRowsFromTableWithId.loan(propertyId, client),
 			StatusCodes.BAD_REQUEST,
 			failedDbGetMessage("Loan")
 		);

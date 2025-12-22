@@ -31,7 +31,7 @@ export const TenantRepository = {
 	},
 	async getTenant(propertyId: string, client?: PoolClient) {
 		const query = await executeDataBaseOperation(
-			() => getRowsFromTableWithId(tenant, propertyId, client),
+			() => getRowsFromTableWithId.tenant(propertyId, client),
 			StatusCodes.BAD_REQUEST,
 			failedDbGetMessage("Tenant")
 		);
