@@ -158,6 +158,8 @@ export default function PropertyDetailPage() {
                   propertyInfo={propertyInfo}
                   loan={loan}
                   transactions={transactions}
+                  lease={lease}
+                  tenant={tenant}
                 />
               </TabsContent>
             </Tabs>

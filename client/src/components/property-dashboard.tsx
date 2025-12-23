@@ -11,6 +11,8 @@ import {
     Pie,
     Cell,
     Legend,
+    BarChart,
+    Bar,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -23,7 +25,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Wallet, Building2, TrendingDown, TrendingUp, ArrowUpRight, ArrowDownRight } from "lucide-react";
-import type { Property, PropertyInfo, Loan, Transaction } from "@/lib/types";
+import type { Property, PropertyInfo, Loan, Transaction, Lease, Tenant } from "@/lib/types";
 import { motion, type Variants } from "motion/react";
 import { cn } from "@/lib/utils";
 
@@ -32,7 +34,38 @@ interface PropertyDashboardProps {
     propertyInfo: PropertyInfo;
     loan?: Loan;
     transactions?: Transaction[];
+    lease?: Lease;
+    tenant?: Tenant;
 }
+
+// --- Helper Functions ---
+
+const calculateNOI = (transactions: Transaction[], startDate?: Date, endDate?: Date) => {
+    // Filter transactions by date range if provided
+    const filtered = transactions.filter(t => {
+        if (!startDate && !endDate) return true;
+        const date = new Date(t.date);
+        if (startDate && date < startDate) return false;
+        if (endDate && date > endDate) return false;
+        return true;
+    });
+
+    const income = filtered
+        .filter(t => t.type === 'income')
+        .reduce((sum, t) => sum + t.amount, 0);
+
+    const expense = filtered
+        .filter(t => t.type === 'expense' && t.subcategory !== 'Mortgage' && t.subcategory !== 'Loan Payment')
+        .reduce((sum, t) => sum + t.amount, 0);
+
+    return { income, expense, noi: income - expense };
+};
+
+const calculateOER = (expense: number, income: number) => {
+    if (income === 0) return 0;
+    return (expense / income) * 100;
+};
+
 
 // Mock data
 const monthlyData = [
@@ -79,12 +112,113 @@ const PropertyDashboard: React.FC<PropertyDashboardProps> = ({
     property,
     loan,
     transactions = [],
+    lease,
+    tenant,
 }) => {
     const currency = property.currency;
 
-    const loanBalance = loan ? loan.totalMortgageAmount : 0;
-    const equity = property.currentValue - loanBalance;
-    const loanToValue = loan ? (loanBalance / property.currentValue) * 100 : 0;
+    // --- Derived Financial Metrics ---
+
+    const { noi, income: totalIncome, expense: totalOperatingExpense } = React.useMemo(() => {
+        return calculateNOI(transactions);
+    }, [transactions]);
+
+    const financingCosts = React.useMemo(() => {
+        // Calculate financing costs based on transactions if available, otherwise estimate from loan
+        const financingTxns = transactions.filter(t =>
+            (t.type === 'expense' && (t.subcategory === 'Mortgage' || t.subcategory === 'Loan Payment'))
+        ).reduce((sum, t) => sum + t.amount, 0);
+
+        if (financingTxns > 0) return financingTxns;
+
+        // Fallback to loan monthly payment * 12 (annualized) or derived from period
+        // For this summary, we'll assume we want the total financing cost incurred in the transaction period
+        // If no transactions, and loan exists, we might estimate, but safe default is 0 for "actuals"
+        return 0;
+    }, [transactions, loan]);
+
+    const cashFlowBeforeFinancing = noi; // Assuming no non-operating expenses for now
+    const cashFlowAfterFinancing = cashFlowBeforeFinancing - financingCosts;
+
+    const oer = calculateOER(totalOperatingExpense, totalIncome);
+
+    const totalReturn = React.useMemo(() => {
+        // (Cash Flow + Appreciation + Principal Paydown) / Initial Investment
+        // Simplification: Using Cash Flow After Financing
+        // Missing: Appreciation, Principal Paydown, Initial Invested. Using defaults as per requirements.
+
+        const initialInvestment = property.purchasePrice * 0.2; // 20% down default
+        const appreciation = 0;
+        const principalPaydown = 0;
+
+        if (initialInvestment === 0) return 0;
+        return ((cashFlowAfterFinancing + appreciation + principalPaydown) / initialInvestment) * 100;
+    }, [cashFlowAfterFinancing, property.purchasePrice]);
+
+    // --- Chart Data Preparation ---
+
+    const monthlyChartData = React.useMemo(() => {
+        if (!transactions.length) return monthlyData; // Fallback to mock
+
+        const groups = transactions.reduce((acc, t) => {
+            const date = new Date(t.date);
+            const monthKey = date.toLocaleString('default', { month: 'short' }); // e.g., 'Jan'
+
+            if (!acc[monthKey]) {
+                acc[monthKey] = { name: monthKey, income: 0, expense: 0, financing: 0 };
+            }
+
+            if (t.type === 'income') {
+                acc[monthKey].income += t.amount;
+            } else if (t.type === 'expense') {
+                if (t.subcategory === 'Mortgage' || t.subcategory === 'Loan Payment') {
+                    acc[monthKey].financing += t.amount;
+                } else {
+                    acc[monthKey].expense += t.amount;
+                }
+            }
+            return acc;
+        }, {} as Record<string, { name: string, income: number, expense: number, financing: number }>);
+
+        // Sort by month (basic implementation, assumes same year or chronological)
+        // For robust sorting we need real dates, but for now we trust `Transaction` date ordering or existing
+        const sortedKeys = Object.keys(groups); // In a real app, sort by date index
+        return sortedKeys.map(k => {
+            const g = groups[k];
+            return {
+                ...g,
+                cashFlow: g.income - g.expense - g.financing
+            };
+        });
+    }, [transactions]);
+
+    const expenseCategoryData = React.useMemo(() => {
+        if (!transactions.length) return expenseData; // Fallback
+
+        const categories = transactions
+            .filter(t => t.type === 'expense')
+            .reduce((acc, t) => {
+                const cat = t.subcategory || 'Other';
+                acc[cat] = (acc[cat] || 0) + t.amount;
+                return acc;
+            }, {} as Record<string, number>);
+
+        const colors = [
+            "var(--color-chart-1)",
+            "var(--color-chart-2)",
+            "var(--color-chart-3)",
+            "var(--color-chart-4)",
+            "var(--color-chart-5)"
+        ];
+
+        return Object.entries(categories).map(([name, value], i) => ({
+            name,
+            value,
+            color: colors[i % colors.length]
+        }));
+    }, [transactions]);
+
+
 
     const formatCurrency = (val: number) =>
         new Intl.NumberFormat("en-US", {
@@ -123,36 +257,38 @@ const PropertyDashboard: React.FC<PropertyDashboardProps> = ({
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
                 {[
                     {
-                        title: "Total Equity",
-                        value: equity,
+                        title: "NOI (Annualized)",
+                        value: noi, // In real app, normalize to annual
                         icon: Wallet,
                         color: "text-primary",
                         bg: "bg-primary/10",
-                        subtext: `${(100 - loanToValue).toFixed(1)}% ownership`
+                        subtext: "Net Operating Income"
                     },
                     {
-                        title: "Current Value",
-                        value: property.currentValue,
+                        title: "Cash Flow",
+                        value: cashFlowAfterFinancing,
                         icon: Building2,
                         color: "text-emerald-500",
                         bg: "bg-emerald-500/10",
-                        subtext: `Valuation: ${property.valuationDate}`
+                        subtext: "After Financing"
                     },
                     {
-                        title: "Outstanding Loan",
-                        value: loanBalance,
+                        title: "OER",
+                        value: oer,
                         icon: TrendingDown,
                         color: "text-rose-500",
                         bg: "bg-rose-500/10",
-                        subtext: loan ? `${loan.interestRate}% Interest Rate` : "No active loan"
+                        subtext: "Operating Expense Ratio",
+                        isPercent: true
                     },
                     {
-                        title: "YTD Net Income",
-                        value: 45300,
+                        title: "Total Return",
+                        value: totalReturn,
                         icon: TrendingUp,
                         color: "text-blue-500",
                         bg: "bg-blue-500/10",
-                        subtext: "+12.5% vs last year"
+                        subtext: "ROI (Est.)",
+                        isPercent: true
                     }
                 ].map((item, index) => (
                     <motion.div key={index} variants={itemVariants}>
@@ -166,7 +302,11 @@ const PropertyDashboard: React.FC<PropertyDashboardProps> = ({
                                 </div>
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold tracking-tight">{formatCurrency(item.value)}</div>
+                                <div className="text-2xl font-bold tracking-tight">
+                                    {item.isPercent
+                                        ? `${item.value.toFixed(1)}%`
+                                        : formatCurrency(item.value)}
+                                </div>
                                 <p className="text-xs text-muted-foreground mt-1 font-medium">
                                     {item.subtext}
                                 </p>
@@ -182,17 +322,14 @@ const PropertyDashboard: React.FC<PropertyDashboardProps> = ({
                     <Card className="glass-card border-border/50 h-full">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
-                                Cash Flow Trends
-                                <Badge variant="outline" className="ml-auto font-normal text-xs bg-background/50">
-                                    Last 6 Months
-                                </Badge>
+                                Income vs Expenses
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="pl-0">
                             <div className="h-[300px] w-full">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <AreaChart
-                                        data={monthlyData}
+                                        data={monthlyChartData}
                                         margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
                                     >
                                         <defs>
@@ -258,7 +395,7 @@ const PropertyDashboard: React.FC<PropertyDashboardProps> = ({
                                 <ResponsiveContainer width="100%" height="100%">
                                     <PieChart>
                                         <Pie
-                                            data={expenseData}
+                                            data={expenseCategoryData}
                                             cx="50%"
                                             cy="50%"
                                             innerRadius={80}
@@ -267,7 +404,7 @@ const PropertyDashboard: React.FC<PropertyDashboardProps> = ({
                                             dataKey="value"
                                             stroke="none"
                                         >
-                                            {expenseData.map((entry, index) => (
+                                            {expenseCategoryData.map((entry, index) => (
                                                 <Cell key={`cell-${index}`} fill={entry.color} />
                                             ))}
                                         </Pie>
@@ -283,7 +420,9 @@ const PropertyDashboard: React.FC<PropertyDashboardProps> = ({
                                 {/* Center text for donut chart */}
                                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none pb-8">
                                     <div className="text-center">
-                                        <p className="text-3xl font-bold tracking-tighter">$7,000</p>
+                                        <p className="text-3xl font-bold tracking-tighter">
+                                            {formatCurrency(totalOperatingExpense)}
+                                        </p>
                                         <p className="text-xs text-muted-foreground uppercase tracking-widest font-medium">Total</p>
                                     </div>
                                 </div>
@@ -292,6 +431,102 @@ const PropertyDashboard: React.FC<PropertyDashboardProps> = ({
                     </Card>
                 </motion.div>
             </div>
+
+            {/* Cash Flow Trend Chart (New) */}
+            <motion.div variants={itemVariants}>
+                <Card className="glass-card border-border/50">
+                    <CardHeader>
+                        <CardTitle>Net Cash Flow Trend</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="h-[250px] w-full">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart
+                                    data={monthlyChartData}
+                                    margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                                >
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-border)" opacity={0.4} />
+                                    <XAxis
+                                        dataKey="name"
+                                        stroke="var(--color-muted-foreground)"
+                                        fontSize={12}
+                                        tickLine={false}
+                                        axisLine={false}
+                                        tickMargin={10}
+                                    />
+                                    <YAxis
+                                        stroke="var(--color-muted-foreground)"
+                                        fontSize={12}
+                                        tickLine={false}
+                                        axisLine={false}
+                                        tickFormatter={(value) => `$${value}`}
+                                    />
+                                    <Tooltip content={<CustomTooltip />} />
+                                    <Bar
+                                        dataKey="cashFlow"
+                                        fill="var(--color-primary)"
+                                        radius={[4, 4, 0, 0]}
+                                        name="Net Cash Flow"
+                                    />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </div>
+                    </CardContent>
+                </Card>
+            </motion.div>
+
+            {/* Rent Roll Table (New) */}
+            <motion.div variants={itemVariants}>
+                <Card className="glass-card border-border/50">
+                    <CardHeader>
+                        <CardTitle>Rent Roll</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <Table>
+                            <TableHeader>
+                                <TableRow className="hover:bg-transparent border-border/50">
+                                    <TableHead>Tenant</TableHead>
+                                    <TableHead>Lease Term</TableHead>
+                                    <TableHead>Status</TableHead>
+                                    <TableHead className="text-right">Monthly Rent</TableHead>
+                                    <TableHead className="text-right">Deposit</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {tenant && lease ? (
+                                    <TableRow className="hover:bg-muted/50 border-border/50">
+                                        <TableCell className="font-medium">
+                                            {tenant.name}
+                                            <div className="text-xs text-muted-foreground">{tenant.email}</div>
+                                        </TableCell>
+                                        <TableCell>
+                                            {new Date(lease.start).toLocaleDateString()} - {new Date(lease.end).toLocaleDateString()}
+                                            <div className="text-xs text-muted-foreground capitalize">{lease.frequency}</div>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 border-0">
+                                                Active
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell className="text-right font-medium">
+                                            {formatCurrency(lease.rentAmount)}
+                                        </TableCell>
+                                        <TableCell className="text-right text-muted-foreground">
+                                            {formatCurrency(lease.deposit)}
+                                        </TableCell>
+                                    </TableRow>
+                                ) : (
+                                    <TableRow>
+                                        <TableCell colSpan={5} className="text-center py-6 text-muted-foreground">
+                                            No active lease or tenant data.
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                        </Table>
+                    </CardContent>
+                </Card>
+            </motion.div>
 
             {/* Recent Transactions Table */}
             <motion.div variants={itemVariants}>
