@@ -66,3 +66,21 @@ export const propertyInfoData = (overrides?: Partial<DB.PropertyInfo>) =>
 		notes: "Nice view",
 		...overrides,
 	} as DB.PropertyInfo);
+
+export const transactionData = (overrides?: Partial<DB.Transaction>) =>
+	({
+		propertyId: randomUUID(),
+		type: "expense",
+		subcategory: "maintenance",
+		amount: "100.00",
+		currency: "USD",
+		taxRate: "0.00",
+		taxAmount: "0.00",
+		fxRateToBase: "1.000000",
+		from: "Landlord",
+		to: "Handyman",
+		method: "cash",
+		date: new Date().toISOString().split("T")[0],
+		notes: "Fixing leaky faucet",
+		...overrides,
+	} as DB.Transaction);
