@@ -48,13 +48,13 @@ describe("Property API Endpoints", () => {
 	// });
 
 	describe("GET /api/properties/:propertyId ", () => {
-		it(`Success: should return 200 status code and return all user properties`, async () => {
+		it(`Success: should return 200 status code and return the requested property data`, async () => {
 			const res = await request(app).get(`/api/properties/${propertyId}`);
 
 			expect(res.statusCode).toBe(StatusCodes.SUCCESS);
 		});
 
-		it(`Failed: should return 400 status code and return a validation error for invalid UUID user id`, async () => {
+		it(`Failed: should return 400 status code and return a validation error for invalid UUID property id`, async () => {
 			const res = await request(app).get(`/api/properties/invalid-property-id`);
 
 			expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
@@ -62,7 +62,7 @@ describe("Property API Endpoints", () => {
 	});
 
 	describe("DELETE /api/properties/delete/:propertyId ", () => {
-		it(`Success: should return 200 status code and return all user properties`, async () => {
+		it(`Success: should return 200 status code and delete the property`, async () => {
 			const res = await request(app).delete(
 				`/api/properties/delete/${propertyId}`
 			);
@@ -70,7 +70,7 @@ describe("Property API Endpoints", () => {
 			expect(res.statusCode).toBe(StatusCodes.SUCCESS);
 		});
 
-		it(`Failed: should return 400 status code and return a validation error for invalid UUID user id`, async () => {
+		it(`Failed: should return 400 status code and return a validation error for invalid UUID property id`, async () => {
 			const res = await request(app).delete(
 				`/api/properties/delete/invalid-property-id`
 			);
@@ -82,7 +82,7 @@ describe("Property API Endpoints", () => {
 	// describe("PATCH /api/properties/update/:propertyId ", () => {
 	// 	const payload = {};
 
-	// 	it(`Success: should return 200 status code and return all user properties`, async () => {
+	// 	it(`Success: should return 200 status code and update the property`, async () => {
 	// 		const res = await request(app)
 	// 			.patch(`/api/properties/update/${propertyId}`)
 	// 			.send(payload);
@@ -90,7 +90,7 @@ describe("Property API Endpoints", () => {
 	// 		expect(res.statusCode).toBe(StatusCodes.SUCCESS);
 	// 	});
 
-	// 	it(`Failed: should return 400 status code and return a validation error for invalid UUID user id`, async () => {
+	// 	it(`Failed: should return 400 status code and return a validation error for invalid UUID property id`, async () => {
 	// 		const res = await request(app)
 	// 			.patch(`/api/properties/update/invalid-property-id`)
 	// 			.send(payload);
