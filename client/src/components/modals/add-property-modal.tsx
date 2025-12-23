@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -14,56 +14,65 @@ import { buildPropertyFromForm } from "@/lib/build-property-from-form";
 import OptionalSections from "../add-property-modal/optional-sections";
 import { Form } from "../ui/form";
 import { z } from "zod";
-import {
-  LeaseSchema,
-  LoanSchema,
-  OptionalSectionsSchema,
-  PropertyInfoSchema,
-  PropertySchema,
-  TenantSchema,
-} from "@/lib/schemas";
+import { propertyDataSchema as schema } from "@/lib/schemas";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ADD_PROPERTY_DEFAULT_VALUES } from "@/constants/form.constants";
-
-const schema = z.object({
-  property: PropertySchema,
-  propertyInfo: PropertyInfoSchema,
-  optionalSections: OptionalSectionsSchema,
-  tenant: TenantSchema.optional(),
-  lease: LeaseSchema.optional(),
-  loan: LoanSchema.optional(),
-});
+import { useMutation } from "@tanstack/react-query";
+import { createNewProperty } from "@/utils/http";
+import { useAuthStore } from "@/stores/auth.store";
 
 export type FormFields = z.infer<typeof schema>;
 interface AddPropertyModalProps {
   isOpen: boolean;
   onClose: () => void;
-  // keep `any` here so you can wire it to your own Property type / DB schema later
-  onSave: (property: any) => void;
 }
 
 const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
   isOpen,
   onClose,
-  onSave,
 }) => {
   const [step, setStep] = useState(1);
+
+  const session = useAuthStore((s) => s.session);
 
   const form = useForm<FormFields>({
     resolver: zodResolver(schema),
     defaultValues: ADD_PROPERTY_DEFAULT_VALUES,
   });
 
+  useEffect(() => {
+    if (session?.user.id) {
+      form.setValue("property.userId", session.user.id, {
+        shouldValidate: true,
+      });
+    }
+  }, [session?.user.id, form]);
+
+  const { mutate } = useMutation({
+    mutationFn: createNewProperty,
+  });
+
   const handleSave = async () => {
     const isValid = await form.trigger();
+    console.log(form.getValues());
+
+    console.log(isValid);
+
     if (!isValid) return;
 
     const values = form.getValues();
-    const property = buildPropertyFromForm(values);
-    onSave(property);
-    form.reset();
-    setStep(1);
+    try {
+      const property = buildPropertyFromForm(values);
+      console.log(property); // TODO: remove when getting ready for production
+
+      mutate(property);
+    } catch (error) {
+      console.error(error);
+      window.alert(
+        "An unexpected error occurred while saving the property. Please try again."
+      );
+    }
   };
 
   const watchedProperty = form.watch("property");
@@ -76,8 +85,7 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
     watchedProperty?.purchasePrice !== undefined &&
     watchedProperty?.closingCosts !== undefined &&
     watchedProperty?.currentValue !== undefined &&
-    !!watchedProperty?.acquisitionDate &&
-    !!watchedProperty?.valuationDate;
+    !!watchedProperty?.acquisitionDate;
 
   const watchedPropertyInfo = form.watch("propertyInfo");
   const isStep2Valid =
@@ -86,7 +94,7 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
     watchedPropertyInfo?.bathrooms !== undefined &&
     watchedPropertyInfo?.sizeSqm !== undefined &&
     !!watchedPropertyInfo?.status &&
-    !!watchedPropertyInfo?.furnishing;
+    !!watchedPropertyInfo?.furnished;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

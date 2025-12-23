@@ -14,7 +14,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
   }
 
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+    <Card className="overflow-hidden bg-[#f8f8f8] hover:shadow-lg transition-shadow">
       {/* Property Image */}
       {property.photos?.[0] && (
         <div className="relative h-48 w-full overflow-hidden bg-muted">

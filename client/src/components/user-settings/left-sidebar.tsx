@@ -10,7 +10,7 @@ const LeftSidebar = ({
   setActiveTab: React.Dispatch<React.SetStateAction<UserSettingsTab>>;
 }) => {
   return (
-    <div className="w-64 bg-white border-r border-border min-h-screen p-6">
+    <div className="w-64 bg-[#f8f8f8] border-r border-border min-h-screen p-6">
       <nav className="space-y-2">
         <button
           onClick={() => setActiveTab("profile")}

@@ -14,8 +14,8 @@ const Lease = ({ form }: LeaseProps) => {
     <div className="space-y-4 border-b pb-6">
       <h3 className="font-semibold text-foreground">Lease Information</h3>
       <div className="grid grid-cols-2 gap-4">
-        <DateInput form={form} name="lease.leaseStart" label="Start Date *" />
-        <DateInput form={form} name="lease.leaseEnd" label="End Date *" />
+        <DateInput form={form} name="lease.start" label="Start Date *" />
+        <DateInput form={form} name="lease.end" label="End Date *" />
       </div>
       <div className="grid grid-cols-2 gap-4">
         <TextInput

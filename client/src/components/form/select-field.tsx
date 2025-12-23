@@ -64,6 +64,8 @@ const SelectField = <T extends FieldValues>({
       />
     );
   }
+  const selectOptions = options as SelectOptions[]; 
+
   return (
     <FormField
       control={form.control}
@@ -73,15 +75,25 @@ const SelectField = <T extends FieldValues>({
           <FormLabel className="text-xs font-medium uppercase tracking-wide text-gray-600">
             {label}
           </FormLabel>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <Select
+            onValueChange={(val) => {
+              const parsed =
+                val === "true" ? true : val === "false" ? false : val;
+              field.onChange(parsed);
+            }}
+            defaultValue={String(field.value)}
+          >
             <FormControl>
               <SelectTrigger className="h-12 rounded-lg bg-white border-gray-300 w-full text-sm focus-visible:ring-1 focus-visible:ring-black">
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>
             <SelectContent>
-              {options.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
+              {selectOptions.map((option) => (
+                <SelectItem
+                  key={String(option.value)}
+                  value={String(option.value)}
+                >
                   {option.label}
                 </SelectItem>
               ))}

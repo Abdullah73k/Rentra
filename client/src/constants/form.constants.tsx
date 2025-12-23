@@ -1,43 +1,43 @@
+import type { propertyInfoSchema, propertySchema } from "@/lib/schemas";
 import type { AddPropertyFormData, AddTransactionFormData } from "@/lib/types";
+import { useAuthStore } from "@/stores/auth.store";
+import z from "zod";
 
-export const PROPERTY_PURPOSES = [
-  "residential",
-  "commercial",
-  "investment",
-  "vacation",
-]
+export const PROPERTY_PURPOSES = ["personal", "investment"];
 export const PROPERTY_TYPES = [
-  "apartment",
   "house",
-  "condo",
-  "office",
-  "retail",
-  "land",
-]
+  "apartment",
+  "villa",
+  "penthouse",
+  "townhouse",
+  "duplex",
+  "triplex",
+  "studio",
+];
 export const PROPERTY_STATUS = [
   "available",
   "rented",
-  "sold",
-  "under_construction",
-]
-export const FURNISHING_TYPES = [
-  "unfurnished",
-  "semi_furnished",
-  "fully_furnished",
-]
+  "maintenance",
+  "off_market",
+  "reserved",
+];
+export const FURNISHING_TYPES = ["furnished", "semi-furnished", "unfurnished"];
 export const LEASE_FREQUENCIES = [
+  "weekly",
+  "bi-weekly",
   "monthly",
+  "bi-monthly",
   "quarterly",
-  "semi_annual",
-  "annual",
-]
+  "annually",
+  "bi-annually",
+];
 export const TRANSACTION_TYPES = [
   "income",
   "expense",
   "repair",
   "upgrade",
   "management",
-]
+];
 
 export const INITIAL_FORM_DATA: AddPropertyFormData = {
   // Step 1: Property
@@ -94,7 +94,7 @@ export const INITIAL_TRANSACTION_FORM: AddTransactionFormData = {
   type: "expense",
   subcategory: "",
   amount: 0,
-  currency: "AED",
+  currency: "",
   taxRate: 0,
   from: "",
   to: "",
@@ -110,33 +110,45 @@ export const PAYMENT_METHODS = [
   { value: "credit_card", label: "Credit Card" },
 ];
 
-export const ADD_PROPERTY_DEFAULT_VALUES = {
-    property: {
-      purpose: "",
-      type: "",
-      address: "",
-      country: "",
-      currency: "",
-      purchasePrice: 0,
-      closingCosts: 0,
-      acquisitionDate: "",
-      currentValue: 0,
-      valuationDate: "",
-      sold: false,
-    },
-    propertyInfo: {
-      propertyNumber: "",
-      bedrooms: 0,
-      bathrooms: 0,
-      sizeSqm: 0,
-      status: "",
-      furnishing: "",
-      parking: "",
-      notes: "",
-    },
-    optionalSections: {
-      addTenant: false,
-      addLease: false,
-      addLoan: false,
-    },
-  }
+const session = useAuthStore.getState().session
+
+export const ADD_PROPERTY_DEFAULT_VALUES: {
+  property: z.infer<typeof propertySchema>;
+  propertyInfo: z.infer<typeof propertyInfoSchema>;
+  optionalSections: {
+    addTenant: boolean;
+    addLease: boolean;
+    addLoan: boolean;
+  };
+} = {
+  property: {
+    userId: session?.user.id || "",
+    purpose: "personal",
+    type: "house",
+    address: "",
+    country: "",
+    currency: "",
+    purchasePrice: 0,
+    closingCosts: 0,
+    acquisitionDate: "",
+    currentValue: 0,
+    photos: [],
+    sold: false,
+  },
+  propertyInfo: {
+    propertyNumber: "",
+    bedrooms: 0,
+    bathrooms: 0,
+    sizeSqm: 0,
+    status: "available",
+    furnished: "furnished",
+    parking: "",
+    lockerNumber: [],
+    notes: "",
+  },
+  optionalSections: {
+    addTenant: false,
+    addLease: false,
+    addLoan: false,
+  },
+};

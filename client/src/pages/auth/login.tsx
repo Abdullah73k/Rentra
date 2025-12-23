@@ -123,7 +123,7 @@ const SignInPage: React.FC = () => {
               <div className="h-px flex-1 bg-gray-300" />
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex gap-3 justify-center">
               <OAuthButtons />
             </div>
           </div>

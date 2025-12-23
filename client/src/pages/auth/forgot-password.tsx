@@ -40,10 +40,9 @@ const ForgotPassword = () => {
         }
       );
       console.log(res);
-      
     } catch (error) {
       console.error(error);
-      
+
       toast.error("Failed to send password reset email");
     }
   }
@@ -55,12 +54,13 @@ const ForgotPassword = () => {
           className="absolute right-[10%] top-[20%] h-[300px] w-[300px] animate-pulse rounded-full bg-linear-to-br from-pink-400 via-orange-300 to-yellow-200 opacity-70 blur-3xl"
           aria-hidden="true"
         />
-
+  
         <div className="relative w-full max-w-md space-y-8">
           <div className="space-y-2">
-            <h1 className="text-5xl font-light tracking-tight">
-              Forgot Password
-            </h1>
+            <h1 className="text-5xl font-light tracking-tight">Forgot Password</h1>
+            <p className="text-sm text-gray-600">
+              Enter your email
+            </p>
           </div>
           <Form {...form}>
             <form
@@ -86,7 +86,7 @@ const ForgotPassword = () => {
                 </Button>
                 <Button
                   type="submit"
-                  className="h-12 w-[80%] bg-black text-sm font-medium text-white hover:bg-black/90"
+                  className="h-12 bg-black text-sm font-medium text-white hover:bg-black/90"
                   disabled={isSubmitting}
                 >
                   <LoadingSwap isLoading={isSubmitting}>

@@ -133,7 +133,7 @@ const SecurityTab = ({ session }: { session: Session }) => {
     <>
       <div className="space-y-6">
         {/* Password Reset */}
-        <Card>
+        <Card className="glass-card">
           <CardHeader>
             <div className="flex items-center gap-2">
               <Key className="h-5 w-5 text-muted-foreground" />
@@ -149,7 +149,7 @@ const SecurityTab = ({ session }: { session: Session }) => {
 
         {/* Two-Factor Authentication */}
         {hasPasswordAccount && (
-          <Card>
+          <Card className="glass-card">
             <CardHeader>
               <div className="flex items-center gap-2">
                 <Shield className="h-5 w-5 text-muted-foreground" />
@@ -194,7 +194,7 @@ const SecurityTab = ({ session }: { session: Session }) => {
         )}
 
         {/* Passkeys */}
-        <Card>
+        <Card className="glass-card">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>

@@ -1,14 +1,14 @@
-import { Button } from "@/components/ui/button";
 import { authClient } from "@/utils/auth-client";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
+import BetterAuthActionButton from "@/components/form/auth-action-button";
 
 const EmailVerification = () => {
   const { email } = useParams();
 
   if (!email) {
     return (
-      <div className="space-y-4" role="alert">
+      <div className="space-y-4 bg-[#f8f8f8]" role="alert">
         <h2 className="text-lg font-semibold">Verification Error</h2>
         <p className="text-sm text-muted-foreground mt-2">
           Sorry, something went wrong with the verification. Please try again.
@@ -54,23 +54,22 @@ const EmailVerification = () => {
         link to verify
       </p>
 
-      {/* TODO: change to better auth action button when merged with main */}
-      <Button
+      <BetterAuthActionButton
         variant="outline"
         className="w-full"
         disabled={timeToNextResend > 0}
-        onClick={() => {
+        action={() => {
           startEmailVerificationCountdown();
-          authClient.sendVerificationEmail({
+          return authClient.sendVerificationEmail({
             email,
             callbackURL: "/",
           });
         }}
       >
         {timeToNextResend > 0
-          ? `Resend Email (${timeToNextResend})`
+          ? `Resend in ${timeToNextResend}s`
           : "Resend Email"}
-      </Button>
+      </BetterAuthActionButton>
     </div>
   );
 };
