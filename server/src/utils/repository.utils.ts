@@ -1,39 +1,17 @@
 import * as DB from "../types/db.types.js";
 import { DBError } from "../errors/db.errors.js";
 import { StatusCodes } from "../constants/statusCodes.constants.js";
-import { ValidationError } from "../errors/validation.errors.js";
 import { dbConnection } from "./db-connects.utils.js";
-import type { PoolClient } from "pg";
-
-// TODO: Add undefined type union for get db operation
-
-type InsertIntoTable = {
-	table: DB.DatabaseTables;
-	keys: string[];
-	colValidation: DB.ColumnValidation;
-	columns: string;
-	queryPlaceholders: string;
-	values: any[];
-	client: PoolClient | undefined;
-};
-
-type QueryConfig = {
-	table: DB.DatabaseTables;
-	id: string;
-	idName: DB.Ids;
-	client: PoolClient | undefined;
-};
-
-type UpdateQuery = {
-	table: DB.DatabaseTables;
-	columnsAndPlaceholders: string;
-	keys: string[];
-	colValidation: DB.ColumnValidation;
-	values: any[];
-	id: string;
-	idName: DB.Ids;
-	client: PoolClient | undefined;
-};
+import type { PoolClient } from "../utils/service.utils.js";
+import type { PgTable, PgTableWithColumns } from "drizzle-orm/pg-core";
+import { eq, type InferInsertModel } from "drizzle-orm";
+import { property } from "../db/schemas/property.db.js";
+import { propertyInfo } from "../db/schemas/property-info.db.js";
+import { loan } from "../db/schemas/loan.db.js";
+import { lease } from "../db/schemas/lease.db.js";
+import { tenant } from "../db/schemas/tenant.db.js";
+import { transaction } from "../db/schemas/transaction.db.js";
+import { documents } from "../db/schemas/document.db.js";
 
 export async function executeDataBaseOperation<T>(
 	dataBaseFn: () => Promise<T>,
@@ -48,136 +26,135 @@ export async function executeDataBaseOperation<T>(
 	}
 }
 
-export function generateCreateQueryColsAndValues<T extends DB.TableObjects>(
-	object: T
+export async function insertIntoTable<T extends PgTable>(
+	table: T,
+	data: InferInsertModel<T>,
+	client: PoolClient | undefined
 ) {
-	const keys = Object.keys(object);
-	const columns = keys.join(", ");
-	const values = Object.values(object);
-
-	const queryPlaceholders = generateQueryPlaceholders(keys.length);
-
-	return {
-		keys,
-		columns,
-		values,
-		queryPlaceholders,
-	};
-}
-
-function generateQueryPlaceholders(length: number) {
-	let placeholder = [];
-	for (let i = 1; i <= length; i++) placeholder.push(i);
-	const queryPlaceholders = placeholder.join(", ");
-
-	return queryPlaceholders;
-}
-
-export function buildUpdateSet(table: Record<string, any>) {
-	const keys = Object.keys(table);
-
-	// SET:  column1 = $2, column2 = $3, ...
-	const setString = keys
-		.map((key, index) => `${key} = $${index + 2}`)
-		.join(", ");
-
-	const values = keys.map((key) => table[key]);
-
-	return { setString, values, keys };
-}
-
-export async function insertIntoTable<T extends DB.TableObjects>({
-	table,
-	keys,
-	colValidation,
-	columns,
-	queryPlaceholders,
-	values,
-	client,
-}: InsertIntoTable) {
-	if (
-		!DB.DatabaseTables.includes(table) ||
-		!keys.every((key) => (colValidation as readonly string[]).includes(key))
-	)
-		throw new ValidationError("Invalid data, query unsafe");
-
-	const db = dbConnection(client);
-	const query = await db.query<T>({
-		text: `
-                INSERT INTO ${table} (${columns})
-                VALUES (${queryPlaceholders})
-                RETURNING *
-                `,
-		values,
-	});
-
-	return query.rows[0];
-}
-
-// TODO: must add validation in repo for table and idName cuz sql injection
-export async function getRowsFromTableWithId<T extends DB.TableObjects>({
-	table,
-	id,
-	idName,
-	client,
-}: QueryConfig) {
-	if (!DB.DatabaseTables.includes(table) || !DB.Ids.includes(idName))
-		throw new ValidationError("Invalid field name, query unsafe");
-
-	const db = dbConnection(client);
-	const query = await db.query<T>({
-		text: `SELECT * FROM ${table} WHERE ${idName} = $1`,
-		values: [id],
-	});
-
-	return query.rows;
-}
-// TODO: must add validation in repo for table and idName cuz sql injection
-export async function deleteRowFromTableWithId({
-	table,
-	id,
-	idName,
-	client,
-}: QueryConfig) {
-	if (!DB.DatabaseTables.includes(table) || !DB.Ids.includes(idName))
-		throw new ValidationError("Invalid field name, query unsafe");
-
-	const db = dbConnection(client);
-	const query = await db.query({
-		text: `DELETE FROM ${table} WHERE ${idName} = $1`,
-		values: [id],
-	});
-
+	const pool = dbConnection(client);
+	const query = await pool.insert(table).values(data).returning();
 	return query;
 }
 
-export async function updateRowFromTableWithId<T extends DB.TableObjects>({
-	table,
-	columnsAndPlaceholders,
-	values,
-	keys,
-	colValidation,
-	id,
-	idName,
-	client,
-}: UpdateQuery) {
-	if (
-		!DB.DatabaseTables.includes(table) ||
-		!DB.Ids.includes(idName) ||
-		!keys.every((key) => (colValidation as readonly string[]).includes(key))
-	)
-		throw new ValidationError("Invalid field name, query unsafe");
+export const getRowsFromTableWithId = {
+	async property(id: string, client: PoolClient | undefined) {
+		const pool = dbConnection(client);
+		return await pool.select().from(property).where(eq(property.userId, id));
+	},
+	async propertyInfo(id: string, client: PoolClient | undefined) {
+		const pool = dbConnection(client);
+		return await pool
+			.select()
+			.from(propertyInfo)
+			.where(eq(propertyInfo.propertyId, id));
+	},
+	async loan(id: string, client: PoolClient | undefined) {
+		const pool = dbConnection(client);
+		return await pool.select().from(loan).where(eq(loan.propertyId, id));
+	},
+	async lease(id: string, client: PoolClient | undefined) {
+		const pool = dbConnection(client);
+		return await pool.select().from(lease).where(eq(lease.propertyId, id));
+	},
+	async tenant(id: string, client: PoolClient | undefined) {
+		const pool = dbConnection(client);
+		return await pool.select().from(tenant).where(eq(tenant.propertyId, id));
+	},
+	async transaction(id: string, client: PoolClient | undefined) {
+		const pool = dbConnection(client);
+		return await pool
+			.select()
+			.from(transaction)
+			.where(eq(transaction.propertyId, id));
+	},
+	async document(id: string, client: PoolClient | undefined) {
+		const pool = dbConnection(client);
+		return await pool
+			.select()
+			.from(documents)
+			.where(eq(documents.propertyId, id));
+	},
+};
 
-	const db = dbConnection(client);
-	const query = await db.query<T>({
-		text: `
-		UPDATE ${table}
-		SET ${columnsAndPlaceholders}
-		WHERE ${idName} = $1
-		RETURNING *
-		`,
-		values: [id, ...values],
-	});
-
+export async function deleteRowFromTableWithId<
+	T extends PgTableWithColumns<any>
+>(table: T, id: string, client: PoolClient | undefined) {
+	const pool = dbConnection(client);
+	const query = await pool.delete(table).where(eq(table.id, id));
 	return query;
 }
+
+export const updateRowFromTableWithId = {
+	async property(
+		id: string,
+		values: DB.Property,
+		client: PoolClient | undefined
+	) {
+		const pool = dbConnection(client);
+		return await pool
+			.update(property)
+			.set(values)
+			.where(eq(property.id, id))
+			.returning();
+	},
+	async propertyInfo(
+		id: string,
+		values: DB.PropertyInfo,
+		client: PoolClient | undefined
+	) {
+		const pool = dbConnection(client);
+		return await pool
+			.update(propertyInfo)
+			.set(values)
+			.where(eq(propertyInfo.propertyId, id))
+			.returning();
+	},
+	async loan(id: string, values: DB.Loan, client: PoolClient | undefined) {
+		const pool = dbConnection(client);
+		return await pool
+			.update(loan)
+			.set(values)
+			.where(eq(loan.propertyId, id))
+			.returning();
+	},
+	async lease(id: string, values: DB.Lease, client: PoolClient | undefined) {
+		const pool = dbConnection(client);
+		return await pool
+			.update(lease)
+			.set(values)
+			.where(eq(lease.propertyId, id))
+			.returning();
+	},
+	async tenant(id: string, values: DB.Tenant, client: PoolClient | undefined) {
+		const pool = dbConnection(client);
+		return await pool
+			.update(tenant)
+			.set(values)
+			.where(eq(tenant.propertyId, id))
+			.returning();
+	},
+	async transaction(
+		id: string,
+		values: DB.Transaction,
+		client: PoolClient | undefined
+	) {
+		const pool = dbConnection(client);
+		return await pool
+			.update(transaction)
+			.set(values)
+			.where(eq(transaction.id, id))
+			.returning();
+	},
+	async document(
+		id: string,
+		values: DB.Document,
+		client: PoolClient | undefined
+	) {
+		const pool = dbConnection(client);
+		return await pool
+			.update(documents)
+			.set(values)
+			.where(eq(documents.propertyId, id))
+			.returning();
+	},
+};
