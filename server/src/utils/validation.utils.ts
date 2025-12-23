@@ -47,6 +47,6 @@ export function validateTransactionDetails<
 		return errorObj;
 	}
 
-	const validatedData = { success: true as const, data: result.data as T };
+	const validatedData = { success: true as const, data: result.data };
 	return validatedData;
 }

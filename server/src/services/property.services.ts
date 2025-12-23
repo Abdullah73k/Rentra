@@ -1,4 +1,3 @@
-import type { PoolClient } from "pg";
 import { LeaseRepository } from "../repositories/lease.repositories.js";
 import { LoanRepository } from "../repositories/loan.repositories.js";
 import { PropertyRepository } from "../repositories/property.repositories.js";
@@ -6,13 +5,10 @@ import { PropertyInfoRepository } from "../repositories/propertyInfo.repositorie
 import { TenantRepository } from "../repositories/tenant.repositories.js";
 import { TransactionRepository } from "../repositories/transaction.repositories.js";
 import * as API from "../types/api.types.js";
-import { queryInTransaction } from "../utils/service.utils.js";
-import { pool } from "../configs/pg.config.js";
+import { queryInTransaction, type PoolClient } from "../utils/service.utils.js";
 
 export const PropertyService = {
 	async create(data: API.POSTPropertyData) {
-		const client = await pool.connect();
-
 		const queryFn = async (
 			propertyData: API.POSTPropertyData,
 			client: PoolClient
@@ -23,16 +19,30 @@ export const PropertyService = {
 			);
 			const propertyInfo = await PropertyInfoRepository.createPropertyInfo(
 				propertyData.propertyInfo,
+				property[0]!.id,
 				client
 			);
 			const loan = propertyData.loan
-				? await LoanRepository.createLoan(propertyData.loan, client)
+				? await LoanRepository.createLoan(
+						propertyData.loan,
+						property[0]!.id,
+						client
+				  )
 				: undefined;
 			const tenant = propertyData.tenant
-				? await TenantRepository.createTenant(propertyData.tenant, client)
+				? await TenantRepository.createTenant(
+						propertyData.tenant,
+						property[0]!.id,
+						client
+				  )
 				: undefined;
 			const lease = propertyData.lease
-				? await LeaseRepository.createLease(propertyData.lease, client)
+				? await LeaseRepository.createLease(
+						propertyData.lease,
+						property[0]!.id,
+						tenant![0]!.id,
+						client
+				  )
 				: undefined;
 			return {
 				property,
@@ -46,7 +56,6 @@ export const PropertyService = {
 		const query = await queryInTransaction(
 			queryFn,
 			data,
-			client,
 			"Insert property data failed transaction"
 		);
 
@@ -60,8 +69,6 @@ export const PropertyService = {
 		await PropertyRepository.deleteProperty(propertyId);
 	},
 	async getAllData(propertyId: string) {
-		const client = await pool.connect();
-
 		const queryFn = async (propertyId: string, client: PoolClient) => {
 			const propertyInfo = await PropertyInfoRepository.getPropertyInfo(
 				propertyId,
@@ -87,10 +94,52 @@ export const PropertyService = {
 		const result = await queryInTransaction(
 			queryFn,
 			propertyId,
-			client,
 			"Could not fetch all property data"
 		);
 		return result;
 	},
-	async update() {},
+	async update(data: API.PATCHPropertyData) {
+		const queryFn = async (data: API.PATCHPropertyData, client: PoolClient) => {
+			const propertyId = data.property.id;
+			const property = await PropertyRepository.updateProperty(
+				propertyId,
+				data.property,
+				client
+			);
+			const propertyInfo = await PropertyInfoRepository.updatePropertyInfo(
+				propertyId,
+				data.propertyInfo,
+				client
+			);
+			const loan = await LoanRepository.updateLoan(
+				propertyId,
+				data.loan,
+				client
+			);
+			const tenant = await TenantRepository.updateTenant(
+				propertyId,
+				data.tenant,
+				client
+			);
+			const lease = await LeaseRepository.updateLease(
+				propertyId,
+				data.lease,
+				client
+			);
+			return {
+				property,
+				propertyInfo,
+				loan,
+				tenant,
+				lease,
+			};
+		};
+
+		const query = await queryInTransaction(
+			queryFn,
+			data,
+			"Update property failed transaction"
+		);
+		return query;
+	},
 };
