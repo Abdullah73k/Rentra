@@ -16,7 +16,7 @@ const PropertyInfo = ({ form }: PropertyInfoProps) => {
   const [lockerNumArray, setLockerNumArray] = useState<string[]>([]);
 
   useEffect(() => {
-    form.setValue("propertyInfo.lockerNumber", lockerNumArray);
+    form.setValue("propertyInfo.lockerNumbers", lockerNumArray);
   }, [lockerNumArray, form]);
 
   return (
@@ -47,18 +47,18 @@ const PropertyInfo = ({ form }: PropertyInfoProps) => {
           form={form}
           name="propertyInfo.bathrooms"
           label="Bathrooms *"
-          type="number"
+          type="decimal"
         />
         <TextInput
           form={form}
           name="propertyInfo.sizeSqm"
           label="Size (sqm) *"
-          type="number"
+          type="decimal"
         />
       </div>
       <SelectField
         form={form}
-        name="propertyInfo.furnished"
+        name="propertyInfo.furnishing"
         label="Furnishing *"
         options={FURNISHING_TYPES}
       />

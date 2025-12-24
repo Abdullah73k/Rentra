@@ -100,7 +100,7 @@ export const passkey = pgTable("passkey", {
   aaguid: text("aaguid"),
 });
 
-export const twoFactor = pgTable("two_factor", {
+export const twoFactor = pgTable("twoFactor", {
   id: text("id").primaryKey(),
   secret: text("secret").notNull(),
   backupCodes: text("backupCodes").notNull(),
