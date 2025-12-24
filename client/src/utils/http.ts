@@ -7,7 +7,7 @@ export const queryClient = new QueryClient();
 
 export async function createNewProperty(propertyData: Omit<NewPropertyBuildType, "optionalSections">) {
     try {
-        const res = await axios.post(API_URL + "/api/properties/create", propertyData, {
+        const res = await axios.post(API_URL + "/api/properties/create", JSON.stringify(propertyData), {
             headers: {
                 "Content-Type": "application/json",
             },

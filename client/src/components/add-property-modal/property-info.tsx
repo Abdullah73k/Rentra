@@ -58,7 +58,7 @@ const PropertyInfo = ({ form }: PropertyInfoProps) => {
       </div>
       <SelectField
         form={form}
-        name="propertyInfo.furnished"
+        name="propertyInfo.furnishing"
         label="Furnishing *"
         options={FURNISHING_TYPES}
       />

@@ -88,10 +88,10 @@ export const propertySchema = z.object({
     address: z.string().min(1),
     country: z.string().min(1),
     currency: ReusableTypes.currency,
-    purchasePrice: ReusableTypes.decimal,
-    closingCosts: ReusableTypes.decimal,
+    purchasePrice: z.string(),
+    closingCosts: z.string(),
     acquisitionDate: ReusableTypes.date,
-    currentValue: ReusableTypes.decimal,
+    currentValue: z.string(),
     photos: ReusableTypes.stringArray,
     sold: z.boolean(),
 });
@@ -99,8 +99,8 @@ export const propertySchema = z.object({
 export const propertyInfoSchema = z.object({
     propertyNumber: z.string().min(1),
     bedrooms: ReusableTypes.positiveInt2,
-    bathrooms: ReusableTypes.decimal,
-    sizeSqm: ReusableTypes.decimal,
+    bathrooms: z.string(),
+    sizeSqm: z.string(),
     status: z.enum([
         "available",
         "rented",
@@ -108,7 +108,7 @@ export const propertyInfoSchema = z.object({
         "off_market",
         "reserved",
     ]),
-    furnished: z.enum(["furnished", "semi-furnished", "unfurnished"]),
+    furnishing: z.enum(["furnished", "semi-furnished", "unfurnished"]),
     parking: ReusableTypes.optionalString,
     lockerNumber: ReusableTypes.stringArray,
     notes: ReusableTypes.optionalString,

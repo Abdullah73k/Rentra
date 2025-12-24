@@ -52,6 +52,9 @@ export const postPropertyData = async (
 
 	const result = validatePropertyData<API.POSTPropertyData>(propertyData);
 
+	console.log(result);
+	
+
 	if (!result.success)
 		throw new ValidationError("Invalid property data", result.errors);
 	const zodPropertyData = result.data;

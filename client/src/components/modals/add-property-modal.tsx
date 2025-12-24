@@ -70,9 +70,10 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
     } catch (error) {
       console.error(error);
       window.alert(
-        "An unexpected error occurred while saving the property. Please try again."
+        "An unexpected error occurred while saving the property. Please try again." // TODO: switch to toast component
       );
     }
+    onClose()
   };
 
   const watchedProperty = form.watch("property");
@@ -94,7 +95,7 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
     watchedPropertyInfo?.bathrooms !== undefined &&
     watchedPropertyInfo?.sizeSqm !== undefined &&
     !!watchedPropertyInfo?.status &&
-    !!watchedPropertyInfo?.furnished;
+    !!watchedPropertyInfo?.furnishing;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
