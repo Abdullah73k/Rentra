@@ -73,7 +73,7 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
         "An unexpected error occurred while saving the property. Please try again." // TODO: switch to toast component
       );
     }
-    onClose()
+    onClose();
   };
 
   const watchedProperty = form.watch("property");

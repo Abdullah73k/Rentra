@@ -30,7 +30,7 @@ const TextInput = <T extends FieldValues>({
   autoComplete,
 }: TextInputProps<T>) => {
   let formType = type;
-  if (type == "decimal") {
+  if (type === "decimal") {
     formType = "number";
   }
   return (

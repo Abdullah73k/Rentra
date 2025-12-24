@@ -7,7 +7,6 @@ import {
 import * as API from "../../types/api.types.js";
 import { PropertyService } from "../../services/property.services.js";
 import { ValidationError } from "../../errors/validation.errors.js";
-import { log } from "node:console";
 
 export const getUserPropertyData = async (
 	req: Request<{ propertyId: string }, {}, {}, {}>,
@@ -51,21 +50,13 @@ export const postPropertyData = async (
 ) => {
 	const propertyData = req.body;
 
-	console.log(propertyData);
-	
-
 	const result = validatePropertyData<API.POSTPropertyData>(propertyData);
-
-	console.log(result);
-
 
 	if (!result.success)
 		throw new ValidationError("Invalid property data", result.errors);
 	const zodPropertyData = result.data;
 
 	const response = await PropertyService.create(zodPropertyData);
-
-	console.log(response)
 
 	return res.status(StatusCodes.SUCCESS).json({
 		error: false,

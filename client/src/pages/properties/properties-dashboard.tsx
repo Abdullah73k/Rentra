@@ -19,16 +19,19 @@ const DashboardPage: React.FC = () => {
     return null; // TODO: render a spinner or loading screen
   }
 
-  const { data, isPending: isPropertiesPending, error, isError } = useQuery({
+  const {
+    data,
+    isPending: isPropertiesPending,
+    error,
+    isError,
+  } = useQuery({
     queryKey: ["properties"],
-    queryFn: () => fetchProperties(session.user.id)
-  })
-  
+    queryFn: () => fetchProperties(session.user.id),
+  });
 
-  const isEmpty = data?.length === 0
+  const isEmpty = data?.length === 0;
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-
 
   return (
     <motion.div
@@ -69,22 +72,33 @@ const DashboardPage: React.FC = () => {
                 </Button>
               </div>
             </div>
-          ) }
+          )}
           {isPropertiesPending && (
-            <p>loading</p>
+            <div className="flex justify-center py-10">
+              <div
+                className="flex items-center gap-3 text-muted-foreground"
+                role="status"
+                aria-live="polite"
+              >
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-muted-foreground border-t-transparent" />
+                <span>Loading...</span>
+              </div>
+            </div>
           )}
           {data && (
             /* Properties Grid */
             <div className="p-6">
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                
-                  {/* <PropertyCard key={property.id} property={property} /> */}
-                  
-              {data.map(property => (
-                <PropertyCard property={property} />
-              ))}
+                {/* <PropertyCard key={property.id} property={property} /> */}
+
+                {data.map((property) => (
+                  <PropertyCard key={property.id} property={property} />
+                ))}
               </div>
             </div>
+          )}
+          {isError && (
+            <p>{error.message || "Failed to create property try again"}</p> // TODO: create an error component to display errors
           )}
         </div>
 
