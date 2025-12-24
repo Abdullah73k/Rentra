@@ -1,5 +1,5 @@
 import { defineConfig } from "drizzle-kit";
-import { SUPABASE_CONNECTION_STRING, SUPABASE_URL } from "./src/constants/supabase.constants.js";
+import { SUPABASE_CONNECTION_STRING } from "./src/constants/supabase.constants.js";
 
 export default defineConfig({
 	dialect: "postgresql",
