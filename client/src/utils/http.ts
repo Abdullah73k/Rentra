@@ -1,5 +1,5 @@
 import { API_URL } from "@/constants/api.constants";
-import type { NewPropertyBuildType } from "@/lib/types";
+import type { NewPropertyBuildType, WithId } from "@/lib/types";
 import { QueryClient } from "@tanstack/react-query";
 import axios from "axios"
 
@@ -23,15 +23,10 @@ export async function createNewProperty(propertyData: Omit<NewPropertyBuildType,
     }
 }
 
-export async function fetchProperties(userId: string): Promise<{}[]> {
+export async function fetchProperties(userId: string): Promise<WithId<NewPropertyBuildType["property"]>[]> {
     try {
         const res = await axios.get(`${API_URL}/api/properties/all/${userId}`);
-        console.log(res); // TODO: remove when getting ready for production
-
-        const { properties } = res.data;
-        console.log(properties); // TODO: remove when getting ready for production
-
-        return properties;
+        return res.data.data;
     } catch (error) {
         throw new Error("An error occurred while fetching properties");
     }

@@ -3,13 +3,14 @@ import { Link } from "react-router-dom"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { MapPin, DollarSign } from "lucide-react"
+import type { NewPropertyBuildType, WithId } from "@/lib/types"
 
 interface PropertyCardProps {
-  property: any
+  property: WithId<NewPropertyBuildType["property"]>
 }
 
 const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
-  const formatCurrency = (value: number, currency: string) => {
+  const formatCurrency = (value: number | string, currency: string) => {
     return `${currency} ${value.toLocaleString()}`
   }
 
@@ -46,19 +47,6 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
             <p className="text-xs text-muted-foreground uppercase tracking-wide">Type</p>
             <p className="text-sm font-medium text-foreground capitalize">{property.type}</p>
           </div>
-
-          {property.info && (
-            <>
-              <div>
-                <p className="text-xs text-muted-foreground uppercase tracking-wide">Bedrooms</p>
-                <p className="text-sm font-medium text-foreground">{property.info.bedrooms}</p>
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground uppercase tracking-wide">Size</p>
-                <p className="text-sm font-medium text-foreground">{property.info.sizeSqm} m²</p>
-              </div>
-            </>
-          )}
         </div>
 
         {/* Current Value */}

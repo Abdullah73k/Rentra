@@ -64,7 +64,12 @@ export const PasswordSchema = z.string()
 
 export const ReusableTypes = {
     uuid: z.uuid("Invalid UUID"),
-    decimal: z.number().min(0).max(9999999999.99),
+    decimal: z
+		.string()
+		.regex(
+			/^\d{1,10}(\.\d{1,2})?$/,
+			"Invalid decimal format (max 10 digits, 2 decimals)"
+		),
     date: z.iso.date(),
     positiveInt2: z.number().int().min(0).max(32767),
     stringArray: z.array(z.string()),
@@ -88,10 +93,11 @@ export const propertySchema = z.object({
     address: z.string().min(1),
     country: z.string().min(1),
     currency: ReusableTypes.currency,
-    purchasePrice: z.string(),
-    closingCosts: z.string(),
+    purchasePrice: ReusableTypes.decimal,
+    closingCosts: ReusableTypes.decimal,
     acquisitionDate: ReusableTypes.date,
-    currentValue: z.string(),
+    valuationDate: ReusableTypes.date,
+    currentValue: ReusableTypes.decimal,
     photos: ReusableTypes.stringArray,
     sold: z.boolean(),
 });
@@ -99,8 +105,8 @@ export const propertySchema = z.object({
 export const propertyInfoSchema = z.object({
     propertyNumber: z.string().min(1),
     bedrooms: ReusableTypes.positiveInt2,
-    bathrooms: z.string(),
-    sizeSqm: z.string(),
+    bathrooms: ReusableTypes.decimal,
+    sizeSqm: ReusableTypes.decimal,
     status: z.enum([
         "available",
         "rented",
@@ -110,7 +116,7 @@ export const propertyInfoSchema = z.object({
     ]),
     furnishing: z.enum(["furnished", "semi-furnished", "unfurnished"]),
     parking: ReusableTypes.optionalString,
-    lockerNumber: ReusableTypes.stringArray,
+    lockerNumbers: ReusableTypes.stringArray,
     notes: ReusableTypes.optionalString,
 });
 

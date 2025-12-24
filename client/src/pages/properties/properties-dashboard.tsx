@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import PropertyCard from "@/components/property-card";
 import AddPropertyModal from "@/components/modals/add-property-modal";
-import { mockProperty, mockPropertyInfo } from "@/lib/mock-data";
 import { useAuthStore } from "@/stores/auth.store";
 import { motion } from "motion/react";
 import { useQuery } from "@tanstack/react-query";
@@ -20,21 +19,16 @@ const DashboardPage: React.FC = () => {
     return null; // TODO: render a spinner or loading screen
   }
 
-  const { data } = useQuery({
+  const { data, isPending: isPropertiesPending, error, isError } = useQuery({
     queryKey: ["properties"],
     queryFn: () => fetchProperties(session.user.id)
   })
+  
 
-  const [properties] = useState([
-    {
-      ...mockProperty,
-      info: mockPropertyInfo,
-    },
-  ]);
+  const isEmpty = data?.length === 0
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  const isEmpty = properties.length === 0;
 
   return (
     <motion.div
@@ -56,7 +50,7 @@ const DashboardPage: React.FC = () => {
           </div>
 
           {/* Empty State */}
-          {isEmpty ? (
+          {isEmpty && (
             <div className="flex flex-col items-center justify-center py-24">
               <div className="text-center">
                 <h2 className="text-2xl font-semibold text-foreground mb-2">
@@ -75,13 +69,20 @@ const DashboardPage: React.FC = () => {
                 </Button>
               </div>
             </div>
-          ) : (
+          ) }
+          {isPropertiesPending && (
+            <p>loading</p>
+          )}
+          {data && (
             /* Properties Grid */
             <div className="p-6">
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {properties.map((property: any) => (
-                  <PropertyCard key={property.id} property={property} />
-                ))}
+                
+                  {/* <PropertyCard key={property.id} property={property} /> */}
+                  
+              {data.map(property => (
+                <PropertyCard property={property} />
+              ))}
               </div>
             </div>
           )}
