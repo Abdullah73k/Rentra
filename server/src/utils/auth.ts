@@ -1,5 +1,4 @@
 import { betterAuth, type BetterAuthPlugin } from "better-auth";
-import { pool } from "../configs/pg.config.js";
 import {
 	GOOGLE_CLIENT_ID,
 	GOOGLE_CLIENT_SECRET,
@@ -12,10 +11,16 @@ import { sendEmail } from "./auth.utils.js";
 import { createAuthMiddleware } from "better-auth/api";
 import { passkey } from "better-auth/plugins/passkey";
 import { twoFactor } from "better-auth/plugins";
+import { dbConnection } from "./db-connects.utils.js";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import * as schema from "../db/schemas/index.schema.js";
 
 export const auth: ReturnType<typeof betterAuth> = betterAuth({
 	appName: "Property Management",
-	database: pool,
+	database: drizzleAdapter(dbConnection(), {
+		provider: "pg",
+		schema: schema,
+	}),
 	trustedOrigins: ["http://localhost:5000", "http://localhost:5173"],
 	advanced: {
 		database: {
@@ -103,9 +108,9 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 				return {
 					country: profile.locale?.split("-")[1]?.toLowerCase() || "us",
 					currency: "USD",
-					vatProfile: 0
-				}
-			}
+					vatProfile: 0,
+				};
+			},
 		},
 		discord: {
 			clientId: DISCORD_CLIENT_ID,
@@ -114,9 +119,9 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 				return {
 					country: "us",
 					currency: "USD",
-					vatProfile: 0
-				}
-			}
+					vatProfile: 0,
+				};
+			},
 		},
 		github: {
 			clientId: GITHUB_CLIENT_ID,
@@ -125,9 +130,9 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 				return {
 					country: "us",
 					currency: "USD",
-					vatProfile: 0
-				}
-			}
+					vatProfile: 0,
+				};
+			},
 		},
 	},
 	hooks: {

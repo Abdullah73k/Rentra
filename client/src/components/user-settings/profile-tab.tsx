@@ -69,8 +69,10 @@ const ProfileTab = ({ user }: { user: Session }) => {
   }
 
   return (
-    <div className="space-y-6">
-      <Card>
+    <div className="space-y-6 ">
+      <Card
+        className="glass-card"
+      >
         <CardHeader>
           <CardTitle>Personal Information</CardTitle>
           <CardDescription>Update your personal details</CardDescription>
@@ -78,7 +80,7 @@ const ProfileTab = ({ user }: { user: Session }) => {
         <CardContent className="space-y-4">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleUpdateUser)}>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4 ">
                 <div className="space-y-2">
                   <TextInput form={form} name="fullName" label="Name" />
                 </div>

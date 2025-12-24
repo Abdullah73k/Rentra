@@ -200,7 +200,7 @@ const SignUpPage: React.FC = () => {
               <div className="h-px flex-1 bg-gray-300" />
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex gap-3 justify-center">
               <OAuthButtons />
             </div>
           </div>
@@ -208,7 +208,7 @@ const SignUpPage: React.FC = () => {
           <p className="text-center text-sm text-gray-600">
             Already have an account?{" "}
             <Link
-              to="/signin"
+              to="/auth/login"
               className="font-medium text-black hover:underline"
             >
               Sign in

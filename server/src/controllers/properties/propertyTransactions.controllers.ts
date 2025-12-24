@@ -19,23 +19,7 @@ export const postCreateTransaction = async (
 	const zodResult = result.data;
 
 	const response = await TransactionService.create(zodResult);
-	// 4. If DB unique constrain error occurs return 409, duplicate record
-	// if (response) {
-	// 	return res.status(StatusCodes.CONFLICT).json({
-	// 		error: true,
-	// 		message:
-	// 			"Duplicate transaction detected (same amount, date, vendor, and lease)",
-	// 	});
-	// }
-	// 5. If any foreign keys not found such as lease or propertyID then DB will return error and endpoint will return 404
-	// if (response) {
-	// 	return res.status(StatusCodes.NOT_FOUND).json({
-	// 		error: true,
-	// 		message: "Related record not found (property/unit/lease)",
-	// 	});
-	// }
 
-	// 6. Otherwise data was successfully inserted, return 201
 	return res.status(StatusCodes.CREATED).json({
 		error: false,
 		message: "Transaction created",
@@ -52,18 +36,10 @@ export const deleteTransaction = async (
 
 	await TransactionService.delete(transactionId);
 
-	// check if rows were affected and respond accordingly
-
 	return res.status(StatusCodes.SUCCESS).json({
 		error: false,
 		message: "successfully deleted transaction",
 	});
-
-	// TODO: Will handle later with error middleware
-	// return res.status(StatusCodes.NOT_FOUND).json({
-	// 	error: true,
-	// 	message: "Transaction doesn't exist",
-	// });
 };
 export const patchTransaction = async (
 	req: Request<{ transactionId: string }, {}, API.POSTTransaction>,
@@ -77,9 +53,11 @@ export const patchTransaction = async (
 		...transactionData,
 	};
 
-	const transactionDataResult = validateTransactionDetails<
-		API.PATCHTransaction
-	>(combinedTransactionData, true);
+	const transactionDataResult =
+		validateTransactionDetails<API.PATCHTransaction>(
+			combinedTransactionData,
+			true
+		);
 
 	if (!transactionDataResult.success)
 		throw new ValidationError(
@@ -89,7 +67,10 @@ export const patchTransaction = async (
 
 	const validatedTransactionData = transactionDataResult.data;
 
-	const response = await TransactionService.update(validatedTransactionData);
+	const response = await TransactionService.update({
+		...validatedTransactionData,
+		id: transactionId,
+	});
 
 	return res.status(StatusCodes.SUCCESS).json({
 		error: false,
