@@ -1,14 +1,15 @@
 import { DBError } from "../errors/db.errors.js";
 import { ValidationError } from "../errors/validation.errors.js";
-import { pool } from "../db/configs/drizzle.config.js";
+import { pool } from "../db/configs/drizzle-orm.config.js";
 import type { PgTransaction } from "drizzle-orm/pg-core";
 import type { NodePgQueryResultHKT } from "drizzle-orm/node-postgres";
 import type { ExtractTablesWithRelations } from "drizzle-orm";
+import * as schema from "../db/schemas/index.schema.js";
 
 export type PoolClient = PgTransaction<
 	NodePgQueryResultHKT,
-	Record<string, never>,
-	ExtractTablesWithRelations<Record<string, never>>
+	typeof schema,
+	ExtractTablesWithRelations<typeof schema>
 >;
 
 export async function queryInTransaction<T, U>(
