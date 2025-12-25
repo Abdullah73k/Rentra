@@ -55,10 +55,10 @@ export const property = pgTable("Property", {
 	currentValue: numeric("currentValue", { precision: 12, scale: 2 }).notNull(),
 	valuationDate: date("valuationDate", { mode: "string" }).notNull(),
 
-	photos: text("photos")
-		.array()
-		.notNull()
-		.default(sql`'{}'::text[]`),
+	// photos: text("photos")
+	// 	.array()
+	// 	.notNull()
+	// 	.default(sql`'{}'::text[]`),
 
 	sold: boolean("sold").notNull().default(false),
 
