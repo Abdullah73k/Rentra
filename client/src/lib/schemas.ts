@@ -64,7 +64,12 @@ export const PasswordSchema = z.string()
 
 export const ReusableTypes = {
     uuid: z.uuid("Invalid UUID"),
-    decimal: z.number().min(0).max(9999999999.99),
+    decimal: z
+		.string()
+		.regex(
+			/^\d{1,10}(\.\d{1,2})?$/,
+			"Invalid decimal format (max 10 digits, 2 decimals)"
+		),
     date: z.iso.date(),
     positiveInt2: z.number().int().min(0).max(32767),
     stringArray: z.array(z.string()),
@@ -91,6 +96,7 @@ export const propertySchema = z.object({
     purchasePrice: ReusableTypes.decimal,
     closingCosts: ReusableTypes.decimal,
     acquisitionDate: ReusableTypes.date,
+    valuationDate: ReusableTypes.date,
     currentValue: ReusableTypes.decimal,
     photos: ReusableTypes.stringArray,
     sold: z.boolean(),
@@ -108,9 +114,9 @@ export const propertyInfoSchema = z.object({
         "off_market",
         "reserved",
     ]),
-    furnished: z.enum(["furnished", "semi-furnished", "unfurnished"]),
+    furnishing: z.enum(["furnished", "semi-furnished", "unfurnished"]),
     parking: ReusableTypes.optionalString,
-    lockerNumber: ReusableTypes.stringArray,
+    lockerNumbers: ReusableTypes.stringArray,
     notes: ReusableTypes.optionalString,
 });
 

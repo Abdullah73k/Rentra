@@ -17,7 +17,7 @@ type TextInputProps<T extends FieldValues> = {
   name: Path<T>; // ensures name is a valid key of your form
   label: string;
   placeholder?: string;
-  type?: "number" | "text" | "date" | "email";
+  type?: "number" | "text" | "date" | "email" | "decimal";
   autoComplete?: string;
 };
 
@@ -29,6 +29,10 @@ const TextInput = <T extends FieldValues>({
   type = "text",
   autoComplete,
 }: TextInputProps<T>) => {
+  let formType = type;
+  if (type === "decimal") {
+    formType = "number";
+  }
   return (
     <FormField
       control={form.control}
@@ -44,7 +48,7 @@ const TextInput = <T extends FieldValues>({
               placeholder={placeholder}
               {...field}
               autoComplete={autoComplete}
-              type={type}
+              type={formType}
               onChange={
                 type === "number"
                   ? (e) => field.onChange(e.target.valueAsNumber)

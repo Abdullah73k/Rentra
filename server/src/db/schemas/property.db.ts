@@ -10,7 +10,7 @@ import {
 	char,
 	pgEnum,
 } from "drizzle-orm/pg-core";
-import { user } from "./stub.db.js";
+import { user } from "./auth-schema.db.js";
 
 /**
  * SQL:

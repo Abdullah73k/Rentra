@@ -241,3 +241,7 @@ export type twoFactorData = {
   backupCodes: string[];
 } | null
 export type NewPropertyBuildType = z.infer<typeof propertyDataSchema>
+
+export type WithId<T> = T & {
+  id: string
+}

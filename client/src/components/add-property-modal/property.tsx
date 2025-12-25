@@ -59,14 +59,14 @@ const Property = ({ form }: PropertyProps) => {
           name="property.purchasePrice"
           label="Purchase Price *"
           placeholder="0"
-          type="number"
+          type="decimal"
         />
         <TextInput
           form={form}
           name="property.closingCosts"
           label="Closing Costs *"
           placeholder="0"
-          type="number"
+          type="decimal"
         />
       </div>
 
@@ -75,6 +75,11 @@ const Property = ({ form }: PropertyProps) => {
           form={form}
           name="property.acquisitionDate"
           label="Acquisition Date *"
+        />
+        <DateInput
+          form={form}
+          name="property.valuationDate"
+          label="Valuation Date *"
         />
         {/* TODO: add a photo input here */}
       </div>
@@ -85,7 +90,7 @@ const Property = ({ form }: PropertyProps) => {
           name="property.currentValue"
           label="Current Value *"
           placeholder="0"
-          type="number"
+          type="decimal"
         />
         <SelectField
           form={form}

@@ -28,6 +28,7 @@ export function buildPropertyFromForm(formValues: FormFields): Omit<NewPropertyB
       purchasePrice: property.purchasePrice,
       closingCosts: property.closingCosts,
       acquisitionDate: property.acquisitionDate,
+      valuationDate: property.valuationDate,
       currentValue: property.currentValue,
       sold: false,
       photos: [],
@@ -38,10 +39,10 @@ export function buildPropertyFromForm(formValues: FormFields): Omit<NewPropertyB
       bathrooms: propertyInfo.bathrooms,
       sizeSqm: propertyInfo.sizeSqm,
       status: propertyInfo.status,
-      furnished: propertyInfo.furnished,
+      furnishing: propertyInfo.furnishing,
       parking: propertyInfo.parking || undefined,
       notes: propertyInfo.notes || undefined,
-      lockerNumber: propertyInfo.lockerNumber,
+      lockerNumbers: propertyInfo.lockerNumbers,
     },
 
     tenant:
