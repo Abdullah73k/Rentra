@@ -6,7 +6,7 @@ import { documentSchema } from "../schemas/post.schemas.js";
 import { ValidationError } from "../errors/validation.errors.js";
 
 export const DocumentService = {
-	async create(propertyId: string, userId: string, file: Express.Multer.File) {
+	async create(propertyId: string, userId: string, file: Express.Multer.File, type: "photo" | "document") {
 		const documentId = randomUUID();
 		const response = await insertPhotoInBucket({
 			userId,
@@ -22,7 +22,7 @@ export const DocumentService = {
 			userId,
 			name: file.originalname,
 			path: response.path,
-			type: "photo",
+			type,
 			contentType: file.mimetype,
 			sizeBytes: file.size,
 		};
