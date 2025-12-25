@@ -11,7 +11,7 @@ import {
 
 import { property } from "./property.db.js";
 import { tenant } from "./tenant.db.js";
-import { user } from "./stub.db.js";
+import { user } from "./auth-schema.db.js";
 
 export const documentTypeEnum = pgEnum("documentType", ["photo", "document"]);
 
