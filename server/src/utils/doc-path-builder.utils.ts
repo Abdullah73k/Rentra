@@ -1,13 +1,15 @@
+export type PhotoPathBuilderConfig = {
+	userId: string;
+	propertyId: string;
+	documentId: string;
+	documentName: string;
+};
+
 export function photoPathBuilder({
 	userId,
 	propertyId,
 	documentId,
 	documentName,
-}: {
-	userId: string;
-	propertyId: string;
-	documentId: string;
-	documentName: string;
-}) {
+}: PhotoPathBuilderConfig) {
 	return `users/${userId}/properties/${propertyId}/photo/${documentId}-${documentName}`;
 }
