@@ -1,19 +1,35 @@
 import { randomUUID } from "node:crypto";
 import { DocumentRepository } from "../repositories/document.repositories.js";
-import { insertPhotoInBucket } from "../utils/bucket.utils.js";
+import { insertFileInBucket } from "../utils/bucket.utils.js";
+import {
+	SUPABASE_PRIVATE_BUCKET_NAME,
+	SUPABASE_PUBLIC_BUCKET_NAME,
+} from "../constants/supabase.constants.js";
 import type { CreateDocument } from "../types/db.types.js";
 import { documentSchema } from "../schemas/post.schemas.js";
 import { ValidationError } from "../errors/validation.errors.js";
 
 export const DocumentService = {
-	async create(propertyId: string, userId: string, file: Express.Multer.File, type: "photo" | "document") {
+	async create(
+		propertyId: string,
+		userId: string,
+		file: Express.Multer.File,
+		type: "photo" | "document"
+	) {
 		const documentId = randomUUID();
-		const response = await insertPhotoInBucket({
+
+		const bucketName =
+			type === "photo"
+				? SUPABASE_PUBLIC_BUCKET_NAME
+				: SUPABASE_PRIVATE_BUCKET_NAME;
+
+		const response = await insertFileInBucket({
 			userId,
 			propertyId,
 			documentId,
 			documentName: file.originalname,
 			file,
+			bucketName,
 		});
 
 		const documentData: CreateDocument = {
@@ -34,7 +50,7 @@ export const DocumentService = {
 		}
 
 		const query = await DocumentRepository.createDocument(zodDocumentData.data);
-		return query;
+		return response.publicUrl;
 	},
 	async delete() {},
 	async get() {},

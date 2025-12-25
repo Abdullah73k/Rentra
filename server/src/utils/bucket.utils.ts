@@ -1,5 +1,5 @@
 import { StatusCodes } from "../constants/statusCodes.constants.js";
-import { SUPABASE_BUCKET_NAME } from "../constants/supabase.constants.js";
+import { SUPABASE_PUBLIC_BUCKET_NAME } from "../constants/supabase.constants.js";
 import { supabase } from "../db/configs/supabase.config.js";
 import { DBError } from "../errors/db.errors.js";
 import {
@@ -7,14 +7,16 @@ import {
 	type PhotoPathBuilderConfig,
 } from "./doc-path-builder.utils.js";
 
-export async function insertPhotoInBucket({
+export async function insertFileInBucket({
 	file,
 	userId,
 	propertyId,
 	documentId,
 	documentName,
+	bucketName,
 }: PhotoPathBuilderConfig & {
 	file: Express.Multer.File;
+	bucketName: string;
 }) {
 	const path = photoPathBuilder({
 		propertyId,
@@ -24,7 +26,7 @@ export async function insertPhotoInBucket({
 	});
 
 	const { data, error } = await supabase.storage
-		.from(SUPABASE_BUCKET_NAME)
+		.from(bucketName)
 		.upload(path, file.buffer, {
 			contentType: file.mimetype,
 		});
@@ -32,5 +34,15 @@ export async function insertPhotoInBucket({
 	if (error)
 		throw new DBError(StatusCodes.BAD_REQUEST, error.message, error.name);
 
-	return data;
+	let publicUrl: string | null = null;
+
+	if (bucketName === SUPABASE_PUBLIC_BUCKET_NAME) {
+		const { data: publicData } = supabase.storage
+			.from(bucketName)
+			.getPublicUrl(path);
+
+		publicUrl = publicData.publicUrl;
+	}
+
+	return { ...data, publicUrl };
 }
