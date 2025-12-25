@@ -116,3 +116,14 @@ export const patchPropertyData = async (
 		data: response, // data should not be cleaned data but the object returned by the data base
 	});
 };
+
+export const postPropertyDoc = async (
+	req: Request<{}, {}, {}, { type: string }>,
+	res: Response
+) => {
+	const { type } = req.query;
+};
+
+export const deletePropertyDoc = async (req: Request, res: Response) => {};
+
+export const getPropertyDoc = async (req: Request, res: Response) => {};

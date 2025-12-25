@@ -1,10 +1,13 @@
 import { Router } from "express";
 import {
+	deletePropertyDoc,
 	deleteUserProperty,
+	getPropertyDoc,
 	getUserProperties,
 	getUserPropertyData,
 	patchPropertyData,
 	postPropertyData,
+	postPropertyDoc,
 } from "../controllers/properties/properties.controllers.js";
 import {
 	deleteTransaction,
@@ -17,15 +20,18 @@ const router: Router = Router();
 
 router.get("/all/:userId", asyncHandler(getUserProperties));
 router.get("/:propertyId", asyncHandler(getUserPropertyData));
+router.get("/document/:propertyId", asyncHandler(getPropertyDoc));
 
 router.post("/create", asyncHandler(postPropertyData));
 router.post("/create/transaction", asyncHandler(postCreateTransaction));
+router.post("/document/store", asyncHandler(postPropertyDoc));
 
 router.delete("/delete/:propertyId", asyncHandler(deleteUserProperty));
 router.delete(
 	"/delete/transaction/:transactionId",
 	asyncHandler(deleteTransaction)
 );
+router.delete("/document/:propertyId", asyncHandler(deletePropertyDoc));
 
 router.patch("/update/:propertyId", asyncHandler(patchPropertyData));
 router.patch(
