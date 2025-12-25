@@ -18,7 +18,7 @@ export const documentTypeEnum = pgEnum("documentType", ["photo", "document"]);
 export const documents = pgTable(
 	"Documents",
 	{
-		id: uuid("id").primaryKey().defaultRandom(),
+		id: uuid("id").primaryKey().notNull(),
 		userId: text("userId")
 			.notNull()
 			.references(() => user.id, { onDelete: "cascade" }),
