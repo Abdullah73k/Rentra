@@ -7,7 +7,7 @@ import {
 	getUserPropertyData,
 	patchPropertyData,
 	postPropertyData,
-	postPropertyDoc,
+	postPropertyPhotos,
 } from "../controllers/properties/properties.controllers.js";
 import {
 	deleteTransaction,
@@ -15,6 +15,7 @@ import {
 	postCreateTransaction,
 } from "../controllers/properties/propertyTransactions.controllers.js";
 import { asyncHandler } from "../utils/async-handler.utils.js";
+import { uploadPropertyPhotos } from "../middlewares/multer.middleware.js";
 
 const router: Router = Router();
 
@@ -24,7 +25,11 @@ router.get("/document/:propertyId", asyncHandler(getPropertyDoc));
 
 router.post("/create", asyncHandler(postPropertyData));
 router.post("/create/transaction", asyncHandler(postCreateTransaction));
-router.post("/document/store", asyncHandler(postPropertyDoc));
+router.post(
+	"/:userId/:propertyId/photo",
+	uploadPropertyPhotos,
+	asyncHandler(postPropertyPhotos)
+);
 
 router.delete("/delete/:propertyId", asyncHandler(deleteUserProperty));
 router.delete(
