@@ -24,20 +24,7 @@ import { Form } from "../ui/form";
 import TextInput from "../form/text-input";
 import SelectField from "../form/select-field";
 import NotesInput from "../form/notes-input";
-
-// TODO: make validation more sophisticated when integrating with backend
-const schema = z.object({
-  type: z.string(),
-  subcategory: z.string(),
-  amount: z.number(),
-  currency: z.string(),
-  taxRate: z.number().min(0).max(100),
-  from: z.string(),
-  to: z.string(),
-  method: z.string(),
-  date: z.string(),
-  notes: z.string(),
-});
+import { transactionSchema as schema } from "@/lib/schemas";
 
 type FormFields = z.infer<typeof schema>;
 
@@ -79,7 +66,6 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
         <DialogHeader>
           <DialogTitle>Add Transaction</DialogTitle>
         </DialogHeader>
-
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSave)}>
             <div className="py-4 space-y-4">

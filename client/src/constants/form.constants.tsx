@@ -91,16 +91,20 @@ export const INITIAL_FORM_DATA: AddPropertyFormData = {
 };
 
 export const INITIAL_TRANSACTION_FORM: AddTransactionFormData = {
-  type: "expense",
+  propertyId: "",
+  leaseId: "",
+  type: "income",
   subcategory: "",
-  amount: 0,
+  amount: "", // decimal
   currency: "",
-  taxRate: 0,
+  taxRate: "", // decimal
+  taxAmount: "", // decimal
+  fxRateToBase: "", // decimal
   from: "",
   to: "",
   method: "bank_transfer",
-  date: new Date().toISOString().split("T")[0],
-  notes: "",
+  date: "",
+  notes: ""
 };
 
 export const PAYMENT_METHODS = [
@@ -110,7 +114,7 @@ export const PAYMENT_METHODS = [
   { value: "credit_card", label: "Credit Card" },
 ];
 
-const session = useAuthStore.getState().session
+const session = useAuthStore.getState().session;
 
 export const ADD_PROPERTY_DEFAULT_VALUES: {
   property: z.infer<typeof propertySchema>;
