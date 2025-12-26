@@ -41,6 +41,7 @@ export async function fetchProperties(
 }
 export async function createNewTransaction(data: Transaction) {
 	try {
+		console.log(data);
 		const res = await axios.post(
 			API_URL + "/api/properties/create/transaction",
 			{ transactionDetails: data },

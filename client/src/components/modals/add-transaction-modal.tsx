@@ -34,9 +34,6 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
 	onClose,
 	propertyId,
 }) => {
-	const [formData, setFormData] = useState<Transaction>(
-		INITIAL_TRANSACTION_FORM
-	);
 
 	const form = useForm<FormFields>({
 		resolver: zodResolver(schema),
@@ -50,6 +47,8 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
 		},
 	});
 
+  const formData = form.getValues();
+
 	const taxAmount = useMemo(() => {
 		return (parseFloat(formData.amount) * parseFloat(formData.taxRate)) / 100;
 	}, [formData.amount, formData.taxRate]);
@@ -61,12 +60,12 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
 			taxAmount
 		);
 		mutate(transaction);
-		setFormData(INITIAL_TRANSACTION_FORM);
+    form.reset();
 	};
 
 	// const isValid = !!formData.subcategory && parseFloat(formData.amount) > 0;
 
-  const isValid = true;
+	const isValid = true;
 
 	return (
 		<Dialog open={isOpen} onOpenChange={onClose}>
@@ -149,17 +148,16 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
 							</div>
 							<NotesInput form={form} name="notes" />
 						</div>
-						
 					</form>
 				</Form>
-        <DialogFooter className="flex justify-between">
-							<Button variant="outline" onClick={onClose}>
-								Cancel
-							</Button>
-							<Button type="submit" disabled={!isValid} onClick={handleSave}>
-								Save Transaction
-							</Button>
-						</DialogFooter>
+				<DialogFooter className="flex justify-between">
+					<Button variant="outline" onClick={onClose}>
+						Cancel
+					</Button>
+					<Button type="submit" disabled={!isValid} onClick={handleSave}>
+						Save Transaction
+					</Button>
+				</DialogFooter>
 			</DialogContent>
 		</Dialog>
 	);
