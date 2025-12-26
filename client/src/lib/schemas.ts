@@ -159,29 +159,6 @@ export const leaseSchema = z.object({
     deposit: ReusableTypes.decimal,
 });
 
-export const transactionSchema = z.object({
-    propertyId: ReusableTypes.uuid,
-    leaseId: ReusableTypes.uuid.optional(),
-    type: z.enum(["income", "expense"]),
-    subcategory: ReusableTypes.optionalString,
-    amount: ReusableTypes.decimal,
-    currency: ReusableTypes.currency,
-    taxRate: z.number().min(0).max(1),
-    taxAmount: z.number().min(0),
-    fxRateToBase: z.number().min(0).max(9999999999.999999),
-    from: z.string().min(1),
-    to: z.string().min(1),
-    method: z.enum([
-        "bank_transfer",
-        "cash",
-        "check",
-        "credit_card",
-        "debit_card",
-    ]),
-    date: ReusableTypes.date, // Validate ISO Date string then transform to Date Type using Date object to store in DB
-    notes: z.string().max(1000).optional(),
-});
-
 export const propertyDataSchema = z.object({
     property: propertySchema,
     propertyInfo: propertyInfoSchema,
@@ -189,4 +166,42 @@ export const propertyDataSchema = z.object({
     loan: loanSchema.optional(),
     tenant: tenantSchema.optional(),
     lease: leaseSchema.optional(),
+});
+
+export const transactionSchema = z.object({
+	propertyId: ReusableTypes.uuid,
+	leaseId: ReusableTypes.uuid.optional(),
+	type: z.enum(["income", "expense"]),
+	subcategory: ReusableTypes.optionalString,
+	amount: ReusableTypes.decimal,
+	currency: ReusableTypes.currency,
+	taxRate: z
+		.string()
+		.regex(
+			/^\d{1,3}(\.\d{1,2})?$/,
+			"Invalid tax rate format (max 3 digits, 2 decimals)"
+		),
+	taxAmount: z
+		.string()
+		.regex(
+			/^\d{1,8}(\.\d{1,2})?$/,
+			"Invalid tax amount format (max 8 digits, 2 decimals)"
+		),
+	fxRateToBase: z
+		.string()
+		.regex(
+			/^\d{1,4}(\.\d{1,6})?$/,
+			"Invalid fx rate format (max 4 digits, 6 decimals)"
+		),
+	from: z.string().min(1),
+	to: z.string().min(1),
+	method: z.enum([
+		"bank_transfer",
+		"cash",
+		"check",
+		"credit_card",
+		"debit_card",
+	]),
+	date: ReusableTypes.date, // Validate ISO Date string then transform to Date Type using Date object to store in DB
+	notes: z.string().max(1000).optional(),
 });
