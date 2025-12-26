@@ -1,19 +1,21 @@
 import { Router } from "express";
 import {
-	deletePropertyDoc,
 	deleteUserProperty,
-	getPropertyDoc,
 	getUserProperties,
 	getUserPropertyData,
 	patchPropertyData,
 	postPropertyData,
-	postPropertyPhotos,
-} from "../controllers/properties/properties.controllers.js";
+} from "../controllers/properties.controllers.js";
 import {
 	deleteTransaction,
 	patchTransaction,
 	postCreateTransaction,
-} from "../controllers/properties/propertyTransactions.controllers.js";
+} from "../controllers/property-transactions.controllers.js";
+import {
+	deletePropertyDoc,
+	getPropertyDoc,
+	postPropertyPhotos,
+} from "../controllers/property-documents.controllers.js";
 import { asyncHandler } from "../utils/async-handler.utils.js";
 import { uploadPropertyPhotos } from "../middlewares/multer.middleware.js";
 
@@ -36,7 +38,10 @@ router.delete(
 	"/delete/transaction/:transactionId",
 	asyncHandler(deleteTransaction)
 );
-router.delete("/document/:propertyId", asyncHandler(deletePropertyDoc));
+router.delete(
+	"/document/:propertyId/:documentId",
+	asyncHandler(deletePropertyDoc)
+);
 
 router.patch("/update/:propertyId", asyncHandler(patchPropertyData));
 router.patch(
