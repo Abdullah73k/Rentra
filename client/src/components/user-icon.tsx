@@ -7,8 +7,8 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { useNavigate } from "react-router-dom";
 import { authClient } from "@/utils/auth-client";
 
@@ -17,7 +17,7 @@ const UserIcon = () => {
 
   const navigate = useNavigate();
 
-  if(!session) return null;
+  if (!session) return null;
 
   const profilePicture =
     session?.user.image ||
@@ -26,9 +26,9 @@ const UserIcon = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Avatar className="w-15 h-15 bg-blue-400 bottom-10 left-10 fixed rounded-full z-10 cursor-pointer">
+        <Avatar className="w-16 h-16 bg-blue-400 bottom-10 left-10 fixed rounded-full z-10 cursor-pointer">
           <AvatarImage src={profilePicture} />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarFallback>{session.user.name}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="fixed top-110 left-3">
