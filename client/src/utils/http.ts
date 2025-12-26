@@ -41,7 +41,6 @@ export async function fetchProperties(
 }
 export async function createNewTransaction(data: Transaction) {
 	try {
-		console.log(data);
 		const res = await axios.post(
 			API_URL + "/api/properties/create/transaction",
 			{ transactionDetails: data },
@@ -51,8 +50,6 @@ export async function createNewTransaction(data: Transaction) {
 				},
 			}
 		);
-		console.log(res); // TODO: remove when getting ready for production
-
 		return res.data;
 	} catch (error) {
 		throw new Error("An error occurred while creating the transaction");

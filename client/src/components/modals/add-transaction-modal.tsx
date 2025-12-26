@@ -26,6 +26,7 @@ import { useMutation } from "@tanstack/react-query";
 import { createNewTransaction } from "@/utils/http";
 import { CURRENCY_OPTIONS } from "@/constants/auth.constants";
 import DateInput from "../form/date-input";
+import { toast } from "sonner";
 
 type FormFields = z.infer<typeof schema>;
 
@@ -46,6 +47,9 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
 		mutationFn: createNewTransaction,
 		onSuccess: () => {
 			onClose();
+		},
+		onError: () => {
+			toast.error("Failed to add transaction, please try again");
 		},
 	});
 
@@ -160,7 +164,7 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
 					<Button variant="outline" onClick={onClose}>
 						Cancel
 					</Button>
-					<Button type="submit" disabled={!isValid} onClick={handleSave}>
+					<Button disabled={!isValid} onClick={handleSave}>
 						Save Transaction
 					</Button>
 				</DialogFooter>

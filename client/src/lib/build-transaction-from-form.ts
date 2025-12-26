@@ -5,8 +5,6 @@ export function buildTransactionFromForm(
 	propertyId: string,
 	taxAmount: number
 ): Transaction {
-    
-
 	return {
 		propertyId,
 		type: formData.type,
