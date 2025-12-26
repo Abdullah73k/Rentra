@@ -13,12 +13,17 @@ import { documentSchema } from "../schemas/post.schemas.js";
 import { ValidationError } from "../errors/validation.errors.js";
 
 export const DocumentService = {
-	async create(
-		propertyId: string,
-		userId: string,
-		file: Express.Multer.File,
-		type: "photo" | "document"
-	) {
+	async create({
+		propertyId,
+		userId,
+		file,
+		type,
+	}: {
+		propertyId: string;
+		userId: string;
+		file: Express.Multer.File;
+		type: "photo" | "document";
+	}) {
 		const documentId = randomUUID();
 
 		const bucketName =

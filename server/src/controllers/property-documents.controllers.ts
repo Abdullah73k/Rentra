@@ -29,7 +29,12 @@ export const postPropertyPhotos = async (
 	const response = [];
 
 	for (const file of files) {
-		const res = await DocumentService.create(propertyId, userId, file, type);
+		const res = await DocumentService.create({
+			propertyId,
+			userId,
+			file,
+			type,
+		});
 
 		response.push(res);
 	}
