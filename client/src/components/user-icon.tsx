@@ -17,7 +17,7 @@ const UserIcon = () => {
 
   const navigate = useNavigate();
 
-  // if(!session) return null;
+  if(!session) return null;
 
   const profilePicture =
     session?.user.image ||
@@ -31,7 +31,7 @@ const UserIcon = () => {
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="">
+      <DropdownMenuContent className="fixed top-110 left-3">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={() => navigate("/auth/settings")}>
