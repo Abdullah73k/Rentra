@@ -52,12 +52,12 @@ const EmailVerification = () => {
       <Card className="w-1/2">
         <CardHeader>
           <CardTitle>
-            <h1 className="text-2xl font-semibold">Verify Your Email</h1>
-            <p className="text-sm text-muted-foreground mt-2">
-              We sent you a verification link. Please check your email and click
-              the link to verify
-            </p>
+            <span className="text-2xl font-semibold">Verify Your Email</span>
           </CardTitle>
+          <p className="text-sm text-muted-foreground mt-2">
+            We sent you a verification link. Please check your email and click
+            the link to verify
+          </p>
         </CardHeader>
         <CardContent>
           <BetterAuthActionButton
