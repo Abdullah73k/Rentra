@@ -1,3 +1,5 @@
+import { SUPABASE_PUBLIC_BUCKET_NAME } from "../constants/supabase.constants.js";
+import { DocumentRepository } from "../repositories/document.repositories.js";
 import { LeaseRepository } from "../repositories/lease.repositories.js";
 import { LoanRepository } from "../repositories/loan.repositories.js";
 import { PropertyRepository } from "../repositories/property.repositories.js";
@@ -5,6 +7,7 @@ import { PropertyInfoRepository } from "../repositories/propertyInfo.repositorie
 import { TenantRepository } from "../repositories/tenant.repositories.js";
 import { TransactionRepository } from "../repositories/transaction.repositories.js";
 import * as API from "../types/api.types.js";
+import { getFilePublicURL } from "../utils/bucket.utils.js";
 import { queryInTransaction, type PoolClient } from "../utils/service.utils.js";
 
 export const PropertyService = {
@@ -62,8 +65,23 @@ export const PropertyService = {
 		return query;
 	},
 	async getAll(userId: string) {
+		let response = [];
+
 		const properties = await PropertyRepository.getProperties(userId);
-		return properties;
+		for (const property of properties) {
+			let paths = [];
+			const documents = await DocumentRepository.getAllDocuments(property.id);
+			for (const document of documents) {
+				const path = await getFilePublicURL({
+					path: document.path,
+					bucket: SUPABASE_PUBLIC_BUCKET_NAME,
+				});
+				paths.push(path);
+			}
+			response.push({ ...property, photos: paths });
+		}
+
+		return response;
 	},
 	async delete(propertyId: string) {
 		await PropertyRepository.deleteProperty(propertyId);

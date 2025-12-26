@@ -2,11 +2,13 @@ import { StatusCodes } from "../constants/status-codes.constants.js";
 import * as DB from "../types/db.types.js";
 import {
 	failedDbDeleteMessage,
+	failedDbGetMessage,
 	failedDbInsertMessage,
 } from "../utils/failed-db-messages.utils.js";
 import {
 	deleteRowFromTableWithId,
 	executeDataBaseOperation,
+	getRowsFromTableWithId,
 	insertIntoTable,
 } from "../utils/repository.utils.js";
 import type { PoolClient } from "../utils/service.utils.js";
@@ -27,6 +29,15 @@ export const DocumentRepository = {
 			() => deleteRowFromTableWithId(documents, documentId, client),
 			StatusCodes.BAD_REQUEST,
 			failedDbDeleteMessage("Documents")
+		);
+
+		return query;
+	},
+	async getAllDocuments(propertyId: string, client?: PoolClient) {
+		const query = await executeDataBaseOperation(
+			() => getRowsFromTableWithId.document(propertyId, client),
+			StatusCodes.BAD_REQUEST,
+			failedDbGetMessage("Documents")
 		);
 
 		return query;
