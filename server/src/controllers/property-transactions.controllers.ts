@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { StatusCodes } from "../constants/statusCodes.constants.js";
+import { StatusCodes } from "../constants/status-codes.constants.js";
 import {
 	validateUUID,
 	validateTransactionDetails,

@@ -1,7 +1,7 @@
 import type { ErrorRequestHandler } from "express";
 import { ValidationError } from "../errors/validation.errors.js";
 import { DBError } from "../errors/db.errors.js";
-import { StatusCodes } from "../constants/statusCodes.constants.js";
+import { StatusCodes } from "../constants/status-codes.constants.js";
 import { MulterError } from "multer";
 
 export const errorHandler: ErrorRequestHandler = (

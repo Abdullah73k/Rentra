@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { StatusCodes } from "../constants/statusCodes.constants.js";
+import { StatusCodes } from "../constants/status-codes.constants.js";
 import { validateUUID } from "../utils/validation.utils.js";
 import { ValidationError } from "../errors/validation.errors.js";
 import { DocumentService } from "../services/document.services.js";

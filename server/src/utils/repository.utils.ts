@@ -1,6 +1,6 @@
 import * as DB from "../types/db.types.js";
 import { DBError } from "../errors/db.errors.js";
-import { StatusCodes } from "../constants/statusCodes.constants.js";
+import { StatusCodes } from "../constants/status-codes.constants.js";
 import { dbConnection } from "./db-connects.utils.js";
 import type { PoolClient } from "../utils/service.utils.js";
 import type { PgTable, PgTableWithColumns } from "drizzle-orm/pg-core";

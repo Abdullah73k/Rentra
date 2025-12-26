@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { StatusCodes } from "../constants/statusCodes.constants.js";
+import { StatusCodes } from "../constants/status-codes.constants.js";
 import {
 	validateUUID,
 	validatePropertyData,
@@ -116,4 +116,3 @@ export const patchPropertyData = async (
 		data: response, // data should not be cleaned data but the object returned by the data base
 	});
 };
-

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import request from "supertest";
 import app from "../../app.js";
-import { StatusCodes } from "../../constants/statusCodes.constants.js";
+import { StatusCodes } from "../../constants/status-codes.constants.js";
 import { propertyData, propertyInfoData } from "../data/db-tables.data.js";
 
 const userId = "d8ef0ed9-451e-4c81-a043-bd0495e67c2e";

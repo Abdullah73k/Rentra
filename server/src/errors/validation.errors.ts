@@ -1,4 +1,4 @@
-import { StatusCodes } from "../constants/statusCodes.constants.js";
+import { StatusCodes } from "../constants/status-codes.constants.js";
 import { AppError } from "./app.errors.js";
 
 type ValidationIssue = { field: string; message: string };
