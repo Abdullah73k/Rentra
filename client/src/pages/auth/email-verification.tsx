@@ -2,6 +2,7 @@ import { authClient } from "@/utils/auth-client";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import BetterAuthActionButton from "@/components/form/auth-action-button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const EmailVerification = () => {
   const { email } = useParams();
@@ -47,29 +48,36 @@ const EmailVerification = () => {
   }
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-semibold">Verify Your Email</h1>
-      <p className="text-sm text-muted-foreground mt-2">
-        We sent you a verification link. Please check your email and click the
-        link to verify
-      </p>
-
-      <BetterAuthActionButton
-        variant="outline"
-        className="w-full"
-        disabled={timeToNextResend > 0}
-        action={() => {
-          startEmailVerificationCountdown();
-          return authClient.sendVerificationEmail({
-            email,
-            callbackURL: "/",
-          });
-        }}
-      >
-        {timeToNextResend > 0
-          ? `Resend in ${timeToNextResend}s`
-          : "Resend Email"}
-      </BetterAuthActionButton>
+    <div className="space-y-4 w-full flex flex-col items-center">
+      <Card className="w-1/2">
+        <CardHeader>
+          <CardTitle>
+            <span className="text-2xl font-semibold">Verify Your Email</span>
+          </CardTitle>
+          <p className="text-sm text-muted-foreground mt-2">
+            We sent you a verification link. Please check your email and click
+            the link to verify
+          </p>
+        </CardHeader>
+        <CardContent>
+          <BetterAuthActionButton
+            variant="outline"
+            className="w-full"
+            disabled={timeToNextResend > 0}
+            action={() => {
+              startEmailVerificationCountdown();
+              return authClient.sendVerificationEmail({
+                email,
+                callbackURL: "/",
+              });
+            }}
+          >
+            {timeToNextResend > 0
+              ? `Resend in ${timeToNextResend}s`
+              : "Resend Email"}
+          </BetterAuthActionButton>
+        </CardContent>
+      </Card>
     </div>
   );
 };
