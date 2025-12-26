@@ -46,3 +46,28 @@ export async function insertFileInBucket({
 
 	return { ...data, publicUrl };
 }
+
+export async function deleteFileFromBucket({
+	bucketName,
+	userId,
+	propertyId,
+	documentId,
+	documentName,
+}: PhotoPathBuilderConfig & {
+	bucketName: string;
+}) {
+	const path = photoPathBuilder({
+		userId,
+		propertyId,
+		documentId,
+		documentName,
+	});
+
+	const { data, error } = await supabase.storage
+		.from(bucketName)
+		.remove([path]);
+
+	if (error) {
+		throw new DBError(StatusCodes.BAD_REQUEST, error.message, error.name);
+	}
+}

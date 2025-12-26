@@ -1,8 +1,6 @@
 import type { Request, Response } from "express";
 import { StatusCodes } from "../constants/statusCodes.constants.js";
-import {
-	validateUUID,
-} from "../utils/validation.utils.js";
+import { validateUUID } from "../utils/validation.utils.js";
 import { ValidationError } from "../errors/validation.errors.js";
 import { DocumentService } from "../services/document.services.js";
 
@@ -37,27 +35,35 @@ export const postPropertyPhotos = async (
 	}
 	return res.status(StatusCodes.SUCCESS).json({
 		error: false,
-		message: "Document created",
+		message: "Successfully created document",
 		data: response,
 	});
 };
 
 export const deletePropertyDoc = async (
-	req: Request<{ documentId: string; propertyId: string }>,
+	req: Request<
+		{ documentId: string; propertyId: string; userId: string },
+		{},
+		{},
+		{ name: string }
+	>,
 	res: Response
 ) => {
-	const { documentId, propertyId } = req.params;
+	const { documentId, propertyId, userId } = req.params;
+	const { name } = req.query;
+
 	const result = validateUUID(documentId);
 	const result2 = validateUUID(propertyId);
+	const result3 = validateUUID(userId);
 
-	if (result.error || result2.error)
+	if (result.error || result2.error || result3.error)
 		throw new ValidationError("Invalid document or property Id");
 
-	await DocumentService.delete(documentId, propertyId);
+	await DocumentService.delete({ userId, propertyId, documentId, name });
 
 	return res.status(StatusCodes.SUCCESS).json({
 		error: false,
-		message: "Document deleted",
+		message: "Successfully deleted document",
 	});
 };
 

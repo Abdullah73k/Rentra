@@ -1,6 +1,9 @@
 import { randomUUID } from "node:crypto";
 import { DocumentRepository } from "../repositories/document.repositories.js";
-import { insertFileInBucket } from "../utils/bucket.utils.js";
+import {
+	deleteFileFromBucket,
+	insertFileInBucket,
+} from "../utils/bucket.utils.js";
 import {
 	SUPABASE_PRIVATE_BUCKET_NAME,
 	SUPABASE_PUBLIC_BUCKET_NAME,
@@ -52,6 +55,26 @@ export const DocumentService = {
 		const query = await DocumentRepository.createDocument(zodDocumentData.data);
 		return response.publicUrl;
 	},
-	async delete() {},
+	async delete({
+		userId,
+		propertyId,
+		documentId,
+		name,
+	}: {
+		userId: string;
+		propertyId: string;
+		documentId: string;
+		name: string;
+	}) {
+		await deleteFileFromBucket({
+			bucketName: SUPABASE_PUBLIC_BUCKET_NAME,
+			propertyId,
+			userId,
+			documentId,
+			documentName: name,
+		});
+
+		await DocumentRepository.deleteDocument(documentId);
+	},
 	async get() {},
 };
