@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
 	Dialog,
 	DialogContent,
@@ -34,10 +34,12 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
 	onClose,
 	propertyId,
 }) => {
-
 	const form = useForm<FormFields>({
 		resolver: zodResolver(schema),
-		defaultValues: INITIAL_TRANSACTION_FORM,
+		defaultValues: {
+			...INITIAL_TRANSACTION_FORM,
+			propertyId,
+		},
 	});
 
 	const { mutate } = useMutation({
@@ -47,25 +49,29 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
 		},
 	});
 
-  const formData = form.getValues();
+	const formData = form.watch();
 
 	const taxAmount = useMemo(() => {
-		return (parseFloat(formData.amount) * parseFloat(formData.taxRate)) / 100;
+		const amount = parseFloat(formData.amount) || 0;
+		const rate = parseFloat(formData.taxRate) || 0;
+		return (amount * rate) / 100;
 	}, [formData.amount, formData.taxRate]);
+
+	useEffect(() => {
+		form.setValue("taxAmount", taxAmount.toFixed(2), { shouldValidate: true });
+	}, [taxAmount, form]);
 
 	const handleSave = () => {
 		const transaction = buildTransactionFromForm(
-			formData,
+			form.getValues(),
 			propertyId,
 			taxAmount
 		);
 		mutate(transaction);
-    form.reset();
+		form.reset();
 	};
 
-	// const isValid = !!formData.subcategory && parseFloat(formData.amount) > 0;
-
-	const isValid = true;
+	const isValid = form.formState.isValid;
 
 	return (
 		<Dialog open={isOpen} onOpenChange={onClose}>

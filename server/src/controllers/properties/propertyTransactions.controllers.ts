@@ -14,7 +14,6 @@ export const postCreateTransaction = async (
 ) => {
 	const { transactionDetails } = req.body;
 	const result = validateTransactionDetails(transactionDetails);
-	console.log(result);
 	if (!result.success)
 		throw new ValidationError("Transaction validation failed", result.errors);
 	const zodResult = result.data;

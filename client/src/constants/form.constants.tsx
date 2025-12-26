@@ -31,10 +31,7 @@ export const LEASE_FREQUENCIES = [
 	"annually",
 	"bi-annually",
 ];
-export const TRANSACTION_TYPES = [
-	"income",
-	"expense",
-];
+export const TRANSACTION_TYPES = ["income", "expense"];
 
 export const INITIAL_FORM_DATA: AddPropertyFormData = {
 	// Step 1: Property
@@ -89,14 +86,14 @@ export const INITIAL_FORM_DATA: AddPropertyFormData = {
 
 export const INITIAL_TRANSACTION_FORM: Transaction = {
 	propertyId: "",
-	leaseId: "",
+	leaseId: undefined,
 	type: "income",
 	subcategory: "",
-	amount: 0, // decimal
-	currency: "",
-	taxRate: 0, // decimal
-	taxAmount: 0, // decimal
-	fxRateToBase: 0, // decimal
+	amount: "0",
+	currency: "AED",
+	taxRate: "0",
+	taxAmount: "0",
+	fxRateToBase: "1",
 	from: "",
 	to: "",
 	method: "bank_transfer",
@@ -130,22 +127,23 @@ export const ADD_PROPERTY_DEFAULT_VALUES: {
 		address: "",
 		country: "",
 		currency: "",
-		purchasePrice: 0,
-		closingCosts: 0,
+		purchasePrice: "0",
+		closingCosts: "0",
 		acquisitionDate: "",
-		currentValue: 0,
+		currentValue: "0",
+		valuationDate: "",
 		photos: [],
 		sold: false,
 	},
 	propertyInfo: {
 		propertyNumber: "",
 		bedrooms: 0,
-		bathrooms: 0,
-		sizeSqm: 0,
+		bathrooms: "0",
+		sizeSqm: "0",
 		status: "available",
-		furnished: "furnished",
+		furnishing: "furnished",
 		parking: "",
-		lockerNumber: [],
+		lockerNumbers: [],
 		notes: "",
 	},
 	optionalSections: {

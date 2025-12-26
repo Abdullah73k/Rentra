@@ -163,11 +163,13 @@ export default function PropertyDetailPage() {
 				</div>
 
 				{/* Add Transaction Modal */}
-				<AddTransactionModal
-					isOpen={isAddTransactionOpen}
-					onClose={() => setIsAddTransactionOpen(false)}
-					propertyId={propertyId!}
-				/>
+				{propertyId && (
+					<AddTransactionModal
+						isOpen={isAddTransactionOpen}
+						onClose={() => setIsAddTransactionOpen(false)}
+						propertyId={propertyId}
+					/>
+				)}
 			</div>
 		</motion.div>
 	);
