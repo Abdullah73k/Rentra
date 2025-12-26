@@ -23,7 +23,7 @@ import { LoadingSwap } from "../ui/loading-swap";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import QRCodeVerify from "./qr-code-verify";
-import { type Passkey } from "better-auth/plugins/passkey";
+import { type Passkey } from "@better-auth/passkey/client";
 import PasskeyManagement from "./passkey-management";
 
 const twoFactorAuthSchema = z.object({

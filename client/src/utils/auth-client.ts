@@ -1,6 +1,7 @@
 import { API_URL } from "@/constants/api.constants";
-import { inferAdditionalFields, passkeyClient, twoFactorClient } from "better-auth/client/plugins";
+import { inferAdditionalFields, twoFactorClient } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react"
+import { passkeyClient } from "@better-auth/passkey/client";
 
 export const authClient = createAuthClient({
 	baseURL: `${API_URL}/api/auth`,

@@ -55,7 +55,7 @@ const properties = {
             element: <Home />
         },
         {    // protected
-            path: "properties/:PropertyId",
+            path: "properties/:propertyId",
             element: <Property />
         },
         {   // protected
