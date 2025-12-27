@@ -37,9 +37,19 @@ export async function insertIntoTable<T extends PgTable>(
 }
 
 export const getRowsFromTableWithId = {
-	async property(id: string, client: PoolClient | undefined) {
+	async property({
+		userId,
+		propertyId,
+		client,
+	}: { client: PoolClient | undefined } & (
+		| { userId: string; propertyId?: never }
+		| { propertyId: string; userId?: never }
+	)) {
 		const pool = dbConnection(client);
-		return await pool.select().from(property).where(eq(property.userId, id));
+		return await pool
+			.select()
+			.from(property)
+			.where(eq(userId ? property.userId : property.id, userId ?? propertyId));
 	},
 	async propertyInfo(id: string, client: PoolClient | undefined) {
 		const pool = dbConnection(client);

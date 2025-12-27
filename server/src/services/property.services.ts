@@ -72,7 +72,7 @@ export const PropertyService = {
 			let paths = [];
 			const documents = await DocumentRepository.getAllDocuments(property.id);
 			for (const document of documents) {
-				const path = await getFilePublicURL({
+				const path = getFilePublicURL({
 					path: document.path,
 					bucket: SUPABASE_PUBLIC_BUCKET_NAME,
 				});
@@ -88,6 +88,7 @@ export const PropertyService = {
 	},
 	async getAllData(propertyId: string) {
 		const queryFn = async (propertyId: string, client: PoolClient) => {
+			const property = await PropertyRepository.getProperty(propertyId, client);
 			const propertyInfo = await PropertyInfoRepository.getPropertyInfo(
 				propertyId,
 				client
@@ -101,6 +102,7 @@ export const PropertyService = {
 			);
 
 			return {
+				property,
 				propertyInfo,
 				loan,
 				tenant,
