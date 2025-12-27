@@ -42,11 +42,21 @@ export const errorHandler: ErrorRequestHandler = (
 					error: error.name,
 					message: "File count exceeds limit",
 				});
+			case "LIMIT_UNEXPECTED_FILE":
+				return res.status(StatusCodes.BAD_REQUEST).json({
+					error: error.name,
+					message: `Unexpected field ${error.field}, please check your input`,
+				});
+			case "MISSING_FIELD_NAME":
+				return res.status(StatusCodes.BAD_REQUEST).json({
+					error: error.name,
+					message: "Field name missing, please ensure the file is uploaded with the key 'photos'",
+				});
 			default:
 				return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
 					error: error.name,
-					message:
-						"Unexpected error, please try again later or contact our team",
+					message: error.message,
+					code: error.code,
 				});
 		}
 	}

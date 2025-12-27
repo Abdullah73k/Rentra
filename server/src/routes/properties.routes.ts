@@ -28,7 +28,7 @@ router.get("/documents/:propertyId", asyncHandler(getPropertyDoc));
 router.post("/create", asyncHandler(postPropertyData));
 router.post("/create/transaction", asyncHandler(postCreateTransaction));
 router.post(
-	"/:userId/:propertyId/photo",
+	"/photo/:userId/:propertyId",
 	uploadPropertyPhotos,
 	asyncHandler(postPropertyPhotos)
 );
