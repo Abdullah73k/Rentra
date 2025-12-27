@@ -46,25 +46,19 @@ export const postPropertyPhotos = async (
 };
 
 export const deletePropertyDoc = async (
-	req: Request<
-		{ documentId: string; propertyId: string; userId: string },
-		{},
-		{},
-		{ name: string }
-	>,
+	req: Request<{}, {}, { documentIds: string[] }, {}>,
 	res: Response
 ) => {
-	const { documentId, propertyId, userId } = req.params;
-	const { name } = req.query;
+	const { documentIds } = req.body;
 
-	const result = validateUUID(documentId);
-	const result2 = validateUUID(propertyId);
-	const result3 = validateUUID(userId);
+	documentIds.forEach((id) => {
+		const result = validateUUID(id);
 
-	if (result.error || result2.error || result3.error)
-		throw new ValidationError("Invalid document or property Id");
+		if (result.error)
+			throw new ValidationError("Invalid document or property Id");
+	});
 
-	await DocumentService.delete({ userId, propertyId, documentId, name });
+	await DocumentService.delete({ documentIds });
 
 	return res.status(StatusCodes.SUCCESS).json({
 		error: false,

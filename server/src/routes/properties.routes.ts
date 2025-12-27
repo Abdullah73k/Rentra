@@ -39,7 +39,7 @@ router.delete(
 	asyncHandler(deleteTransaction)
 );
 router.delete(
-	"/document/:userId/:propertyId/:documentId",
+	"/document/:documentId",
 	asyncHandler(deletePropertyDoc)
 );
 

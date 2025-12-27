@@ -4,7 +4,7 @@ import { StatusCodes } from "../constants/status-codes.constants.js";
 import { dbConnection } from "./db-connects.utils.js";
 import type { PoolClient } from "../utils/service.utils.js";
 import type { PgTable, PgTableWithColumns } from "drizzle-orm/pg-core";
-import { eq, type InferInsertModel } from "drizzle-orm";
+import { eq, inArray, type InferInsertModel } from "drizzle-orm";
 import { property } from "../db/schemas/property.db.js";
 import { propertyInfo } from "../db/schemas/property-info.db.js";
 import { loan } from "../db/schemas/loan.db.js";
@@ -67,12 +67,33 @@ export const getRowsFromTableWithId = {
 			.from(transaction)
 			.where(eq(transaction.propertyId, id));
 	},
-	async document(id: string, client: PoolClient | undefined) {
+	async document({
+		client,
+		propertyId,
+		documentId,
+	}: { client: PoolClient | undefined } & (
+		| { propertyId: string; documentId?: never }
+		| { propertyId?: never; documentId: string }
+	)) {
 		const pool = dbConnection(client);
 		return await pool
 			.select()
 			.from(documents)
-			.where(eq(documents.propertyId, id));
+			.where(
+				eq(
+					propertyId ? documents.propertyId : documents.id,
+					(propertyId ?? documentId)!
+				)
+			);
+	},
+	async documentsPath(ids: string[], client: PoolClient | undefined) {
+		const pool = dbConnection();
+		const paths = await pool
+			.select({ path: documents.path })
+			.from(documents)
+			.where(inArray(documents.id, ids));
+
+		return paths.map((p) => p.path);
 	},
 };
 
@@ -81,6 +102,15 @@ export async function deleteRowFromTableWithId<
 >(table: T, id: string, client: PoolClient | undefined) {
 	const pool = dbConnection(client);
 	const query = await pool.delete(table).where(eq(table.id, id));
+	return query;
+}
+
+export async function deleteDocumentsFromTable(
+	ids: string[],
+	client: PoolClient | undefined
+) {
+	const pool = dbConnection(client);
+	const query = await pool.delete(documents).where(inArray(documents.id, ids));
 	return query;
 }
 

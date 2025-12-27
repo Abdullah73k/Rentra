@@ -60,26 +60,15 @@ export const DocumentService = {
 		const query = await DocumentRepository.createDocument(zodDocumentData.data);
 		return response.publicUrl;
 	},
-	async delete({
-		userId,
-		propertyId,
-		documentId,
-		name,
-	}: {
-		userId: string;
-		propertyId: string;
-		documentId: string;
-		name: string;
-	}) {
+	async delete({ documentIds }: { documentIds: string[] }) {
+		const paths = await DocumentRepository.getDocumentsPath(documentIds);
+
 		await deleteFileFromBucket({
-			bucketName: SUPABASE_PUBLIC_BUCKET_NAME,
-			propertyId,
-			userId,
-			documentId,
-			documentName: name,
+			bucket: SUPABASE_PUBLIC_BUCKET_NAME,
+			paths,
 		});
 
-		await DocumentRepository.deleteDocument(documentId);
+		await DocumentRepository.deleteDocuments(documentIds);
 	},
 	async get() {},
 };
