@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { DocumentRepository } from "../repositories/document.repositories.js";
 import {
 	deleteFileFromBucket,
+	getFilePublicURL,
 	insertFileInBucket,
 } from "../utils/bucket.utils.js";
 import {

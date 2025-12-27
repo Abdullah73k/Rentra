@@ -23,7 +23,7 @@ const router: Router = Router();
 
 router.get("/all/:userId", asyncHandler(getUserProperties));
 router.get("/:propertyId", asyncHandler(getUserPropertyData));
-router.get("/document/:propertyId", asyncHandler(getPropertyDoc));
+router.get("/documents/:propertyId", asyncHandler(getPropertyDoc));
 
 router.post("/create", asyncHandler(postPropertyData));
 router.post("/create/transaction", asyncHandler(postCreateTransaction));

@@ -61,7 +61,7 @@ export async function deleteFileFromBucket({
 	}
 }
 
-export async function getFilePublicURL({
+export function getFilePublicURL({
 	path,
 	bucket,
 }: {
