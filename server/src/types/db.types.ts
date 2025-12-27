@@ -60,7 +60,6 @@ export const Ids = [
 
 export type Ids = (typeof Ids)[number];
 
-
 // transformed from http req into proper format to be stored in DB (transformed by zod)
 export type Property = NonNullable<PATCHPropertyData["property"]>;
 export type PropertyInfo = NonNullable<PATCHPropertyData["propertyInfo"]>;
@@ -76,4 +75,6 @@ export type CreateLoan = NonNullable<POSTPropertyData["loan"]>;
 export type CreateTenant = NonNullable<POSTPropertyData["tenant"]>;
 export type CreateLease = NonNullable<POSTPropertyData["lease"]>;
 export type CreateTransaction = z.output<typeof POST.transactionSchema>;
-export type CreateDocument = z.output<typeof POST.documentSchema>;
+export type CreateDocument = z.output<typeof POST.documentSchema> & {
+	id: string;
+};

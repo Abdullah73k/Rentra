@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import request from "supertest";
 import app from "../../app.js";
-import { StatusCodes } from "../../constants/statusCodes.constants.js";
+import { StatusCodes } from "../../constants/status-codes.constants.js";
 
 describe("Health Check Endpoints", () => {
 	describe("GET /api/ping ", () => {
