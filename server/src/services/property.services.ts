@@ -131,21 +131,15 @@ export const PropertyService = {
 				data.propertyInfo,
 				client
 			);
-			const loan = await LoanRepository.updateLoan(
-				propertyId,
-				data.loan,
-				client
-			);
-			const tenant = await TenantRepository.updateTenant(
-				propertyId,
-				data.tenant,
-				client
-			);
-			const lease = await LeaseRepository.updateLease(
-				propertyId,
-				data.lease,
-				client
-			);
+			const loan = data.loan
+				? await LoanRepository.updateLoan(propertyId, data.loan, client)
+				: undefined;
+			const tenant = data.tenant
+				? await TenantRepository.updateTenant(propertyId, data.tenant, client)
+				: undefined;
+			const lease = data.lease
+				? await LeaseRepository.updateLease(propertyId, data.lease, client)
+				: undefined;
 			return {
 				property,
 				propertyInfo,
