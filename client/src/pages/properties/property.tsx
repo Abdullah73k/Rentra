@@ -17,16 +17,30 @@ export default function PropertyDetailPage() {
 
 	const { propertyId } = useParams();
 
-	if (!propertyId) <Navigate to="/properties/dashboard" />
+	if (!propertyId) return <Navigate to="/properties/dashboard" />;
 
-	const { data, isPending, isError, error} = useQuery({
+	const { data, isPending, isError, error } = useQuery({
 		queryKey: ["property", propertyId],
-		queryFn: () => fetchPropertyInfo(propertyId!)
-	})
-	console.log(data)
-	console.log(data?.transaction)
+		queryFn: () => fetchPropertyInfo(propertyId),
+	});
 
-	if(isPending) return null;
+	if (isPending) {
+		return (
+			<div className="flex h-full w-full items-center justify-center py-10">
+				<span className="text-muted-foreground">
+					Loading property details...
+				</span>
+			</div>
+		);
+	}
+
+	if (!data) {
+		return (
+			<div className="flex h-full w-full items-center justify-center py-10">
+				<span className="text-muted-foreground">No property found</span>
+			</div>
+		);
+	}
 
 	// In a real React app, you'd fetch using the ID from React Router
 	const property = data?.property[0];
@@ -54,8 +68,18 @@ export default function PropertyDetailPage() {
 					backgroundRepeat: "no-repeat",
 				}}
 			/>
-			{isError && <p>{error.message || "Failed to get property info"}</p>}
 			<div className="absolute inset-0 bg-[#f8f8f8]/40 h-360 w-full">
+				{isError && (
+					<div
+						role="alert"
+						aria-live="assertive"
+						className="mx-auto w-full px-6 pt-4"
+					>
+						<p className="rounded-md bg-red-50 px-4 py-3 text-sm text-red-700 border border-red-200 shadow-sm">
+							{error.message || "Failed to get property info"}
+						</p>
+					</div>
+				)}
 				<div className="mx-auto w-full ">
 					{/* Header */}
 					<div className="border-b border-border w-full px-6 py-6 bg-[#f8f8f8]">
@@ -74,13 +98,15 @@ export default function PropertyDetailPage() {
 
 								<div className="flex gap-2 flex-wrap">
 									<span className="inline-block px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm">
-										{property?.purpose &&property?.purpose.charAt(0).toUpperCase() +
-											property?.purpose.slice(1)}
+										{property?.purpose &&
+											property?.purpose.charAt(0).toUpperCase() +
+												property?.purpose.slice(1)}
 									</span>
 
 									<span className="inline-block px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm">
-										{property?.type && property?.type.charAt(0).toUpperCase() +
-											property?.type.slice(1)}
+										{property?.type &&
+											property?.type.charAt(0).toUpperCase() +
+												property?.type.slice(1)}
 									</span>
 
 									<span className="inline-block px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm">
@@ -98,7 +124,10 @@ export default function PropertyDetailPage() {
 							<div className="text-right">
 								<p className="text-sm text-muted-foreground">Current Value</p>
 								<p className="text-2xl font-semibold text-foreground">
-									{property?.currency} {property?.currentValue.toLocaleString()}
+									{property?.currency}{" "}
+									{property?.currentValue != null
+										? Number(property.currentValue).toLocaleString()
+										: ""}{" "}
 								</p>
 							</div>
 						</div>

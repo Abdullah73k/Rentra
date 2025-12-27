@@ -24,13 +24,13 @@ const LoanCard = ({ loan }: { loan: NewPropertyBuildType["loan"] }) => {
       <div>
         <p className="text-sm text-muted-foreground">Total Amount</p>
         <p className="font-semibold text-foreground">
-          {loan?.totalMortgageAmount.toLocaleString()}
+          {Number(loan?.totalMortgageAmount).toLocaleString()}
         </p>
       </div>
       <div>
         <p className="text-sm text-muted-foreground">Monthly Payment</p>
         <p className="font-semibold text-foreground">
-          {loan?.monthlyPayment.toLocaleString()}
+          {Number(loan?.monthlyPayment).toLocaleString()}
         </p>
       </div>
     </CustomCard>

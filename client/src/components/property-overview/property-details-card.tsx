@@ -14,13 +14,14 @@ const PropertyDetailsCard = ({
 				<div>
 					<p className="text-sm text-muted-foreground">Purchase Price</p>
 					<p className="font-semibold text-foreground">
-						{property.currency} {property.purchasePrice.toLocaleString()}
+						{property.currency}
+						{Number(property.purchasePrice).toLocaleString()}
 					</p>
 				</div>
 				<div>
 					<p className="text-sm text-muted-foreground">Closing Costs</p>
 					<p className="font-semibold text-foreground">
-						{property.currency} {property.closingCosts.toLocaleString()}
+						{property.currency} {Number(property.closingCosts).toLocaleString()}
 					</p>
 				</div>
 				<div>

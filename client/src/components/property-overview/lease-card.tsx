@@ -28,7 +28,7 @@ const LeaseCard = ({ lease }: { lease: NewPropertyBuildType["lease"] }) => {
       <div>
         <p className="text-sm text-muted-foreground">Deposit</p>
         <p className="font-semibold text-foreground">
-          {lease?.currency} {lease?.deposit.toLocaleString()}
+          {lease?.currency} {Number(lease?.deposit).toLocaleString()}
         </p>
       </div>
     </CustomCard>

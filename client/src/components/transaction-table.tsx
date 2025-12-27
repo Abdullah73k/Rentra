@@ -8,16 +8,16 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
+import type { WithId } from "@/lib/types";
 import type { Transaction } from "@/lib/types";
 
 interface TransactionsTableProps {
-	transactions: Transaction[] | undefined;
+	transactions: WithId<Transaction>[] | undefined;
 }
 
 const TransactionsTable: React.FC<TransactionsTableProps> = ({
 	transactions,
 }) => {
-  console.log(transactions);
 	if (!transactions || transactions.length === 0) {
 		return (
 			<Card>
@@ -54,8 +54,8 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({
 					</TableHeader>
 
 					<TableBody>
-						{transactions.map((transaction, index) => (
-							<TableRow key={`${transaction.propertyId}-${index}`}>
+						{transactions.map((transaction) => (
+							<TableRow key={transaction.id}>
 								<TableCell className="font-medium">
 									{new Date(transaction.date).toLocaleDateString()}
 								</TableCell>
