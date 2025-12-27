@@ -25,22 +25,22 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Wallet, Building2, TrendingDown, TrendingUp, ArrowUpRight, ArrowDownRight } from "lucide-react";
-import type { Property, PropertyInfo, Loan, Transaction, Lease, Tenant } from "@/lib/types";
+import type { NewPropertyBuildType, Transaction, WithId } from "@/lib/types";
 import { motion, type Variants } from "motion/react";
 import { cn } from "@/lib/utils";
 
 interface PropertyDashboardProps {
-    property: Property;
-    propertyInfo: PropertyInfo;
-    loan?: Loan;
-    transactions?: Transaction[];
-    lease?: Lease;
-    tenant?: Tenant;
+    property: NewPropertyBuildType["property"];
+    propertyInfo: NewPropertyBuildType["propertyInfo"];
+    loan?: NewPropertyBuildType["loan"];
+    transactions?: WithId<Transaction>[];
+    lease?: NewPropertyBuildType["lease"];
+    tenant?: NewPropertyBuildType["tenant"];
 }
 
 // --- Helper Functions ---
 
-const calculateNOI = (transactions: Transaction[], startDate?: Date, endDate?: Date) => {
+const calculateNOI = (transactions: WithId<Transaction>[], startDate?: Date, endDate?: Date) => {
     // Filter transactions by date range if provided
     const filtered = transactions.filter(t => {
         if (!startDate && !endDate) return true;
@@ -52,11 +52,11 @@ const calculateNOI = (transactions: Transaction[], startDate?: Date, endDate?: D
 
     const income = filtered
         .filter(t => t.type === 'income')
-        .reduce((sum, t) => sum + t.amount, 0);
+        .reduce((sum, t) => sum + parseFloat(t.amount), 0);
 
     const expense = filtered
         .filter(t => t.type === 'expense' && t.subcategory !== 'Mortgage' && t.subcategory !== 'Loan Payment')
-        .reduce((sum, t) => sum + t.amount, 0);
+        .reduce((sum, t) => sum + parseFloat(t.amount), 0);
 
     return { income, expense, noi: income - expense };
 };
@@ -127,7 +127,7 @@ const PropertyDashboard: React.FC<PropertyDashboardProps> = ({
         // Calculate financing costs based on transactions if available, otherwise estimate from loan
         const financingTxns = transactions.filter(t =>
             (t.type === 'expense' && (t.subcategory === 'Mortgage' || t.subcategory === 'Loan Payment'))
-        ).reduce((sum, t) => sum + t.amount, 0);
+        ).reduce((sum, t) => sum + parseFloat(t.amount), 0);
 
         if (financingTxns > 0) return financingTxns;
 
@@ -147,7 +147,7 @@ const PropertyDashboard: React.FC<PropertyDashboardProps> = ({
         // Simplification: Using Cash Flow After Financing
         // Missing: Appreciation, Principal Paydown, Initial Invested. Using defaults as per requirements.
 
-        const initialInvestment = property.purchasePrice * 0.2; // 20% down default
+        const initialInvestment = parseFloat(property.purchasePrice) * 0.2; // 20% down default
         const appreciation = 0;
         const principalPaydown = 0;
 
@@ -169,12 +169,12 @@ const PropertyDashboard: React.FC<PropertyDashboardProps> = ({
             }
 
             if (t.type === 'income') {
-                acc[monthKey].income += t.amount;
+                acc[monthKey].income += parseFloat(t.amount);
             } else if (t.type === 'expense') {
                 if (t.subcategory === 'Mortgage' || t.subcategory === 'Loan Payment') {
-                    acc[monthKey].financing += t.amount;
+                    acc[monthKey].financing += parseFloat(t.amount);
                 } else {
-                    acc[monthKey].expense += t.amount;
+                    acc[monthKey].expense += parseFloat(t.amount);
                 }
             }
             return acc;
@@ -199,7 +199,7 @@ const PropertyDashboard: React.FC<PropertyDashboardProps> = ({
             .filter(t => t.type === 'expense')
             .reduce((acc, t) => {
                 const cat = t.subcategory || 'Other';
-                acc[cat] = (acc[cat] || 0) + t.amount;
+                acc[cat] = (acc[cat] || 0) + parseFloat(t.amount);
                 return acc;
             }, {} as Record<string, number>);
 
@@ -509,10 +509,10 @@ const PropertyDashboard: React.FC<PropertyDashboardProps> = ({
                                             </Badge>
                                         </TableCell>
                                         <TableCell className="text-right font-medium">
-                                            {formatCurrency(lease.rentAmount)}
+                                            {formatCurrency(parseFloat(lease.rentAmount))}
                                         </TableCell>
                                         <TableCell className="text-right text-muted-foreground">
-                                            {formatCurrency(lease.deposit)}
+                                            {formatCurrency(parseFloat(lease.deposit))}
                                         </TableCell>
                                     </TableRow>
                                 ) : (
@@ -572,7 +572,7 @@ const PropertyDashboard: React.FC<PropertyDashboardProps> = ({
                                                     txn.type === "income" ? "text-emerald-500" : "text-rose-500"
                                                 )}>
                                                     {txn.type === "income" ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
-                                                    {formatCurrency(txn.amount)}
+                                                    {formatCurrency(parseFloat(txn.amount))}
                                                 </div>
                                             </TableCell>
                                         </TableRow>

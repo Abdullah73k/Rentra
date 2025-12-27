@@ -238,3 +238,11 @@ export type NewPropertyBuildType = z.infer<typeof propertyDataSchema>;
 export type WithId<T> = T & {
 	id: string;
 };
+export type FetchPropertyReturnType = {
+	property: NewPropertyBuildType["property"][];
+	propertyInfo: NewPropertyBuildType["propertyInfo"][];
+	tenant: NewPropertyBuildType["tenant"][];
+	lease: NewPropertyBuildType["lease"][];
+	loan: NewPropertyBuildType["loan"][];
+	transaction: WithId<Transaction>[];
+};

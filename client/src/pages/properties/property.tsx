@@ -1,36 +1,54 @@
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Plus } from "lucide-react";
 import TransactionsTable from "@/components/transaction-table";
 import AddTransactionModal from "@/components/modals/add-transaction-modal";
 import { motion } from "motion/react";
-import {
-	mockProperty,
-	mockPropertyInfo,
-	mockTenant,
-	mockLease,
-	mockLoan,
-	mockTransactions,
-} from "@/lib/mock-data";
 import PropertyOverview from "@/components/property-overview/property-overview";
 import watercolorHouse from "@/assets/pictures/watercolorHouse.png";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PropertyDashboard from "@/components/property-dashboard";
+import { useQuery } from "@tanstack/react-query";
+import { fetchPropertyInfo } from "@/utils/http";
 
 export default function PropertyDetailPage() {
-	// const { id } = useParams()
 	const [isAddTransactionOpen, setIsAddTransactionOpen] = useState(false);
-	const [transactions] = useState(mockTransactions);
 
 	const { propertyId } = useParams();
 
+	if (!propertyId) return <Navigate to="/properties/dashboard" />;
+
+	const { data, isPending, isError, error } = useQuery({
+		queryKey: ["property", propertyId],
+		queryFn: () => fetchPropertyInfo(propertyId),
+	});
+
+	if (isPending) {
+		return (
+			<div className="flex h-full w-full items-center justify-center py-10">
+				<span className="text-muted-foreground">
+					Loading property details...
+				</span>
+			</div>
+		);
+	}
+
+	if (!data) {
+		return (
+			<div className="flex h-full w-full items-center justify-center py-10">
+				<span className="text-muted-foreground">No property found</span>
+			</div>
+		);
+	}
+
 	// In a real React app, you'd fetch using the ID from React Router
-	const property = mockProperty;
-	const propertyInfo = mockPropertyInfo;
-	const tenant = mockTenant;
-	const lease = mockLease;
-	const loan = mockLoan;
+	const property = data?.property[0];
+	const propertyInfo = data?.propertyInfo[0];
+	const tenant = data?.tenant[0];
+	const lease = data?.lease[0];
+	const loan = data?.loan[0];
+	let transactions = data?.transaction;
 
 	return (
 		<motion.div
@@ -51,6 +69,17 @@ export default function PropertyDetailPage() {
 				}}
 			/>
 			<div className="absolute inset-0 bg-[#f8f8f8]/40 h-360 w-full">
+				{isError && (
+					<div
+						role="alert"
+						aria-live="assertive"
+						className="mx-auto w-full px-6 pt-4"
+					>
+						<p className="rounded-md bg-red-50 px-4 py-3 text-sm text-red-700 border border-red-200 shadow-sm">
+							{error.message || "Failed to get property info"}
+						</p>
+					</div>
+				)}
 				<div className="mx-auto w-full ">
 					{/* Header */}
 					<div className="border-b border-border w-full px-6 py-6 bg-[#f8f8f8]">
@@ -64,25 +93,27 @@ export default function PropertyDetailPage() {
 						<div className="flex items-start justify-between">
 							<div>
 								<h1 className="text-3xl font-semibold text-foreground mb-2">
-									{property.address}
+									{property?.address}
 								</h1>
 
 								<div className="flex gap-2 flex-wrap">
 									<span className="inline-block px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm">
-										{property.purpose.charAt(0).toUpperCase() +
-											property.purpose.slice(1)}
+										{property?.purpose &&
+											property?.purpose.charAt(0).toUpperCase() +
+												property?.purpose.slice(1)}
 									</span>
 
 									<span className="inline-block px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm">
-										{property.type.charAt(0).toUpperCase() +
-											property.type.slice(1)}
+										{property?.type &&
+											property?.type.charAt(0).toUpperCase() +
+												property?.type.slice(1)}
 									</span>
 
 									<span className="inline-block px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm">
-										{property.currency}
+										{property?.currency}
 									</span>
 
-									{property.sold && (
+									{property?.sold && (
 										<span className="inline-block px-3 py-1 bg-destructive text-destructive-foreground rounded-full text-sm">
 											SOLD
 										</span>
@@ -93,7 +124,10 @@ export default function PropertyDetailPage() {
 							<div className="text-right">
 								<p className="text-sm text-muted-foreground">Current Value</p>
 								<p className="text-2xl font-semibold text-foreground">
-									{property.currency} {property.currentValue.toLocaleString()}
+									{property?.currency}{" "}
+									{property?.currentValue != null
+										? Number(property.currentValue).toLocaleString()
+										: ""}{" "}
 								</p>
 							</div>
 						</div>
@@ -121,8 +155,8 @@ export default function PropertyDetailPage() {
 							<TabsContent value="info" className="pt-6">
 								{/* Overview Section */}
 								<PropertyOverview
-									property={property}
-									propertyInfo={propertyInfo}
+									property={property!}
+									propertyInfo={propertyInfo!}
 									tenant={tenant}
 									lease={lease}
 									loan={loan}
@@ -150,8 +184,8 @@ export default function PropertyDetailPage() {
 
 							<TabsContent value="dashboard">
 								<PropertyDashboard
-									property={property}
-									propertyInfo={propertyInfo}
+									property={property!}
+									propertyInfo={propertyInfo!}
 									loan={loan}
 									transactions={transactions}
 									lease={lease}
