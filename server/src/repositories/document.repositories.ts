@@ -39,7 +39,7 @@ export const DocumentRepository = {
 			() => deleteDocumentsFromTable(documentIds, client),
 			StatusCodes.BAD_REQUEST,
 			failedDbDeleteMessage("Documents")
-		)
+		);
 	},
 	async getAllDocuments(propertyId: string, client?: PoolClient) {
 		const query = await executeDataBaseOperation(
