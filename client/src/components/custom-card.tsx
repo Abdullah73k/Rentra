@@ -20,7 +20,7 @@ const CustomCard = ({ children, Icon, title }: CardProps) => {
           {title}
         </CardTitle>
         {/* TODO: add functionality to edit button */}
-        <Button variant="outline" size="sm" className="gap-1 bg-transparent">
+        <Button variant="outline" size="sm" className="gap-1 bg-transparent" onClick={() => {}}>
           Edit
         </Button>
       </CardHeader>

@@ -12,7 +12,7 @@ import {
 	PAYMENT_METHODS,
 	TRANSACTION_TYPES,
 } from "@/constants/form.constants";
-import type { Transaction, AddTransactionModalProps } from "@/lib/types";
+import type { AddTransactionModalProps } from "@/lib/types";
 import { buildTransactionFromForm } from "@/lib/build-transaction-from-form";
 import { z } from "zod";
 import { useForm } from "react-hook-form";

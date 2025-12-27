@@ -135,8 +135,8 @@ export default function PropertyDetailPage() {
 
 					<div className="px-6 bg-[#f8f8f8] min-h-screen">
 						<Tabs defaultValue="info" className="w-full">
-							<div className="border-b border-border">
-								<TabsList className="bg-transparent h-auto p-0 gap-6">
+							<div className="border-b border-border flex justify-between">
+								<TabsList className="bg-transparent h-auto p-0 gap-6 flex-row justify-between">
 									<TabsTrigger
 										value="info"
 										className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-2 py-3"
@@ -150,6 +150,11 @@ export default function PropertyDetailPage() {
 										Dashboard
 									</TabsTrigger>
 								</TabsList>
+								<div className="flex items-center gap-2">
+									<Button className="text-black" variant="outline" >
+										Edit
+									</Button>
+								</div>
 							</div>
 
 							<TabsContent value="info" className="pt-6">
