@@ -1,5 +1,5 @@
 import type { PoolClient } from "../utils/service.utils.js";
-import { StatusCodes } from "../constants/statusCodes.constants.js";
+import { StatusCodes } from "../constants/status-codes.constants.js";
 import * as DB from "../types/db.types.js";
 import {
 	failedDbDeleteMessage,
@@ -23,13 +23,22 @@ export const PropertyRepository = {
 			() => insertIntoTable(property, propertyObject, client),
 			StatusCodes.BAD_REQUEST,
 			failedDbInsertMessage("Property")
-		);
+		);   
 
 		return query;
 	},
 	async getProperties(userId: string, client?: PoolClient) {
 		const query = await executeDataBaseOperation(
-			() => getRowsFromTableWithId.property(userId, client),
+			() => getRowsFromTableWithId.property({ userId, client }),
+			StatusCodes.BAD_REQUEST,
+			failedDbGetMessage("Property")
+		);
+
+		return query;
+	},
+	async getProperty(propertyId: string, client?: PoolClient) {
+		const query = await executeDataBaseOperation(
+			() => getRowsFromTableWithId.property({ propertyId, client }),
 			StatusCodes.BAD_REQUEST,
 			failedDbGetMessage("Property")
 		);

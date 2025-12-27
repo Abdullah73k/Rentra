@@ -5,7 +5,7 @@ import { rateLimit } from "express-rate-limit";
 import { fromNodeHeaders, toNodeHandler } from "better-auth/node";
 import { auth } from "./utils/auth.js";
 import { errorHandler } from "./middlewares/error-handler.middlewares.js";
-import { StatusCodes } from "./constants/statusCodes.constants.js";
+import { StatusCodes } from "./constants/status-codes.constants.js";
 
 const app: Express = express();
 
@@ -16,7 +16,7 @@ app.use(
 		credentials: true,
 	})
 );
-app.use(express.json({ limit: "2mb" }));
+app.use(express.json({ limit: "5mb" }));
 
 const rateLimiter = rateLimit({
 	windowMs: 1 * 60 * 1000,

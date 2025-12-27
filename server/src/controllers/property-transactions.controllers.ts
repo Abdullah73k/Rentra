@@ -1,12 +1,12 @@
 import type { Request, Response } from "express";
-import { StatusCodes } from "../../constants/statusCodes.constants.js";
+import { StatusCodes } from "../constants/status-codes.constants.js";
 import {
 	validateUUID,
 	validateTransactionDetails,
-} from "../../utils/validation.utils.js";
-import * as API from "../../types/api.types.js";
-import { TransactionService } from "../../services/transaction.services.js";
-import { ValidationError } from "../../errors/validation.errors.js";
+} from "../utils/validation.utils.js";
+import * as API from "../types/api.types.js";
+import { TransactionService } from "../services/transaction.services.js";
+import { ValidationError } from "../errors/validation.errors.js";
 
 export const postCreateTransaction = async (
 	req: Request<{}, {}, { transactionDetails: API.POSTTransaction }, {}>,

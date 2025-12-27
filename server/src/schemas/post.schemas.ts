@@ -45,10 +45,19 @@ export const propertyInfoSchema = z.object({
 });
 
 export const documentSchema = z.object({
-	propertyId: ReusableTypes.uuid,
+	id: ReusableTypes.uuid,
+	userId: ReusableTypes.uuid,
+	propertyId: ReusableTypes.uuid.optional(),
 	tenantId: ReusableTypes.uuid.optional(),
 	name: z.string(),
+	type: z.enum(["photo", "document"]),
 	path: z.string(),
+	contentType: z.string(),
+	sizeBytes: z
+		.number()
+		.int()
+		.min(0)
+		.max(1024 * 1024 * 10),
 });
 
 export const loanSchema = z.object({

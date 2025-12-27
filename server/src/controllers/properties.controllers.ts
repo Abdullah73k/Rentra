@@ -1,12 +1,12 @@
 import type { Request, Response } from "express";
-import { StatusCodes } from "../../constants/statusCodes.constants.js";
+import { StatusCodes } from "../constants/status-codes.constants.js";
 import {
 	validateUUID,
 	validatePropertyData,
-} from "../../utils/validation.utils.js";
-import * as API from "../../types/api.types.js";
-import { PropertyService } from "../../services/property.services.js";
-import { ValidationError } from "../../errors/validation.errors.js";
+} from "../utils/validation.utils.js";
+import * as API from "../types/api.types.js";
+import { PropertyService } from "../services/property.services.js";
+import { ValidationError } from "../errors/validation.errors.js";
 
 export const getUserPropertyData = async (
 	req: Request<{ propertyId: string }, {}, {}, {}>,
@@ -17,7 +17,7 @@ export const getUserPropertyData = async (
 	if (!result.success) throw new ValidationError("Invalid property Id");
 
 	const response = await PropertyService.getAllData(propertyId);
-
+ 
 	return res.status(StatusCodes.SUCCESS).json({
 		error: false,
 		message: "Successfully fetched user property and all associated info",
