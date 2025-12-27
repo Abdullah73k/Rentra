@@ -68,20 +68,20 @@ export const PropertyService = {
 		let response = [];
 
 		const properties = await PropertyRepository.getProperties(userId);
-		for (const property of properties) {
-			let paths = [];
-			const documents = await DocumentRepository.getAllDocuments(property.id);
-			for (const document of documents) {
-				const path = getFilePublicURL({
-					path: document.path,
-					bucket: SUPABASE_PUBLIC_BUCKET_NAME,
-				});
-				paths.push(path);
-			}
-			response.push({ ...property, photos: paths });
-		}
+		// for (const property of properties) {
+		// 	let paths = [];
+		// 	const documents = await DocumentRepository.getAllDocuments(property.id);
+		// 	for (const document of documents) {
+		// 		const path = getFilePublicURL({
+		// 			path: document.path,
+		// 			bucket: SUPABASE_PUBLIC_BUCKET_NAME,
+		// 		});
+		// 		paths.push(path);
+		// 	}
+		// 	response.push({ ...property}); // TODO: add photos
+		// }
 
-		return response;
+		return properties;
 	},
 	async delete(propertyId: string) {
 		await PropertyRepository.deleteProperty(propertyId);

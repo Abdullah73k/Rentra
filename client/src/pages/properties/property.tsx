@@ -5,9 +5,6 @@ import { ArrowLeft, Plus } from "lucide-react";
 import TransactionsTable from "@/components/transaction-table";
 import AddTransactionModal from "@/components/modals/add-transaction-modal";
 import { motion } from "motion/react";
-import {
-	mockProperty,
-} from "@/lib/mock-data";
 import PropertyOverview from "@/components/property-overview/property-overview";
 import watercolorHouse from "@/assets/pictures/watercolorHouse.png";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -32,7 +29,7 @@ export default function PropertyDetailPage() {
 	if(isPending) return null;
 
 	// In a real React app, you'd fetch using the ID from React Router
-	const property = mockProperty
+	const property = data?.property[0];
 	const propertyInfo = data?.propertyInfo[0];
 	const tenant = data?.tenant[0];
 	const lease = data?.lease[0];
@@ -72,25 +69,25 @@ export default function PropertyDetailPage() {
 						<div className="flex items-start justify-between">
 							<div>
 								<h1 className="text-3xl font-semibold text-foreground mb-2">
-									{property.address}
+									{property?.address}
 								</h1>
 
 								<div className="flex gap-2 flex-wrap">
 									<span className="inline-block px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm">
-										{property.purpose.charAt(0).toUpperCase() +
-											property.purpose.slice(1)}
+										{property?.purpose &&property?.purpose.charAt(0).toUpperCase() +
+											property?.purpose.slice(1)}
 									</span>
 
 									<span className="inline-block px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm">
-										{property.type.charAt(0).toUpperCase() +
-											property.type.slice(1)}
+										{property?.type && property?.type.charAt(0).toUpperCase() +
+											property?.type.slice(1)}
 									</span>
 
 									<span className="inline-block px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm">
-										{property.currency}
+										{property?.currency}
 									</span>
 
-									{property.sold && (
+									{property?.sold && (
 										<span className="inline-block px-3 py-1 bg-destructive text-destructive-foreground rounded-full text-sm">
 											SOLD
 										</span>
@@ -101,7 +98,7 @@ export default function PropertyDetailPage() {
 							<div className="text-right">
 								<p className="text-sm text-muted-foreground">Current Value</p>
 								<p className="text-2xl font-semibold text-foreground">
-									{property.currency} {property.currentValue.toLocaleString()}
+									{property?.currency} {property?.currentValue.toLocaleString()}
 								</p>
 							</div>
 						</div>
@@ -129,8 +126,8 @@ export default function PropertyDetailPage() {
 							<TabsContent value="info" className="pt-6">
 								{/* Overview Section */}
 								<PropertyOverview
-									property={property}
-									propertyInfo={propertyInfo}
+									property={property!}
+									propertyInfo={propertyInfo!}
 									tenant={tenant}
 									lease={lease}
 									loan={loan}
@@ -158,8 +155,8 @@ export default function PropertyDetailPage() {
 
 							<TabsContent value="dashboard">
 								<PropertyDashboard
-									property={property}
-									propertyInfo={propertyInfo}
+									property={property!}
+									propertyInfo={propertyInfo!}
 									loan={loan}
 									transactions={transactions}
 									lease={lease}

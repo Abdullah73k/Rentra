@@ -1,15 +1,15 @@
 import { Users } from "lucide-react";
-import { type Tenant } from "@/lib/types";
+import { type NewPropertyBuildType } from "@/lib/types";
 import CustomCard from "../custom-card";
 
-const TenantCard = ({ tenant }: { tenant: Tenant }) => {
+const TenantCard = ({ tenant }: { tenant: NewPropertyBuildType["tenant"] }) => {
   return (
     <CustomCard title="Tenant" Icon={Users}>
       <div>
         <p className="text-sm text-muted-foreground">Name</p>
-        <p className="font-semibold text-foreground">{tenant.name}</p>
+        <p className="font-semibold text-foreground">{tenant?.name}</p>
       </div>
-      {tenant.phone && (
+      {tenant?.phone && (
         <div>
           <p className="text-sm text-muted-foreground">Phone</p>
           <p className="text-sm text-foreground">{tenant.phone}</p>
@@ -17,7 +17,7 @@ const TenantCard = ({ tenant }: { tenant: Tenant }) => {
       )}
       <div>
         <p className="text-sm text-muted-foreground">Email</p>
-        <p className="text-sm text-foreground">{tenant.email}</p>
+        <p className="text-sm text-foreground">{tenant?.email}</p>
       </div>
     </CustomCard>
   );
