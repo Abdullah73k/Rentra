@@ -5,36 +5,35 @@ import { ArrowLeft, Plus } from "lucide-react";
 import TransactionsTable from "@/components/transaction-table";
 import AddTransactionModal from "@/components/modals/add-transaction-modal";
 import { motion } from "motion/react";
-import {
-  mockProperty,
-  mockPropertyInfo,
-  mockTenant,
-  mockLease,
-  mockLoan,
-  mockTransactions,
-} from "@/lib/mock-data";
-import type { Transaction } from "@/lib/types";
+import { mockProperty } from "@/lib/mock-data";
 import PropertyOverview from "@/components/property-overview/property-overview";
 import watercolorHouse from "@/assets/pictures/watercolorHouse.png";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PropertyDashboard from "@/components/property-dashboard";
 
 export default function PropertyDetailPage() {
-  // const { id } = useParams()
-  const [isAddTransactionOpen, setIsAddTransactionOpen] = useState(false);
-  const [transactions, setTransactions] = useState(mockTransactions);
+	const [isAddTransactionOpen, setIsAddTransactionOpen] = useState(false);
 
-  // In a real React app, you'd fetch using the ID from React Router
-  const property = mockProperty;
-  const propertyInfo = mockPropertyInfo;
-  const tenant = mockTenant;
-  const lease = mockLease;
-  const loan = mockLoan;
+	const { propertyId } = useParams();
 
-  const handleAddTransaction = (transaction: Transaction) => {
-    setTransactions([...transactions, transaction]);
-    setIsAddTransactionOpen(false);
-  };
+	if (!propertyId) <Navigate to="/properties/dashboard" />;
+
+	const { data, isPending, isError, error } = useQuery({
+		queryKey: ["property", propertyId],
+		queryFn: () => fetchPropertyInfo(propertyId!),
+	});
+	console.log(data);
+	console.log(data?.transaction);
+
+	if (isPending) return null;
+
+	// In a real React app, you'd fetch using the ID from React Router
+	const property = mockProperty;
+	const propertyInfo = data?.propertyInfo[0];
+	const tenant = data?.tenant[0];
+	const lease = data?.lease[0];
+	const loan = data?.loan[0];
+	let transactions = data?.transaction;
 
   return (
     <motion.div
