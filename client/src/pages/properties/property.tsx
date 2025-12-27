@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Plus } from "lucide-react";
 import TransactionsTable from "@/components/transaction-table";
@@ -7,30 +7,37 @@ import AddTransactionModal from "@/components/modals/add-transaction-modal";
 import { motion } from "motion/react";
 import {
 	mockProperty,
-	mockPropertyInfo,
-	mockTenant,
-	mockLease,
-	mockLoan,
-	mockTransactions,
 } from "@/lib/mock-data";
 import PropertyOverview from "@/components/property-overview/property-overview";
 import watercolorHouse from "@/assets/pictures/watercolorHouse.png";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PropertyDashboard from "@/components/property-dashboard";
+import { useQuery } from "@tanstack/react-query";
+import { fetchPropertyInfo } from "@/utils/http";
 
 export default function PropertyDetailPage() {
-	// const { id } = useParams()
 	const [isAddTransactionOpen, setIsAddTransactionOpen] = useState(false);
-	const [transactions] = useState(mockTransactions);
 
 	const { propertyId } = useParams();
 
+	if (!propertyId) <Navigate to="/properties/dashboard" />
+
+	const { data, isPending, isError, error} = useQuery({
+		queryKey: ["property", propertyId],
+		queryFn: () => fetchPropertyInfo(propertyId!)
+	})
+	console.log(data)
+	console.log(data?.transaction)
+
+	if(isPending) return null;
+
 	// In a real React app, you'd fetch using the ID from React Router
-	const property = mockProperty;
-	const propertyInfo = mockPropertyInfo;
-	const tenant = mockTenant;
-	const lease = mockLease;
-	const loan = mockLoan;
+	const property = mockProperty
+	const propertyInfo = data?.propertyInfo[0];
+	const tenant = data?.tenant[0];
+	const lease = data?.lease[0];
+	const loan = data?.loan[0];
+	let transactions = data?.transaction;
 
 	return (
 		<motion.div
@@ -50,6 +57,7 @@ export default function PropertyDetailPage() {
 					backgroundRepeat: "no-repeat",
 				}}
 			/>
+			{isError && <p>{error.message || "Failed to get property info"}</p>}
 			<div className="absolute inset-0 bg-[#f8f8f8]/40 h-360 w-full">
 				<div className="mx-auto w-full ">
 					{/* Header */}
