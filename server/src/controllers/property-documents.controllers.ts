@@ -21,10 +21,10 @@ export const postPropertyPhotos = async (
 	const { type } = req.query;
 	const { propertyId, userId } = req.params;
 	const files = req.files;
-	console.log("Files: ", files)
-	console.log("Type: ", type)
-	console.log("PropertyId: ", propertyId)
-	console.log("UserId: ", userId)
+	console.log("Files: ", files);
+	console.log("Type: ", type);
+	console.log("PropertyId: ", propertyId);
+	console.log("UserId: ", userId);
 
 	if (!files || !Array.isArray(files) || files.length === 0) {
 		throw new ValidationError("No file uploaded");
