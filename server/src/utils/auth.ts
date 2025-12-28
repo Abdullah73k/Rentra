@@ -10,7 +10,7 @@ import {
 import { sendEmail } from "./auth.utils.js";
 import { createAuthMiddleware } from "better-auth/api";
 import { passkey } from "better-auth/plugins/passkey";
-import { twoFactor } from "better-auth/plugins";
+import { twoFactor, bearer } from "better-auth/plugins";
 import { dbConnection } from "./db-connects.utils.js";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import * as schema from "../db/schemas/index.schema.js";
@@ -158,5 +158,5 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 			}
 		}),
 	},
-	plugins: [passkey(), twoFactor() as BetterAuthPlugin],
+	plugins: [passkey(), (twoFactor(), bearer()) as BetterAuthPlugin],
 });
