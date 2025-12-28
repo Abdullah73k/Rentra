@@ -1,7 +1,7 @@
 import CustomCard from "../custom-card";
-import { type PropertyInfo } from "@/lib/types";
+import { type NewPropertyBuildType } from "@/lib/types";
 
-const PropertyInfoCard = ({ propertyInfo }: { propertyInfo: PropertyInfo }) => {
+const PropertyInfoCard = ({ propertyInfo }: { propertyInfo: NewPropertyBuildType["propertyInfo"] }) => {
   return (
     <CustomCard title="Property Information">
       <div className="grid grid-cols-2 gap-4">
