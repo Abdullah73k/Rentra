@@ -21,27 +21,27 @@ export const postPropertyPhotos = async (
 	const { type } = req.query;
 	const { propertyId, userId } = req.params;
 	const files = req.files;
-	console.log("Files: ", files)
-	console.log("Type: ", type)
-	console.log("PropertyId: ", propertyId)
-	console.log("UserId: ", userId)
+	console.log("Files: ", files);
+	console.log("Type: ", type);
+	console.log("PropertyId: ", propertyId);
+	console.log("UserId: ", userId);
 
-	// if (!files || !Array.isArray(files) || files.length === 0) {
-	// 	throw new ValidationError("No file uploaded");
-	// }
+	if (!files || !Array.isArray(files) || files.length === 0) {
+		throw new ValidationError("No file uploaded");
+	}
 
-	// const response = [];
+	const response = [];
 
-	// for (const file of files) {
-	// 	const res = await DocumentService.create({
-	// 		propertyId,
-	// 		userId,
-	// 		file,
-	// 		type,
-	// 	});
+	for (const file of files) {
+		const res = await DocumentService.create({
+			propertyId,
+			userId,
+			file,
+			type,
+		});
 
-	// 	response.push(res);
-	// }
+		response.push(res);
+	}
 	return res.status(StatusCodes.SUCCESS).json({
 		error: false,
 		message: "Successfully created document",
