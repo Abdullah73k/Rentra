@@ -2,9 +2,9 @@ import { fromNodeHeaders } from "better-auth/node";
 import { auth } from "../utils/auth.js";
 import type { RequestHandler } from "express";
 import { StatusCodes } from "../constants/status-codes.constants.js";
-import type { User } from "../db/schemas/auth-schema.db.js";
 
 export const authenticate: RequestHandler = async (req, res, next) => {
+
 	const headers = req.headers;
 
 	const session = await auth.api.getSession({
@@ -18,6 +18,6 @@ export const authenticate: RequestHandler = async (req, res, next) => {
 		});
 	}
 
-	req.user = session.user as User;
+	req.user = session.user;
 	next();
 };
