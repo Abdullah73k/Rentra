@@ -15,7 +15,7 @@ export const postPropertyPhotos = async (
 ) => {
 	const { type } = req.query;
 	const { propertyId } = req.params;
-	const userId = (req as any).user?.id;
+	const userId = req.user?.id;
 	const files = req.files;
 
 	console.log("Files: ", files);
@@ -27,12 +27,16 @@ export const postPropertyPhotos = async (
 		throw new ValidationError("No file uploaded");
 	}
 
+	const userIdResult = validateUUID(userId);
+	if (!userIdResult.success) throw new ValidationError("Invalid User Id");
+	const validUserId = userIdResult.data;
+
 	const response = [];
 
 	for (const file of files) {
 		const res = await DocumentService.create({
 			propertyId,
-			userId,
+			userId: validUserId,
 			file,
 			type,
 		});

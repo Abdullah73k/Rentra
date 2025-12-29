@@ -27,14 +27,14 @@ export const getUserPropertyData = async (
 };
 
 export const getUserProperties = async (req: Request, res: Response) => {
-	const userId = (req as any).user?.id;
+	const userId = req.user?.id;
 
 	const result = validateUUID(userId);
 
-	// checking if userId is a valid UUID  jj
+	// checking if userId is a valid UUID
 	if (!result.success) throw new ValidationError("Invalid user Id");
 
-	const properties = await PropertyService.getAll(userId);
+	const properties = await PropertyService.getAll(result.data);
 
 	return res.status(StatusCodes.SUCCESS).json({
 		error: false,

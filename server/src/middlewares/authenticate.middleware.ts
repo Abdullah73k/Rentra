@@ -27,8 +27,8 @@ export const authenticate: RequestHandler = async (req, res, next) => {
 			});
 		}
 
-		(req as any).user = response.user;
-		(req as any).session = response.session;
+		req.user = response.user;
+		req.session = response.session;
 		console.log("DEBUG: calling next()");
 		next();
 	} catch (error) {
