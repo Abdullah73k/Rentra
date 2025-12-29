@@ -4,6 +4,13 @@ import { createAuthClient } from "better-auth/react"
 import { passkeyClient } from "@better-auth/passkey/client";
 
 export const authClient = createAuthClient({
+	fetchOptions: {
+		onSuccess(context) {
+			const authToken = context.response.headers.get("set-auth-token");
+
+
+		},
+	},
 	baseURL: `${API_URL}/api/auth`,
 	plugins: [inferAdditionalFields({
 		user: {
