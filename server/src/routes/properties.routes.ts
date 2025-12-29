@@ -18,10 +18,12 @@ import {
 } from "../controllers/property-documents.controllers.js";
 import { asyncHandler } from "../utils/async-handler.utils.js";
 import { uploadPropertyPhotos } from "../middlewares/multer.middleware.js";
+import { authenticate } from "../middlewares/authenticate.middleware.js";
 
 const router: Router = Router();
 
-router.get("/all/:userId", asyncHandler(getUserProperties));
+router.get("/all/:userId", authenticate, asyncHandler(getUserProperties));
+
 router.get("/:propertyId", asyncHandler(getUserPropertyData));
 router.get("/documents/:propertyId", asyncHandler(getPropertyDoc));
 
@@ -38,10 +40,7 @@ router.delete(
 	"/delete/transaction/:transactionId",
 	asyncHandler(deleteTransaction)
 );
-router.delete(
-	"/document/:documentId",
-	asyncHandler(deletePropertyDoc)
-);
+router.delete("/document/:documentId", asyncHandler(deletePropertyDoc));
 
 router.patch("/update/:propertyId", asyncHandler(patchPropertyData));
 router.patch(
