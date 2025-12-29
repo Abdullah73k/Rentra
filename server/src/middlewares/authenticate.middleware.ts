@@ -11,15 +11,15 @@ export const authenticate: RequestHandler = async (req, res, next) => {
 		const nodeHeaders = fromNodeHeaders(headers);
 
 		console.log("DEBUG: calling auth.api.getSession");
-		const session = await auth.api.getSession({
+		const response = await auth.api.getSession({
 			headers: nodeHeaders,
 		});
 		console.log(
 			"DEBUG: session retrieved",
-			session ? "Session Found" : "No Session"
+			response ? "Session Found" : "No Session"
 		);
 
-		if (!session) {
+		if (!response?.user || !response) {
 			console.log("DEBUG: returning 401");
 			return res.status(StatusCodes.UNAUTHORIZED).json({
 				error: true,
@@ -27,8 +27,8 @@ export const authenticate: RequestHandler = async (req, res, next) => {
 			});
 		}
 
-		(req as any).user = session.user;
-		(req as any).session = session.session;
+		(req as any).user = response.user;
+		(req as any).session = response.session;
 		console.log("DEBUG: calling next()");
 		next();
 	} catch (error) {

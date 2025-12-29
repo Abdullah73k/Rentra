@@ -6,6 +6,7 @@ import { fromNodeHeaders, toNodeHandler } from "better-auth/node";
 import { auth } from "./utils/auth.js";
 import { errorHandler } from "./middlewares/error-handler.middlewares.js";
 import { StatusCodes } from "./constants/status-codes.constants.js";
+// import { authenticate } from "./middlewares/authenticate.middleware.js";
 
 const app: Express = express();
 

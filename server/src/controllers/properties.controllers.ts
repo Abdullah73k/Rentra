@@ -18,7 +18,7 @@ export const getUserPropertyData = async (
 	if (!result.success) throw new ValidationError("Invalid property Id");
 
 	const response = await PropertyService.getAllData(propertyId);
- 
+
 	return res.status(StatusCodes.SUCCESS).json({
 		error: false,
 		message: "Successfully fetched user property and all associated info",
@@ -26,14 +26,12 @@ export const getUserPropertyData = async (
 	});
 };
 
-export const getUserProperties = async (
-	req: Request<{ userId: string }>,
-	res: Response
-) => {
-	const { userId } = req.params;
+export const getUserProperties = async (req: Request, res: Response) => {
+	const userId = req.user?.id;
+	if (!userId) return
 	const result = validateUUID(userId);
 
-	// checking if userId is a valid UUID
+	// checking if userId is a valid UUID  jj
 	if (!result.success) throw new ValidationError("Invalid user Id");
 
 	const properties = await PropertyService.getAll(userId);
