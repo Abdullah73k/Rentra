@@ -15,10 +15,9 @@ export const postPropertyPhotos = async (
 ) => {
 	const { type } = req.query;
 	const { propertyId } = req.params;
-	const userId = req.user?.id;
+	const userId = (req as any).user?.id;
 	const files = req.files;
 
-	if (!userId) return 
 	console.log("Files: ", files);
 	console.log("Type: ", type);
 	console.log("PropertyId: ", propertyId);

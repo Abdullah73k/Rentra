@@ -27,8 +27,8 @@ export const getUserPropertyData = async (
 };
 
 export const getUserProperties = async (req: Request, res: Response) => {
-	const userId = req.user?.id;
-	if (!userId) return
+	const userId = (req as any).user?.id;
+
 	const result = validateUUID(userId);
 
 	// checking if userId is a valid UUID  jj
