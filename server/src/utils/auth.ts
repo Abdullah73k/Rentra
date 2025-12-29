@@ -15,6 +15,7 @@ import { dbConnection } from "./db-connects.utils.js";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import * as schema from "../db/schemas/index.schema.js";
 
+console.log("DEBUG: Initializing betterAuth...");
 export const auth: ReturnType<typeof betterAuth> = betterAuth({
 	appName: "Property Management",
 	database: drizzleAdapter(dbConnection(), {

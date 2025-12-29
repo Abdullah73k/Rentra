@@ -10,17 +10,14 @@ import { DocumentService } from "../services/document.services.js";
  * users/:userId/properties/:propertyId/photo/:documentId-documentName
  */
 export const postPropertyPhotos = async (
-	req: Request<
-		{ propertyId: string; userId: string },
-		{},
-		{},
-		{ type: "photo" | "document" }
-	>,
+	req: Request<{ propertyId: string }, {}, {}, { type: "photo" | "document" }>,
 	res: Response
 ) => {
 	const { type } = req.query;
-	const { propertyId, userId } = req.params;
+	const { propertyId } = req.params;
+	const userId = req.user?.id;
 	const files = req.files;
+
 	console.log("Files: ", files);
 	console.log("Type: ", type);
 	console.log("PropertyId: ", propertyId);
@@ -30,12 +27,16 @@ export const postPropertyPhotos = async (
 		throw new ValidationError("No file uploaded");
 	}
 
+	const userIdResult = validateUUID(userId);
+	if (!userIdResult.success) throw new ValidationError("Invalid User Id");
+	const validUserId = userIdResult.data;
+
 	const response = [];
 
 	for (const file of files) {
 		const res = await DocumentService.create({
 			propertyId,
-			userId,
+			userId: validUserId,
 			file,
 			type,
 		});
@@ -45,7 +46,7 @@ export const postPropertyPhotos = async (
 	return res.status(StatusCodes.SUCCESS).json({
 		error: false,
 		message: "Successfully created document",
-		data: [],
+		data: response,
 	});
 };
 

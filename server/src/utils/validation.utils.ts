@@ -3,7 +3,7 @@ import * as PATCH from "../schemas/patch.schemas.js";
 import { z } from "zod";
 import * as API from "../types/api.types.js";
 
-export function validateUUID(userId: string) {
+export function validateUUID(userId: string | undefined | null) {
 	const schema = z.uuid();
 	const result = schema.safeParse(userId);
 	return result;

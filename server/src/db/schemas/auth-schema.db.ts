@@ -8,6 +8,8 @@ import {
   index,
 } from "drizzle-orm/pg-core";
 
+export type User = typeof user.$inferSelect
+
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),

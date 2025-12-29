@@ -6,6 +6,7 @@ import { fromNodeHeaders, toNodeHandler } from "better-auth/node";
 import { auth } from "./utils/auth.js";
 import { errorHandler } from "./middlewares/error-handler.middlewares.js";
 import { StatusCodes } from "./constants/status-codes.constants.js";
+import { authenticate } from "./middlewares/authenticate.middleware.js";
 
 const app: Express = express();
 
@@ -42,7 +43,7 @@ app.get("/api/ping", (req: Request, res: Response) => {
 	res.status(StatusCodes.SUCCESS).json({ message: "pong" });
 });
 
-app.use("/api/properties", propertiesRouter);
+app.use("/api/properties", authenticate, propertiesRouter);
 
 app.use(errorHandler);
 
