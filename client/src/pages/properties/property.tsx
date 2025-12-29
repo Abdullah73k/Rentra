@@ -12,9 +12,12 @@ import PropertyDashboard from "@/components/property-dashboard";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPropertyInfo } from "@/utils/http";
 import EditPropertyModal from "@/components/modals/edit-property-modal";
+import { usePropertyStore } from "@/stores/property.store";
 
 export default function PropertyDetailPage() {
-	const [isAddTransactionOpen, setIsAddTransactionOpen] = useState(false);
+	const isAddTransactionOpen = usePropertyStore(s => s.isAddTransactionOpen)
+	const setIsAddTransactionOpen = usePropertyStore(s => s.setIsAddTransactionOpen)
+	const setIsEditPropertyOpen = usePropertyStore(s => s.setIsEditPropertyOpen)
 
 	const { propertyId } = useParams();
 
@@ -151,7 +154,7 @@ export default function PropertyDetailPage() {
 									</TabsTrigger>
 								</TabsList>
 								<div className="flex items-center gap-2">
-									<Button className="text-black" variant="outline">
+									<Button className="text-black" variant="outline" onClick={() => setIsEditPropertyOpen(true)}>
 										Edit
 									</Button>
 								</div>

@@ -1,5 +1,5 @@
 import { API_URL } from "@/constants/api.constants";
-import type { FetchPropertyReturnType, NewPropertyBuildType, Transaction, WithId } from "@/lib/types";
+import type { EditPropertyBuildType, FetchPropertyReturnType, NewPropertyBuildType, Transaction, WithId } from "@/lib/types";
 import { QueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -62,9 +62,10 @@ export async function fetchPropertyInfo(propertyId: string): Promise<FetchProper
 		throw new Error("An error occurred while fetching the property info");
 	}
 }
-export async function editPropertyInfo(data: Omit<NewPropertyBuildType, "optionalSections">) {
+export async function editPropertyInfo(data: Omit<EditPropertyBuildType, "optionalSections">) {
 	try {
-		const res = await axios.patch(API_URL + "/api/properties/update")
+		const res = await axios.patch(API_URL + "/api/properties/update" + data.property.id)
+		return res.data.data
 	} catch (error) {
 		
 	}

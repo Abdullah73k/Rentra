@@ -18,10 +18,10 @@ import Property from "../add-property-modal/property";
 import PropertyInfo from "../add-property-modal/property-info";
 import OptionalSections from "../add-property-modal/optional-sections";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { buildPropertyFromForm } from "@/lib/build-property-from-form";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "@/stores/auth.store";
 import { usePropertyStore } from "@/stores/property.store";
+import { buildEditPropertyFromForm } from "@/lib/build-edit-property-from-form";
 
 export type EditPropertyFormFields = z.infer<typeof schema>;
 
@@ -71,7 +71,7 @@ const EditPropertyModal = ({ property }: props) => {
 
 		const values = form.getValues();
 		try {
-			const property = buildPropertyFromForm(values);
+			const property = buildEditPropertyFromForm(values);
 			console.log(property); // TODO: remove when getting ready for production
 
 			mutate(property);

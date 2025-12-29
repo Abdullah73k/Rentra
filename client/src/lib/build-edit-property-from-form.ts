@@ -1,17 +1,11 @@
-import {
-	isCompleteLease,
-	isCompleteLoan,
-	isCompleteTenant,
-} from "@/utils/property.utils";
-import type { EditPropertyBuildType, NewPropertyBuildType } from "./types";
+import type { EditPropertyBuildType } from "./types";
 import { useAuthStore } from "@/stores/auth.store";
 import type { EditPropertyFormFields } from "@/components/modals/edit-property-modal";
 
 export function buildEditPropertyFromForm(
 	formValues: EditPropertyFormFields
-): Omit<NewPropertyBuildType, "optionalSections"> {
-	const { property, propertyInfo, tenant, lease, loan } =
-		formValues;
+): Omit<EditPropertyBuildType, "optionalSections"> {
+	const { property, propertyInfo, tenant, lease, loan } = formValues;
 	const session = useAuthStore.getState().session;
 	if (!session) {
 		throw new Error("Invalid session");

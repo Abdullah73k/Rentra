@@ -1,5 +1,4 @@
 import type React from "react";
-import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { type LucideProps } from "lucide-react";
 
@@ -19,10 +18,6 @@ const CustomCard = ({ children, Icon, title }: CardProps) => {
           {Icon && <Icon className="h-5 w-5" />}
           {title}
         </CardTitle>
-        {/* TODO: add functionality to edit button */}
-        <Button variant="outline" size="sm" className="gap-1 bg-transparent" onClick={() => {}}>
-          Edit
-        </Button>
       </CardHeader>
       <CardContent className="space-y-2">{children}</CardContent>
     </Card>
