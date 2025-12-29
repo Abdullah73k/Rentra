@@ -22,24 +22,21 @@ export const authenticate: RequestHandler = async (req, res, next) => {
 		if (!session) {
 			console.log("DEBUG: returning 401");
 			return res.status(StatusCodes.UNAUTHORIZED).json({
-				error: true, 
-				message: "Unauthorized", 
-			}); 
-		} 
+				error: true,
+				message: "Unauthorized",
+			});
+		}
 
-		req.user = session.user;
+		(req as any).user = session.user;
+		(req as any).session = session.session;
 		console.log("DEBUG: calling next()");
 		next();
 	} catch (error) {
-		console.error("DEBUG: CATCH BLOCK ENTERED");
-		// Try to log useful info about the weird error object 
-		console.error("Error type:", typeof error);
-		console.error("Is generic object?", error instanceof Object);
-		try {
-			console.error("JSON Stringify:", JSON.stringify(error, null, 2));
-		} catch (e) {
-			console.error("Stringify failed");
-		}
-		next(error);
+		console.error("Auth Middleware Error: ", error);
+
+		return res.status(StatusCodes.UNAUTHORIZED).json({
+			error: true,
+			message: "Unauthorized",
+		});
 	}
 };

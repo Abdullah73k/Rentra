@@ -13,6 +13,7 @@ export const getUserPropertyData = async (
 	res: Response
 ) => {
 	const { propertyId } = req.params;
+
 	const result = validateUUID(propertyId);
 	if (!result.success) throw new ValidationError("Invalid property Id");
 
