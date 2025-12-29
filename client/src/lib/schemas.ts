@@ -257,8 +257,9 @@ export const patchTransactionSchema = transactionSchema.extend({
 
 export const patchPropertyDataSchema = z.object({
 	property: patchPropertySchema,
-	propertyInfo: propertyInfoSchema,
-	loan: loanSchema,
-	tenant: tenantSchema,
-	lease: leaseSchema,
+	propertyInfo: patchPropertyInfoSchema,
+	optionalSections: OptionalSectionsSchema,
+	loan: patchLoanSchema,
+	tenant: patchTenantSchema,
+	lease: patchLeaseSchema,
 });

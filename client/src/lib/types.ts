@@ -1,5 +1,9 @@
 import { z } from "zod";
-import type { propertyDataSchema, transactionSchema } from "./schemas";
+import type {
+	patchPropertyDataSchema,
+	propertyDataSchema,
+	transactionSchema,
+} from "./schemas";
 
 // Property Management Types
 export type PropertyPurpose =
@@ -235,14 +239,16 @@ export type twoFactorData = {
 } | null;
 export type NewPropertyBuildType = z.infer<typeof propertyDataSchema>;
 
+export type EditPropertyBuildType = z.infer<typeof patchPropertyDataSchema>;
+
 export type WithId<T> = T & {
 	id: string;
 };
 export type FetchPropertyReturnType = {
-	property: NewPropertyBuildType["property"][];
-	propertyInfo: NewPropertyBuildType["propertyInfo"][];
-	tenant: NewPropertyBuildType["tenant"][];
-	lease: NewPropertyBuildType["lease"][];
-	loan: NewPropertyBuildType["loan"][];
+	property: EditPropertyBuildType["property"][];
+	propertyInfo: EditPropertyBuildType["propertyInfo"][];
+	tenant: EditPropertyBuildType["tenant"][];
+	lease: EditPropertyBuildType["lease"][];
+	loan: EditPropertyBuildType["loan"][];
 	transaction: WithId<Transaction>[];
 };

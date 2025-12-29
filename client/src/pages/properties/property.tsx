@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PropertyDashboard from "@/components/property-dashboard";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPropertyInfo } from "@/utils/http";
+import EditPropertyModal from "@/components/modals/edit-property-modal";
 
 export default function PropertyDetailPage() {
 	const [isAddTransactionOpen, setIsAddTransactionOpen] = useState(false);
@@ -42,7 +43,6 @@ export default function PropertyDetailPage() {
 		);
 	}
 
-	// In a real React app, you'd fetch using the ID from React Router
 	const property = data?.property[0];
 	const propertyInfo = data?.propertyInfo[0];
 	const tenant = data?.tenant[0];
@@ -151,7 +151,7 @@ export default function PropertyDetailPage() {
 									</TabsTrigger>
 								</TabsList>
 								<div className="flex items-center gap-2">
-									<Button className="text-black" variant="outline" >
+									<Button className="text-black" variant="outline">
 										Edit
 									</Button>
 								</div>
@@ -209,6 +209,13 @@ export default function PropertyDetailPage() {
 						propertyId={propertyId}
 					/>
 				)}
+				<EditPropertyModal property={{
+					property,
+					propertyInfo,
+					tenant,
+					lease,
+					loan
+				}} />
 			</div>
 		</motion.div>
 	);

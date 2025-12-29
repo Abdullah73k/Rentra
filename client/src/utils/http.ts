@@ -62,3 +62,10 @@ export async function fetchPropertyInfo(propertyId: string): Promise<FetchProper
 		throw new Error("An error occurred while fetching the property info");
 	}
 }
+export async function editPropertyInfo(data: Omit<NewPropertyBuildType, "optionalSections">) {
+	try {
+		const res = await axios.patch(API_URL + "/api/properties/update")
+	} catch (error) {
+		
+	}
+}
