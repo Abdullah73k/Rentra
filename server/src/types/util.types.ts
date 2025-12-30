@@ -5,3 +5,5 @@ export type DeepPartial<T> = T extends Array<infer U>
 			[P in keyof T]?: DeepPartial<T[P]>;
 	  }
 	: T;
+
+export type MulterFile = Express.Multer.File;

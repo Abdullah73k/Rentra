@@ -2,6 +2,7 @@ import { StatusCodes } from "../constants/status-codes.constants.js";
 import { SUPABASE_PUBLIC_BUCKET_NAME } from "../constants/supabase.constants.js";
 import { supabase } from "../db/configs/supabase.config.js";
 import { DBError } from "../errors/db.errors.js";
+import type { MulterFile } from "../types/util.types.js";
 import {
 	photoPathBuilder,
 	type PhotoPathBuilderConfig,
@@ -15,7 +16,7 @@ export async function insertFileInBucket({
 	documentName,
 	bucketName,
 }: PhotoPathBuilderConfig & {
-	file: Express.Multer.File;
+	file: MulterFile;
 	bucketName: string;
 }) {
 	const path = photoPathBuilder({
@@ -24,7 +25,7 @@ export async function insertFileInBucket({
 		documentName,
 		userId,
 	});
-
+	
 	const { data, error } = await supabase.storage
 		.from(bucketName)
 		.upload(path, file.buffer, {
