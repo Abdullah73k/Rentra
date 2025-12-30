@@ -14,7 +14,7 @@ export const UserRepository = {
 	}: {
 		userId: string;
 		avatar: string;
-		client: PoolClient | undefined;
+		client?: PoolClient;
 	}) {
 		const query = await executeDataBaseOperation(
 			() => updateRowFromTableWithId.user(userId, avatar, client),
