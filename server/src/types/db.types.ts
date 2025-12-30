@@ -29,6 +29,7 @@ export type TableObjects =
 	| CreateTransaction;
 
 export const DatabaseTables = [
+	"User",
 	"Property",
 	"PropertyInfo",
 	"Loan",
