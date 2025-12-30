@@ -12,6 +12,7 @@ import { lease } from "../db/schemas/lease.db.js";
 import { tenant } from "../db/schemas/tenant.db.js";
 import { transaction } from "../db/schemas/transaction.db.js";
 import { documents } from "../db/schemas/document.db.js";
+import { user } from "../db/schemas/auth-schema.db.js";
 
 export async function executeDataBaseOperation<T>(
 	dataBaseFn: () => Promise<T>,
@@ -125,6 +126,14 @@ export async function deleteDocumentsFromTable(
 }
 
 export const updateRowFromTableWithId = {
+	async user(id: string, avatar: string, client: PoolClient | undefined) {
+		const pool = dbConnection(client);
+		return await pool
+			.update(user)
+			.set({ avatar })
+			.where(eq(user.id, id))
+			.returning();
+	},
 	async property(
 		id: string,
 		values: DB.Property,
