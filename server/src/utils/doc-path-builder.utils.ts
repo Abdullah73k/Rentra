@@ -13,3 +13,17 @@ export function photoPathBuilder({
 }: PhotoPathBuilderConfig) {
 	return `users/${userId}/properties/${propertyId}/photo/${documentId}-${documentName}`;
 }
+
+export function avatarPathBuilder({
+	userId,
+	avatarName,
+}: {
+	userId: string;
+	avatarName: string;
+}) {
+	return `users/${userId}/avatar/${avatarName}`;
+}
+
+export function avatarFolderPathBuilder({ userId }: { userId: string }) {
+	return `users/${userId}/avatar`;
+}

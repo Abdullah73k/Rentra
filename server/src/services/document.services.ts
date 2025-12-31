@@ -2,7 +2,6 @@ import { randomUUID } from "node:crypto";
 import { DocumentRepository } from "../repositories/document.repositories.js";
 import {
 	deleteFileFromBucket,
-	getFilePublicURL,
 	insertFileInBucket,
 } from "../utils/bucket.utils.js";
 import {
@@ -12,6 +11,7 @@ import {
 import type { CreateDocument } from "../types/db.types.js";
 import { documentSchema } from "../schemas/post.schemas.js";
 import { ValidationError } from "../errors/validation.errors.js";
+import type { MulterFile } from "../types/util.types.js";
 
 export const DocumentService = {
 	async create({
@@ -22,7 +22,7 @@ export const DocumentService = {
 	}: {
 		propertyId: string;
 		userId: string;
-		file: Express.Multer.File;
+		file: MulterFile;
 		type: "photo" | "document";
 	}) {
 		const documentId = randomUUID();

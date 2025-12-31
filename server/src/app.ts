@@ -7,6 +7,7 @@ import { auth } from "./utils/auth.js";
 import { errorHandler } from "./middlewares/error-handler.middlewares.js";
 import { StatusCodes } from "./constants/status-codes.constants.js";
 import { authenticate } from "./middlewares/authenticate.middleware.js";
+import userRouter from "./routes/user.routes.js";
 
 const app: Express = express();
 
@@ -44,6 +45,7 @@ app.get("/api/ping", (req: Request, res: Response) => {
 });
 
 app.use("/api/properties", authenticate, propertiesRouter);
+app.use("/api/user", authenticate, userRouter);
 
 app.use(errorHandler);
 
