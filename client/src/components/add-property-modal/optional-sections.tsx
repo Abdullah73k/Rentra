@@ -9,13 +9,14 @@ import { Checkbox } from "../ui/checkbox";
 import Lease from "./lease";
 import Loan from "./loan";
 import Tenant from "./tenant";
-import type { UseFormReturn, FieldValues, Path } from "react-hook-form";
+import type { UseFormReturn, Path } from "react-hook-form";
+import type { EditPropertyFormFields } from "../modals/edit-property-modal";
 
-type OptionalSectionsProps<T extends FieldValues> = {
+type OptionalSectionsProps<T extends EditPropertyFormFields> = {
 	form: UseFormReturn<T>;
 };
 
-const OptionalSections = <T extends FieldValues>({
+const OptionalSections = <T extends EditPropertyFormFields>({
 	form,
 }: OptionalSectionsProps<T>) => {
 	// We need to cast the watch argument because TypeScript can't verify 'optionalSections' exists on T
@@ -37,7 +38,7 @@ const OptionalSections = <T extends FieldValues>({
 							<FormItem className="flex items-center space-x-2">
 								<FormControl>
 									<Checkbox
-										checked={field.value}
+										checked={!!field.value}
 										onCheckedChange={field.onChange}
 									/>
 								</FormControl>
@@ -55,7 +56,7 @@ const OptionalSections = <T extends FieldValues>({
 							<FormItem className="flex items-center space-x-2">
 								<FormControl>
 									<Checkbox
-										checked={field.value}
+										checked={!!field.value}
 										onCheckedChange={field.onChange}
 									/>
 								</FormControl>
@@ -73,7 +74,7 @@ const OptionalSections = <T extends FieldValues>({
 							<FormItem className="flex items-center space-x-2">
 								<FormControl>
 									<Checkbox
-										checked={field.value}
+										checked={!!field.value}
 										onCheckedChange={field.onChange}
 									/>
 								</FormControl>
@@ -90,13 +91,13 @@ const OptionalSections = <T extends FieldValues>({
 			{/* Tenant Form */}
 			{/* Casting form to any here to allow compatibility with non-generic children for now, 
           or until they are updated. This prevents compile errors in this file. */}
-			{watchedOptionalSections?.addTenant && <Tenant form={form as any} />}
+			{watchedOptionalSections?.addTenant && <Tenant form={form} />}
 
 			{/* Lease Form */}
-			{watchedOptionalSections?.addLease && <Lease form={form as any} />}
+			{watchedOptionalSections?.addLease && <Lease form={form} />}
 
 			{/* Loan Form */}
-			{watchedOptionalSections?.addLoan && <Loan form={form as any} />}
+			{watchedOptionalSections?.addLoan && <Loan form={form} />}
 		</div>
 	);
 };

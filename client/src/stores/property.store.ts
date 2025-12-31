@@ -5,6 +5,8 @@ type PropertyStore = {
 	setIsAddTransactionOpen: (isAddTransactionOpen: boolean) => void;
 	isEditPropertyOpen: boolean;
 	setIsEditPropertyOpen: (isEditPropertyOpen: boolean) => void;
+	editPropertyStep: number;
+	setEditPropertyStep: (editPropertyStep: number) => void;
 };
 
 export const usePropertyStore = create<PropertyStore>((set) => ({
@@ -14,4 +16,6 @@ export const usePropertyStore = create<PropertyStore>((set) => ({
 	isEditPropertyOpen: false,
 	setIsEditPropertyOpen: (isEditPropertyOpen: boolean) =>
 		set({ isEditPropertyOpen }),
+	editPropertyStep: 1,
+	setEditPropertyStep: (editPropertyStep: number) => set({ editPropertyStep }),
 }));

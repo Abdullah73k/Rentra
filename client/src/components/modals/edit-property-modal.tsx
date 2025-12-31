@@ -18,7 +18,7 @@ import Property from "../add-property-modal/property";
 import PropertyInfo from "../add-property-modal/property-info";
 import OptionalSections from "../add-property-modal/optional-sections";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAuthStore } from "@/stores/auth.store";
 import { usePropertyStore } from "@/stores/property.store";
 import { buildEditPropertyFromForm } from "@/lib/build-edit-property-from-form";
@@ -30,26 +30,29 @@ type props = {
 };
 
 const EditPropertyModal = ({ property }: props) => {
-  const isOpen = usePropertyStore((s) => s.isEditPropertyOpen)
-  const setIsEditPropertyOpen = usePropertyStore((s) => s.setIsEditPropertyOpen)
+	const isOpen = usePropertyStore((s) => s.isEditPropertyOpen);
+	const setIsEditPropertyOpen = usePropertyStore(
+		(s) => s.setIsEditPropertyOpen
+	);
+	const step = usePropertyStore((s) => s.editPropertyStep);
+	const setStep = usePropertyStore((s) => s.setEditPropertyStep);
+
 	const form = useForm<EditPropertyFormFields>({
 		resolver: zodResolver(schema),
 		defaultValues: {
-      ...property
-    },
+			...property,
+		},
 	});
 
 	const { mutate } = useMutation({
 		mutationFn: editPropertyInfo,
 		onSuccess: () => {
-			setIsEditPropertyOpen(false)
+			setIsEditPropertyOpen(false);
 		},
 		onError: () => {
 			toast.error("Failed to add transaction, please try again");
 		},
 	});
-
-	const [step, setStep] = useState(1);
 
 	const session = useAuthStore((s) => s.session);
 
@@ -81,7 +84,7 @@ const EditPropertyModal = ({ property }: props) => {
 				"An unexpected error occurred while saving the property. Please try again." // TODO: switch to toast component
 			);
 		}
-		setIsEditPropertyOpen(false)
+		setIsEditPropertyOpen(false);
 	};
 
 	const watchedProperty = form.watch("property");
@@ -133,7 +136,7 @@ const EditPropertyModal = ({ property }: props) => {
 				<DialogFooter className="flex justify-between">
 					<Button
 						variant="outline"
-						onClick={() => setStep((prev) => Math.max(1, prev - 1))}
+						onClick={() => setStep(Math.max(1, step - 1))}
 						disabled={step === 1}
 					>
 						<ChevronLeft className="h-4 w-4 mr-2" />
@@ -143,7 +146,7 @@ const EditPropertyModal = ({ property }: props) => {
 					<div className="flex gap-2">
 						{step < 3 && (
 							<Button
-								onClick={() => setStep((prev) => prev + 1)}
+								onClick={() => setStep(step + 1)}
 								disabled={step === 1 && !isStep1Valid}
 							>
 								Next
@@ -158,7 +161,10 @@ const EditPropertyModal = ({ property }: props) => {
 								Save Property
 							</Button>
 						)}
-						<Button variant="outline" onClick={() => setIsEditPropertyOpen(false)}>
+						<Button
+							variant="outline"
+							onClick={() => setIsEditPropertyOpen(false)}
+						>
 							Cancel
 						</Button>
 					</div>
