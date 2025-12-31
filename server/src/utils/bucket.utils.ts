@@ -66,7 +66,7 @@ export async function insertAvatarInBucket({
 	if (error)
 		throw new DBError(StatusCodes.BAD_REQUEST, error.message, error.name);
 
-	let publicUrl: string | null = null;
+	let publicUrl: string;
 
 	const { data: publicData } = supabase.storage
 		.from(SUPABASE_PUBLIC_BUCKET_NAME)
