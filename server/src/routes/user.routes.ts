@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { putUserAvatar } from "../controllers/user-avatar.controllers.js";
+import { patchUserAvatar } from "../controllers/user-avatar.controllers.js";
 
 const router: Router = Router()
 
-router.put("/avatar", putUserAvatar)
+router.patch("/avatar", patchUserAvatar)
 
 export default router

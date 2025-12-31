@@ -4,7 +4,7 @@ import { validateUUID } from "../utils/validation.utils.js";
 import { ValidationError } from "../errors/validation.errors.js";
 import { UserService } from "../services/user.services.js";
 
-export const putUserAvatar = async (req: Request, res: Response) => {
+export const patchUserAvatar = async (req: Request, res: Response) => {
 	const userId = req.user?.id;
 	const avatar = req.file;
 
