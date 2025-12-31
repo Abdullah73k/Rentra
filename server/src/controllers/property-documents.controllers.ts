@@ -11,7 +11,7 @@ export type PrivateDocsIds =
 	| { leaseId?: never; loanId?: never; tenantId: string };
 
 /**
- * 
+ *
  * Path for property photos in bucket: \
  * users/:userId/properties/:propertyId/photo/:documentId-documentName
  */
@@ -77,8 +77,6 @@ export const deletePropertyDoc = async (
 	});
 };
 
-export const getPropertyDoc = async (req: Request, res: Response) => {};
-
 export const getPropertyPrivateDocs = async (
 	req: Request<PrivateDocsIds, {}, {}, { type: PrivateDocs }>,
 	res: Response
@@ -111,4 +109,4 @@ export const getPropertyPrivateDocs = async (
 		message: "Successfully retrieved document",
 		data: documents,
 	});
-}; 
+};
