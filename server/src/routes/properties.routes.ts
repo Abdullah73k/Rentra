@@ -17,20 +17,34 @@ import {
 	postPropertyPhotos,
 } from "../controllers/property-documents.controllers.js";
 import { asyncHandler } from "../utils/async-handler.utils.js";
-import { uploadPropertyPhotos } from "../middlewares/multer.middleware.js";
+import {
+	DOCUMENTS_MAX_FILES,
+	PROPERTY_PHOTOS_MAX_FILES,
+	uploadPropertyDocs,
+} from "../middlewares/multer.middleware.js";
 
 const router: Router = Router();
 
 router.get("/all", asyncHandler(getUserProperties));
 
 router.get("/:propertyId", asyncHandler(getUserPropertyData));
-router.get("/privateDocs/:referenceId", asyncHandler(getPropertyPrivateDocs));
+router.get(
+	"/privateDocs/:referenceId",
+	uploadPropertyDocs({ type: "document" }).array(
+		"document",
+		DOCUMENTS_MAX_FILES
+	),
+	asyncHandler(getPropertyPrivateDocs)
+);
 
 router.post("/create", asyncHandler(postPropertyData));
 router.post("/create/transaction", asyncHandler(postCreateTransaction));
 router.post(
 	"/photo/:propertyId",
-	uploadPropertyPhotos,
+	uploadPropertyDocs({ type: "photo" }).array(
+		"photo",
+		PROPERTY_PHOTOS_MAX_FILES
+	),
 	asyncHandler(postPropertyPhotos)
 );
 
