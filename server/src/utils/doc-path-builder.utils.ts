@@ -21,5 +21,9 @@ export function avatarPathBuilder({
 	userId: string;
 	avatarName: string;
 }) {
-	return `users/${userId}/${avatarName}`;
+	return `users/${userId}/avatar/${avatarName}`;
+}
+
+export function avatarFolderPathBuilder({ userId }: { userId: string }) {
+	return `users/${userId}/avatar`;
 }

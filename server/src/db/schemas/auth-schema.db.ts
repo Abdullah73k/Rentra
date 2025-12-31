@@ -24,11 +24,11 @@ export const user = pgTable("user", {
 	twoFactorEnabled: boolean("twoFactorEnabled").default(false),
 	country: text("country").notNull(),
 	currency: text("currency").notNull(),
-	avatar: text("text")
-		.notNull()
-		.default(
-			"https://api.dicebear.com/9.x/pixel-art/svg?backgroundColor=b6e3f4,c0aede,d1d4f9"
-		),
+	avatar: text("avatar"),
+		// .notNull()
+		// .default(
+		// 	"https://api.dicebear.com/9.x/pixel-art/svg?backgroundColor=b6e3f4,c0aede,d1d4f9"
+		// ),
 	vatProfile: integer("vatProfile").notNull(),
 });
 

@@ -4,6 +4,7 @@ import { supabase } from "../db/configs/supabase.config.js";
 import { DBError } from "../errors/db.errors.js";
 import type { MulterFile } from "../types/util.types.js";
 import {
+	avatarPathBuilder,
 	photoPathBuilder,
 	type PhotoPathBuilderConfig,
 } from "./doc-path-builder.utils.js";
@@ -25,7 +26,7 @@ export async function insertFileInBucket({
 		documentName,
 		userId,
 	});
-	
+
 	const { data, error } = await supabase.storage
 		.from(bucketName)
 		.upload(path, file.buffer, {
@@ -44,6 +45,34 @@ export async function insertFileInBucket({
 
 		publicUrl = publicData.publicUrl;
 	}
+
+	return { ...data, publicUrl };
+}
+
+export async function insertAvatarInBucket({
+	file,
+	userId,
+}: {
+	file: MulterFile;
+	userId: string;
+}) {
+	const path = avatarPathBuilder({ userId, avatarName: file.originalname });
+	const { data, error } = await supabase.storage
+		.from(SUPABASE_PUBLIC_BUCKET_NAME)
+		.upload(path, file.buffer, {
+			contentType: file.mimetype,
+		});
+
+	if (error)
+		throw new DBError(StatusCodes.BAD_REQUEST, error.message, error.name);
+
+	let publicUrl: string | null = null;
+
+	const { data: publicData } = supabase.storage
+		.from(SUPABASE_PUBLIC_BUCKET_NAME)
+		.getPublicUrl(path);
+
+	publicUrl = publicData.publicUrl;
 
 	return { ...data, publicUrl };
 }
@@ -73,4 +102,38 @@ export function getFilePublicURL({
 		data: { publicUrl },
 	} = supabase.storage.from(bucket).getPublicUrl(path);
 	return publicUrl;
+}
+
+export async function deleteFolderContents({
+	bucket,
+	folderPath,
+}: {
+	bucket: string;
+	folderPath: string;
+}) {
+	const { data: files, error: listError } = await supabase.storage
+		.from(bucket)
+		.list(folderPath);
+
+	if (listError)
+		throw new DBError(
+			StatusCodes.BAD_REQUEST,
+			listError.message,
+			listError.name
+		);
+
+	if (!files || files.length === 0) return;
+
+	const pathsToDelete = files.map((file) => `${folderPath}/${file.name}`);
+
+	const { error: removeError } = await supabase.storage
+		.from(bucket)
+		.remove(pathsToDelete);
+
+	if (removeError)
+		throw new DBError(
+			StatusCodes.BAD_REQUEST,
+			removeError.message,
+			removeError.name
+		);
 }
