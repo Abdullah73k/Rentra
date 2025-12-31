@@ -106,6 +106,27 @@ export const getRowsFromTableWithId = {
 
 		return paths.map((p) => p.path);
 	},
+	async loanDocs(loanId: string, client: PoolClient | undefined) {
+		const pool = dbConnection(client);
+		return await pool
+			.select()
+			.from(documents)
+			.where(eq(documents.loanId, loanId));
+	},
+	async leaseDocs(leaseId: string, client: PoolClient | undefined) {
+		const pool = dbConnection(client);
+		return await pool
+			.select()
+			.from(documents)
+			.where(eq(documents.leaseId, leaseId));
+	},
+	async tenantDocs(tenantId: string, client: PoolClient | undefined) {
+		const pool = dbConnection(client);
+		return await pool
+			.select()
+			.from(documents)
+			.where(eq(documents.tenantId, tenantId));
+	},
 };
 
 export async function deleteRowFromTableWithId<
