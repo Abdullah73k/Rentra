@@ -14,6 +14,7 @@ import {
 import {
 	deletePropertyDoc,
 	getPropertyDoc,
+	getPropertyPrivateDocs,
 	postPropertyPhotos,
 } from "../controllers/property-documents.controllers.js";
 import { asyncHandler } from "../utils/async-handler.utils.js";
@@ -25,6 +26,7 @@ router.get("/all", asyncHandler(getUserProperties));
 
 router.get("/:propertyId", asyncHandler(getUserPropertyData));
 router.get("/documents/:propertyId", asyncHandler(getPropertyDoc));
+router.get("/privateDocs/:referenceId", asyncHandler(getPropertyPrivateDocs));
 
 router.post("/create", asyncHandler(postPropertyData));
 router.post("/create/transaction", asyncHandler(postCreateTransaction));

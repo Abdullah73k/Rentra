@@ -12,6 +12,8 @@ import {
 import { property } from "./property.db.js";
 import { tenant } from "./tenant.db.js";
 import { user } from "./auth-schema.db.js";
+import { lease } from "./lease.db.js";
+import { loan } from "./loan.db.js";
 
 export const documentTypeEnum = pgEnum("documentType", ["photo", "document"]);
 
@@ -27,6 +29,14 @@ export const documents = pgTable(
 		}),
 
 		tenantId: uuid("tenantId").references(() => tenant.id, {
+			onDelete: "cascade",
+		}),
+
+		leaseId: uuid("leaseId").references(() => lease.id, {
+			onDelete: "cascade",
+		}),
+
+		loanId: uuid("loanId").references(() => loan.id, {
 			onDelete: "cascade",
 		}),
 
@@ -47,9 +57,7 @@ export const documents = pgTable(
 	(t) => [
 		check(
 			"Documents_exactly_one_owner_check",
-			sql`(${t.propertyId} IS NOT NULL AND ${t.tenantId} IS NULL)
-          OR
-          (${t.propertyId} IS NULL AND ${t.tenantId} IS NOT NULL)`
+			sql`num_nonnulls(${t.propertyId}, ${t.tenantId}, ${t.leaseId}, ${t.loanId}) = 1`
 		),
 	]
 );
