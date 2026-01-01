@@ -1,4 +1,7 @@
 import { Label } from "@/components/ui/label";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Upload, X } from "lucide-react";
+import { useRef } from "react";
 import {
   Card,
   CardContent,
@@ -19,6 +22,7 @@ import { Button } from "../ui/button";
 import { LoadingSwap } from "../ui/loading-swap";
 import { authClient } from "@/utils/auth-client";
 import { toast } from "sonner";
+import { useState } from "react";
 
 const profileSchema = z.object({
   fullName: z.string().optional(),
@@ -30,6 +34,9 @@ const profileSchema = z.object({
 type ProfileSchema = z.infer<typeof profileSchema>;
 
 const ProfileTab = ({ user }: { user: Session }) => {
+  const [file, setFile] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   if (user == null)
     return <LoadingSwap isLoading={true} children={undefined} />;
 
@@ -57,7 +64,7 @@ const ProfileTab = ({ user }: { user: Session }) => {
       },
       {
         onSuccess: () => {
-          toast.success("Update Info Successfully");
+          toast.success("Updated Info Successfully");
         },
         onError: (error) => {
           toast.error(
@@ -68,26 +75,116 @@ const ProfileTab = ({ user }: { user: Session }) => {
     );
   }
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const url = URL.createObjectURL(e.target.files[0]);
+      setFile(url);
+    }
+  };
+
+  const handleSaveProfilePicture = () => {
+    authClient.updateUser(
+      {
+        image: file,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Successfully changed profile picture");
+        },
+        onError: (error) => {
+          toast.error(
+            error.error.message || "Failed to change profile picture"
+          );
+        },
+      }
+    );
+  };
+
+  const initial = userInfo.name ? userInfo.name.charAt(0).toUpperCase() : "U";
+
   return (
-    <div className="space-y-6 ">
-      <Card
-        className="glass-card"
-      >
+    <div className="space-y-6">
+      <Card className="glass-card">
         <CardHeader>
           <CardTitle>Personal Information</CardTitle>
-          <CardDescription>Update your personal details</CardDescription>
+          <CardDescription>Update your personal details and profile picture</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-8">
+          <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
+            <Avatar className="h-24 w-24 border-2 border-border/50 shadow-sm">
+              <AvatarImage src={file || userInfo.image || ""} className="object-cover" />
+              <AvatarFallback className="text-2xl font-medium bg-muted text-muted-foreground">
+                {initial}
+              </AvatarFallback>
+            </Avatar>
+
+            <div className="flex flex-col gap-4 items-center sm:items-start">
+              <div className="space-y-1 text-center sm:text-left">
+                <h3 className="text-sm font-medium leading-none">Profile Picture</h3>
+                <p className="text-xs text-muted-foreground">
+                  Update your profile picture. Supported formats: JPG, PNG.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Input
+                  type="file"
+                  ref={fileInputRef}
+                  className="hidden"
+                  accept="image/jpeg, image/png, image/jpg"
+                  onChange={handleFileChange}
+                />
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="h-9 dark:bg-zinc-900/50 dark:border-zinc-800"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <Upload className="mr-2 h-3.5 w-3.5" />
+                  Change Picture
+                </Button>
+
+                {file && (
+                  <>
+                    <Button
+                      onClick={handleSaveProfilePicture}
+                      size="sm"
+                      className="h-9 bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90"
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-9 w-9 text-muted-foreground hover:text-foreground"
+                      onClick={() => {
+                        setFile("");
+                        if (fileInputRef.current) fileInputRef.current.value = "";
+                      }}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="h-px bg-border/40" />
+
+          {/* Personal Info Form */}
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleUpdateUser)}>
-              <div className="grid grid-cols-2 gap-4 ">
+            <form onSubmit={form.handleSubmit(handleUpdateUser)} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <TextInput form={form} name="fullName" label="Name" />
                 </div>
                 <div className="space-y-2">
                   <Label
                     htmlFor="email"
-                    className="text-xs font-medium uppercase tracking-wide text-gray-600"
+                    className="text-xs font-medium uppercase tracking-wide text-muted-foreground/70"
                   >
                     Email
                   </Label>
@@ -95,17 +192,17 @@ const ProfileTab = ({ user }: { user: Session }) => {
                     id="email"
                     name="email"
                     type="email"
-                    value={user?.user.email}
+                    value={userInfo.email}
                     disabled
-                    className="h-12 rounded-lg border-gray-300 bg-gray-100 text-sm opacity-60 cursor-not-allowed"
+                    className="h-10 rounded-md border-input bg-muted/50 text-sm opacity-100 cursor-not-allowed text-muted-foreground font-medium"
                   />
-                  <p className="text-xs text-muted-foreground">
-                    Email cannot be changed
+                  <p className="text-[10px] text-muted-foreground/60 pl-1">
+                    Email address cannot be changed
                   </p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <TextInput
                     form={form}
@@ -134,15 +231,17 @@ const ProfileTab = ({ user }: { user: Session }) => {
                 />
               </div>
 
-              <Button
-                type="submit"
-                className="h-12 w-full rounded-full bg-black text-sm font-medium text-white hover:bg-black/90"
-                disabled={isSubmitting}
-              >
-                <LoadingSwap isLoading={isSubmitting}>
-                  Update Account
-                </LoadingSwap>
-              </Button>
+              <div className="flex justify-end pt-2">
+                <Button
+                  type="submit"
+                  className="h-10 px-6 rounded-full bg-black text-sm font-medium text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90"
+                  disabled={isSubmitting}
+                >
+                  <LoadingSwap isLoading={isSubmitting}>
+                    Update Account
+                  </LoadingSwap>
+                </Button>
+              </div>
             </form>
           </Form>
         </CardContent>
