@@ -5,6 +5,8 @@ import {
 	getUserPropertyData,
 	patchPropertyData,
 	postPropertyData,
+	postOptionalData,
+	deleteOptionalData,
 } from "../controllers/properties.controllers.js";
 import {
 	deleteTransaction,
@@ -22,7 +24,6 @@ import { uploadPropertyPhotos } from "../middlewares/multer.middleware.js";
 const router: Router = Router();
 
 router.get("/all", asyncHandler(getUserProperties));
-
 router.get("/:propertyId", asyncHandler(getUserPropertyData));
 router.get("/documents/:propertyId", asyncHandler(getPropertyDoc));
 
@@ -33,6 +34,7 @@ router.post(
 	uploadPropertyPhotos,
 	asyncHandler(postPropertyPhotos)
 );
+router.post("/optional/:propertyId", asyncHandler(postOptionalData));
 
 router.delete("/delete/:propertyId", asyncHandler(deleteUserProperty));
 router.delete(
@@ -40,6 +42,7 @@ router.delete(
 	asyncHandler(deleteTransaction)
 );
 router.delete("/document/:documentId", asyncHandler(deletePropertyDoc));
+router.delete("/optional/:optionId", asyncHandler(deleteOptionalData));
 
 router.patch("/update/:propertyId", asyncHandler(patchPropertyData));
 router.patch(
