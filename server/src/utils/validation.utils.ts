@@ -2,6 +2,7 @@ import * as POST from "../schemas/post.schemas.js";
 import * as PATCH from "../schemas/patch.schemas.js";
 import { z } from "zod";
 import * as API from "../types/api.types.js";
+import { option } from "../schemas/util.schemas.js";
 
 export function validateUUID(userId: string | undefined | null) {
 	const schema = z.uuid();
@@ -51,6 +52,6 @@ export function validateTransactionDetails<
 	return validatedData;
 }
 
-export function validateOption(option: string) {
-	return z.enum(["loan", "lease", "tenant"]).safeParse(option);
+export function validateOption(opt: string) {
+	return option.safeParse(opt);
 }
