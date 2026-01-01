@@ -7,6 +7,7 @@ import { PropertyInfoRepository } from "../repositories/propertyInfo.repositorie
 import { TenantRepository } from "../repositories/tenant.repositories.js";
 import { TransactionRepository } from "../repositories/transaction.repositories.js";
 import * as API from "../types/api.types.js";
+import * as DB from "../types/db.types.js";
 import { getFilePublicURL } from "../utils/bucket.utils.js";
 import { queryInTransaction, type PoolClient } from "../utils/service.utils.js";
 
@@ -155,5 +156,13 @@ export const PropertyService = {
 			"Update property failed transaction"
 		);
 		return query;
+	},
+	async createOptionalData(
+		option: "loan" | "lease" | "tenant",
+		data: DB.Optional
+	) {
+		const response = await PropertyRepository.createOptionalData(option, data);
+
+		return response;
 	},
 };

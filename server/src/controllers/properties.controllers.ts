@@ -7,6 +7,12 @@ import {
 import * as API from "../types/api.types.js";
 import { PropertyService } from "../services/property.services.js";
 import { ValidationError } from "../errors/validation.errors.js";
+import {
+	leaseSchema,
+	loanSchema,
+	tenantSchema,
+} from "../schemas/post.schemas.js";
+import * as DB from "../types/db.types.js";
 
 export const getUserPropertyData = async (
 	req: Request<{ propertyId: string }, {}, {}, {}>,
@@ -113,5 +119,48 @@ export const patchPropertyData = async (
 		error: false,
 		message: "Property updated",
 		data: response, // data should not be cleaned data but the object returned by the data base
+	});
+};
+
+export const postOptionalData = async (
+	req: Request<
+		{ propertyId: string },
+		{},
+		DB.CreateOptional,
+		{ option: "loan" | "lease" | "tenant" }
+	>,
+	res: Response
+) => {
+	const { option } = req.query;
+	const { propertyId } = req.params;
+
+	const propertyIdResult = validateUUID(propertyId);
+
+	const zodSchema =
+		option === "loan"
+			? loanSchema
+			: option === "lease"
+			? leaseSchema
+			: tenantSchema;
+
+	const result = zodSchema.safeParse(req.body);
+
+	if (!propertyIdResult.success || !result.success)
+		throw new ValidationError(`Invalid ${option} data`);
+
+	if (!option || !(option in ["loan", "lease", "tenant"]))
+		throw new ValidationError("Invalid option");
+
+	const validatedData = { propertyId, ...result.data };
+
+	const response = await PropertyService.createOptionalData(
+		option,
+		validatedData as DB.Optional
+	);
+
+	return res.status(StatusCodes.SUCCESS).json({
+		error: false,
+		message: "Optional data created",
+		data: response,
 	});
 };
