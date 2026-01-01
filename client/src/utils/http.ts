@@ -64,7 +64,7 @@ export async function fetchPropertyInfo(propertyId: string): Promise<FetchProper
 }
 export async function editPropertyInfo(data: Omit<EditPropertyBuildType, "optionalSections">) {
 	try {
-		const res = await axios.patch(API_URL + "/api/properties/update" + data.property.id)
+		const res = await axios.patch(API_URL + "/api/properties/update/" + data.property.id, data)
 		return res.data.data
 	} catch (error) {
 		

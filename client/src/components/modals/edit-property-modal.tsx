@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "../ui/form";
 import { patchPropertyDataSchema as schema } from "@/lib/schemas";
@@ -39,9 +39,14 @@ const EditPropertyModal = ({ property }: props) => {
 	const setStep = usePropertyStore((s) => s.setEditPropertyStep);
 
 	const form = useForm<EditPropertyFormFields>({
-		resolver: zodResolver(schema),
+		resolver: zodResolver(schema) as Resolver<EditPropertyFormFields>,
 		defaultValues: {
 			...property,
+			optionalSections: {
+				addLease: !!property.lease,
+				addTenant: !!property.tenant,
+				addLoan: !!property.loan,
+			},
 		},
 	});
 
@@ -68,7 +73,7 @@ const EditPropertyModal = ({ property }: props) => {
 	useEffect(() => {
 		setLockerNumArray(property.propertyInfo.lockerNumbers)
 	}, [property.propertyInfo.lockerNumbers])
-	
+
 
 	const handleSave = async () => {
 		const isValid = await form.trigger();
@@ -76,7 +81,7 @@ const EditPropertyModal = ({ property }: props) => {
 
 		console.log(isValid);
 
-		if (!isValid) return;
+		// if (!isValid) return;
 
 		const values = form.getValues();
 		try {

@@ -1,16 +1,17 @@
 import type { EditPropertyBuildType } from "./types";
 import { useAuthStore } from "@/stores/auth.store";
 import type { EditPropertyFormFields } from "@/components/modals/edit-property-modal";
+import { isCompleteLease, isCompleteLoan, isCompleteTenant } from "@/utils/property.utils";
 
 export function buildEditPropertyFromForm(
 	formValues: EditPropertyFormFields
 ): Omit<EditPropertyBuildType, "optionalSections"> {
-	const { property, propertyInfo, tenant, lease, loan } = formValues;
+	const { property, propertyInfo, tenant, lease, loan, optionalSections } = formValues;
 	const session = useAuthStore.getState().session;
 	if (!session) {
 		throw new Error("Invalid session");
 	}
-
+	const today = new Date()
 	const newPropertyBuild: Omit<EditPropertyBuildType, "optionalSections"> = {
 		property: {
 			id: property.id,
@@ -27,6 +28,8 @@ export function buildEditPropertyFromForm(
 			currentValue: property.currentValue,
 			sold: false,
 			photos: [],
+			createdAt: property.createdAt,
+			updatedAt: today
 		},
 		propertyInfo: {
 			id: propertyInfo.id,
@@ -40,16 +43,18 @@ export function buildEditPropertyFromForm(
 			parking: propertyInfo.parking || undefined,
 			notes: propertyInfo.notes || undefined,
 			lockerNumbers: propertyInfo.lockerNumbers,
+			createdAt: propertyInfo.createdAt,
+			updatedAt: today
 		},
 
-		tenant: {
+		tenant: optionalSections.addTenant && isCompleteTenant(tenant) ? {
 			id: tenant.id,
 			propertyId: tenant.propertyId,
 			name: tenant.name,
 			phone: tenant.phone || undefined,
 			email: tenant.email,
-		},
-		lease: {
+		} : undefined,
+		lease: optionalSections.addLease && isCompleteLease(lease) ? {
 			id: lease.id,
 			propertyId: lease.propertyId,
 			tenantId: lease.tenantId,
@@ -60,8 +65,8 @@ export function buildEditPropertyFromForm(
 			frequency: lease.frequency,
 			paymentDay: lease.paymentDay,
 			deposit: lease.deposit,
-		},
-		loan: {
+		} : undefined,
+		loan: optionalSections.addLoan && isCompleteLoan(loan) ? {
 			id: loan.id,
 			propertyId: loan.propertyId,
 			lender: loan.lender,
@@ -69,7 +74,7 @@ export function buildEditPropertyFromForm(
 			monthlyPayment: loan.monthlyPayment,
 			totalMortgageAmount: loan.totalMortgageAmount,
 			interestRate: loan.interestRate,
-		},
+		} : undefined,
 	};
 
 	return newPropertyBuild;

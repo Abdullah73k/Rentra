@@ -23,12 +23,13 @@ export const PasswordSchema = z
 export const ReusableTypes = {
 	uuid: z.uuid("Invalid UUID"),
 	decimal: z
-		.string()
-		.regex(
-			/^\d{1,10}(\.\d{1,2})?$/,
+		.union([z.string(), z.number()])
+		.transform((val) => val.toString())
+		.refine(
+			(val) => /^\d{1,10}(\.\d{1,2})?$/.test(val),
 			"Invalid decimal format (max 10 digits, 2 decimals)"
 		),
-	date: z.iso.date(),
+	date: z.string().or(z.date()),
 	positiveInt2: z.number().int().min(0).max(32767),
 	stringArray: z.array(z.string()),
 	optionalString: z.string().optional(),
@@ -176,11 +177,15 @@ export const transactionSchema = z.object({
 
 export const patchPropertySchema = propertySchema.extend({
 	id: ReusableTypes.uuid,
+	createdAt: z.string().or(z.date()).optional(),
+	updatedAt: z.string().or(z.date()).optional(),
 });
 
 export const patchPropertyInfoSchema = propertyInfoSchema.extend({
 	id: ReusableTypes.uuid,
 	propertyId: ReusableTypes.uuid,
+	createdAt: z.string().or(z.date()).optional(),
+	updatedAt: z.string().or(z.date()).optional(),
 });
 
 export const patchDocumentSchema = documentSchema.extend({
@@ -211,7 +216,7 @@ export const patchPropertyDataSchema = z.object({
 	property: patchPropertySchema,
 	propertyInfo: patchPropertyInfoSchema,
 	optionalSections: OptionalSectionsSchema,
-	loan: patchLoanSchema,
-	tenant: patchTenantSchema,
-	lease: patchLeaseSchema,
+	loan: patchLoanSchema.optional(),
+	tenant: patchTenantSchema.optional(),
+	lease: patchLeaseSchema.optional(),
 });
