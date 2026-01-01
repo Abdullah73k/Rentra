@@ -13,6 +13,7 @@ import {
 	tenantSchema,
 } from "../schemas/post.schemas.js";
 import * as DB from "../types/db.types.js";
+import { validateOption } from "../utils/validation.utils.js";
 
 export const getUserPropertyData = async (
 	req: Request<{ propertyId: string }, {}, {}, {}>,
@@ -134,12 +135,19 @@ export const postOptionalData = async (
 	const { option } = req.query;
 	const { propertyId } = req.params;
 
+	const optionResult = validateOption(option);
+
+	if (!optionResult.success)
+		throw new ValidationError(
+			"Invalid option. Must be one of: loan, lease, or tenant"
+		);
+
 	const propertyIdResult = validateUUID(propertyId);
 
 	const zodSchema =
-		option === "loan"
+		optionResult.data === "loan"
 			? loanSchema
-			: option === "lease"
+			: optionResult.data === "lease"
 			? leaseSchema
 			: tenantSchema;
 
@@ -148,14 +156,11 @@ export const postOptionalData = async (
 	if (!propertyIdResult.success || !result.success)
 		throw new ValidationError(`Invalid ${option} data`);
 
-	if (!option || !(option in ["loan", "lease", "tenant"]))
-		throw new ValidationError("Invalid option");
-
 	const validatedData = { propertyId, ...result.data };
 
 	const response = await PropertyService.createOptionalData(
-		option,
-		validatedData as DB.Optional
+		optionResult.data,
+		validatedData
 	);
 
 	return res.status(StatusCodes.SUCCESS).json({
@@ -166,23 +171,31 @@ export const postOptionalData = async (
 };
 
 export const deleteOptionalData = async (
-	req: Request<{ referenceId: string }, {}, {}, { option: "loan" | "lease" | "tenant" }>,
+	req: Request<
+		{ optionId: string },
+		{},
+		{},
+		{ option: "loan" | "lease" | "tenant" }
+	>,
 	res: Response
 ) => {
 	const { option } = req.query;
-	const { referenceId } = req.params;
+	const { optionId } = req.params;
 
-	const referenceIdResult = validateUUID(referenceId);
+	const optionIdResult = validateUUID(optionId);
+	const optionResult = validateOption(option);
 
-	if (!referenceIdResult.success) throw new ValidationError("Invalid reference Id");
+	if (!optionIdResult.success) throw new ValidationError("Invalid option Id");
 
-	if (!option || !(option in ["loan", "lease", "tenant"]))
-		throw new ValidationError("Invalid option");
+	if (!optionResult.success)
+		throw new ValidationError(
+			"Invalid option. Must be one of: loan, lease, or tenant"
+		);
 
-	const response = await PropertyService.deleteOptionalData(option, referenceId);
+	await PropertyService.deleteOptionalData(optionResult.data, optionId);
 
 	return res.status(StatusCodes.SUCCESS).json({
 		error: false,
-		message: `${option} data deleted`,
+		message: `${optionResult.data} data deleted`,
 	});
 };

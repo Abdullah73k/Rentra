@@ -42,7 +42,7 @@ router.delete(
 	asyncHandler(deleteTransaction)
 );
 router.delete("/document/:documentId", asyncHandler(deletePropertyDoc));
-router.delete("/optional/:referenceId", asyncHandler(deleteOptionalData));
+router.delete("/optional/:optionId", asyncHandler(deleteOptionalData));
 
 router.patch("/update/:propertyId", asyncHandler(patchPropertyData));
 router.patch(

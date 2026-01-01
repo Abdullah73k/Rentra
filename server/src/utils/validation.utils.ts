@@ -50,3 +50,7 @@ export function validateTransactionDetails<
 	const validatedData = { success: true as const, data: result.data };
 	return validatedData;
 }
+
+export function validateOption(option: string) {
+	return z.enum(["loan", "lease", "tenant"]).safeParse(option);
+}
