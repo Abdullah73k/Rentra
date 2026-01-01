@@ -96,4 +96,22 @@ export const PropertyRepository = {
 
 		return query;
 	},
+	async deleteOptionalData(
+		option: "loan" | "lease" | "tenant",
+		referenceId: string,
+		client?: PoolClient
+	) {
+		const table =
+			option === "loan" ? loan : option === "lease" ? lease : tenant;
+		const query = await executeDataBaseOperation(
+			() => deleteRowFromTableWithId(table, referenceId, client),
+			StatusCodes.BAD_REQUEST,
+			failedDbDeleteMessage(
+				(option.slice(0, 1).toUpperCase() +
+					option.slice(1)) as DB.DatabaseTables
+			)
+		);
+
+		return query;
+	},
 };

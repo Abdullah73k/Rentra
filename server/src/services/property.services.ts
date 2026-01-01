@@ -165,4 +165,9 @@ export const PropertyService = {
 
 		return response;
 	},
+	async deleteOptionalData(option: "loan" | "lease" | "tenant", referenceId: string) {
+		const response = await PropertyRepository.deleteOptionalData(option, referenceId);
+
+		return response;
+	},
 };

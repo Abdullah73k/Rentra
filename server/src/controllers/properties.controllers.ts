@@ -164,3 +164,25 @@ export const postOptionalData = async (
 		data: response,
 	});
 };
+
+export const deleteOptionalData = async (
+	req: Request<{ referenceId: string }, {}, {}, { option: "loan" | "lease" | "tenant" }>,
+	res: Response
+) => {
+	const { option } = req.query;
+	const { referenceId } = req.params;
+
+	const referenceIdResult = validateUUID(referenceId);
+
+	if (!referenceIdResult.success) throw new ValidationError("Invalid reference Id");
+
+	if (!option || !(option in ["loan", "lease", "tenant"]))
+		throw new ValidationError("Invalid option");
+
+	const response = await PropertyService.deleteOptionalData(option, referenceId);
+
+	return res.status(StatusCodes.SUCCESS).json({
+		error: false,
+		message: `${option} data deleted`,
+	});
+};
