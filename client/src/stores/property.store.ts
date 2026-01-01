@@ -7,6 +7,8 @@ type PropertyStore = {
 	setIsEditPropertyOpen: (isEditPropertyOpen: boolean) => void;
 	editPropertyStep: number;
 	setEditPropertyStep: (editPropertyStep: number) => void;
+	lockerNumArray: string[];
+	setLockerNumArray: (lockerNumArray: string[]) => void
 };
 
 export const usePropertyStore = create<PropertyStore>((set) => ({
@@ -18,4 +20,6 @@ export const usePropertyStore = create<PropertyStore>((set) => ({
 		set({ isEditPropertyOpen }),
 	editPropertyStep: 1,
 	setEditPropertyStep: (editPropertyStep: number) => set({ editPropertyStep }),
+	lockerNumArray: [],
+	setLockerNumArray: (lockerNumArray: string[]) => set({ lockerNumArray })
 }));

@@ -30,6 +30,7 @@ type props = {
 };
 
 const EditPropertyModal = ({ property }: props) => {
+	const setLockerNumArray = usePropertyStore(s => s.setLockerNumArray)
 	const isOpen = usePropertyStore((s) => s.isEditPropertyOpen);
 	const setIsEditPropertyOpen = usePropertyStore(
 		(s) => s.setIsEditPropertyOpen
@@ -63,6 +64,11 @@ const EditPropertyModal = ({ property }: props) => {
 			});
 		}
 	}, [session?.user.id, form]);
+
+	useEffect(() => {
+		setLockerNumArray(property.propertyInfo.lockerNumbers)
+	}, [property.propertyInfo.lockerNumbers])
+	
 
 	const handleSave = async () => {
 		const isValid = await form.trigger();
@@ -113,9 +119,9 @@ const EditPropertyModal = ({ property }: props) => {
 			<DialogContent className="max-h-[90vh] overflow-y-auto max-w-2xl">
 				<DialogHeader>
 					<DialogTitle>
-						{step === 1 && "Add Property - Basic Information"}
-						{step === 2 && "Add Property - Property Details"}
-						{step === 3 && "Add Property - Optional Information"}
+						{step === 1 && "Edit Property - Basic Information"}
+						{step === 2 && "Edit Property - Property Details"}
+						{step === 3 && "Edit Property - Optional Information"}
 					</DialogTitle>
 				</DialogHeader>
 
