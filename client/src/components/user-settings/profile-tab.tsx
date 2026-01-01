@@ -23,6 +23,8 @@ import { LoadingSwap } from "../ui/loading-swap";
 import { authClient } from "@/utils/auth-client";
 import { toast } from "sonner";
 import { useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { editUserAvatar } from "@/utils/http";
 
 const profileSchema = z.object({
   fullName: z.string().optional(),
@@ -34,7 +36,7 @@ const profileSchema = z.object({
 type ProfileSchema = z.infer<typeof profileSchema>;
 
 const ProfileTab = ({ user }: { user: Session }) => {
-  const [file, setFile] = useState("");
+  const [file, setFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (user == null)
@@ -53,6 +55,11 @@ const ProfileTab = ({ user }: { user: Session }) => {
   });
 
   const { isSubmitting } = form.formState;
+
+  const { mutate } = useMutation({
+    mutationKey: ["avatar"],
+    mutationFn: editUserAvatar
+  })
 
   async function handleUpdateUser(data: ProfileSchema) {
     await authClient.updateUser(
@@ -77,27 +84,13 @@ const ProfileTab = ({ user }: { user: Session }) => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      const url = URL.createObjectURL(e.target.files[0]);
-      setFile(url);
+      const file = e.target.files[0]
+      setFile(file);
     }
   };
 
-  const handleSaveProfilePicture = () => {
-    authClient.updateUser(
-      {
-        image: file,
-      },
-      {
-        onSuccess: () => {
-          toast.success("Successfully changed profile picture");
-        },
-        onError: (error) => {
-          toast.error(
-            error.error.message || "Failed to change profile picture"
-          );
-        },
-      }
-    );
+  const handleSaveProfilePicture = (file: File) => {
+    mutate(file)
   };
 
   const initial = userInfo.name ? userInfo.name.charAt(0).toUpperCase() : "U";
@@ -112,7 +105,7 @@ const ProfileTab = ({ user }: { user: Session }) => {
         <CardContent className="space-y-8">
           <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
             <Avatar className="h-24 w-24 border-2 border-border/50 shadow-sm">
-              <AvatarImage src={file || userInfo.image || ""} className="object-cover" />
+              <AvatarImage src={userInfo.image || ""} className="object-cover" />
               <AvatarFallback className="text-2xl font-medium bg-muted text-muted-foreground">
                 {initial}
               </AvatarFallback>
@@ -149,7 +142,7 @@ const ProfileTab = ({ user }: { user: Session }) => {
                 {file && (
                   <>
                     <Button
-                      onClick={handleSaveProfilePicture}
+                      onClick={() => handleSaveProfilePicture(file)}
                       size="sm"
                       className="h-9 bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90"
                     >
@@ -160,7 +153,7 @@ const ProfileTab = ({ user }: { user: Session }) => {
                       size="icon"
                       className="h-9 w-9 text-muted-foreground hover:text-foreground"
                       onClick={() => {
-                        setFile("");
+                        setFile(null);
                         if (fileInputRef.current) fileInputRef.current.value = "";
                       }}
                     >
