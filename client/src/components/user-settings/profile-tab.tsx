@@ -1,7 +1,7 @@
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Upload, X } from "lucide-react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import {
   Card,
   CardContent,
@@ -22,9 +22,8 @@ import { Button } from "../ui/button";
 import { LoadingSwap } from "../ui/loading-swap";
 import { authClient } from "@/utils/auth-client";
 import { toast } from "sonner";
-import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { editUserAvatar } from "@/utils/http";
+import { useMutation } from "@tanstack/react-query";
+import { editUserAvatar, queryClient } from "@/utils/http";
 
 const profileSchema = z.object({
   fullName: z.string().optional(),
@@ -58,8 +57,16 @@ const ProfileTab = ({ user }: { user: Session }) => {
 
   const { mutate } = useMutation({
     mutationKey: ["avatar"],
-    mutationFn: editUserAvatar
-  })
+    mutationFn: editUserAvatar,
+    onSuccess: () => {
+      toast.success("Profile picture updated successfully");
+    },
+    onError: (error) => {
+      toast.error(
+        error?.message ?? "Failed to update profile picture, try again"
+      );
+    },
+  });
 
   async function handleUpdateUser(data: ProfileSchema) {
     await authClient.updateUser(
@@ -84,13 +91,21 @@ const ProfileTab = ({ user }: { user: Session }) => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0]
+      const file = e.target.files[0];
+      if (file.size > 2 * 1024 * 1024) {
+        // 2 mb max size
+        toast.message("File size must be less that 2MB");
+        e.target.value = "";
+        return;
+      }
       setFile(file);
     }
   };
 
   const handleSaveProfilePicture = (file: File) => {
-    mutate(file)
+    mutate(file);
+    queryClient.invalidateQueries({ queryKey: ["avatar"] });
+    setFile(null);
   };
 
   const initial = userInfo.name ? userInfo.name.charAt(0).toUpperCase() : "U";
@@ -100,12 +115,17 @@ const ProfileTab = ({ user }: { user: Session }) => {
       <Card className="glass-card">
         <CardHeader>
           <CardTitle>Personal Information</CardTitle>
-          <CardDescription>Update your personal details and profile picture</CardDescription>
+          <CardDescription>
+            Update your personal details and profile picture
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-8">
           <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
             <Avatar className="h-24 w-24 border-2 border-border/50 shadow-sm">
-              <AvatarImage src={userInfo.image || ""} className="object-cover" />
+              <AvatarImage
+                src={userInfo.image || ""}
+                className="object-cover"
+              />
               <AvatarFallback className="text-2xl font-medium bg-muted text-muted-foreground">
                 {initial}
               </AvatarFallback>
@@ -113,7 +133,9 @@ const ProfileTab = ({ user }: { user: Session }) => {
 
             <div className="flex flex-col gap-4 items-center sm:items-start">
               <div className="space-y-1 text-center sm:text-left">
-                <h3 className="text-sm font-medium leading-none">Profile Picture</h3>
+                <h3 className="text-sm font-medium leading-none">
+                  Profile Picture
+                </h3>
                 <p className="text-xs text-muted-foreground">
                   Update your profile picture. Supported formats: JPG, PNG.
                 </p>
@@ -154,7 +176,8 @@ const ProfileTab = ({ user }: { user: Session }) => {
                       className="h-9 w-9 text-muted-foreground hover:text-foreground"
                       onClick={() => {
                         setFile(null);
-                        if (fileInputRef.current) fileInputRef.current.value = "";
+                        if (fileInputRef.current)
+                          fileInputRef.current.value = "";
                       }}
                     >
                       <X className="h-4 w-4" />
@@ -169,7 +192,10 @@ const ProfileTab = ({ user }: { user: Session }) => {
 
           {/* Personal Info Form */}
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleUpdateUser)} className="space-y-6">
+            <form
+              onSubmit={form.handleSubmit(handleUpdateUser)}
+              className="space-y-6"
+            >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <TextInput form={form} name="fullName" label="Name" />
