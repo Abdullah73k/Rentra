@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useAuthStore } from "@/stores/auth.store";
 import {
   DropdownMenu,
@@ -28,7 +28,6 @@ const UserIcon = () => {
       <DropdownMenuTrigger>
         <Avatar className="w-16 h-16 bg-blue-400 bottom-10 left-10 fixed rounded-full z-10 cursor-pointer">
           <AvatarImage src={profilePicture} />
-          <AvatarFallback>{session.user.name}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="fixed top-110 left-3">
