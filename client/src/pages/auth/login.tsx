@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, redirect, useNavigate } from "react-router-dom";
+import { Link, Navigate, redirect, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import OAuthButtons from "@/components/form/o-auth-buttons";
 import { Form } from "@/components/ui/form";
@@ -16,138 +16,137 @@ import PasskeyButton from "@/components/form/passkey-button";
 import { useAuthStore } from "@/stores/auth.store";
 
 const signInSchema = z.object({
-	email: z.email(),
-	password: PasswordSchema,
+  email: z.email(),
+  password: PasswordSchema,
 });
 
 type SignInForm = z.infer<typeof signInSchema>;
 
 const SignInPage: React.FC = () => {
-	const navigate = useNavigate();
+  const navigate = useNavigate();
+  const session = useAuthStore((s) => s.session);
 
-	const form = useForm<SignInForm>({
-		resolver: zodResolver(signInSchema),
-		defaultValues: {
-			email: "",
-			password: "",
-		},
-	});
+  const form = useForm<SignInForm>({
+    resolver: zodResolver(signInSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-	const { isSubmitting } = form.formState;
+  if (session) return <Navigate to="/properties/dashboard" />;
 
-	async function handleSignIn(data: SignInForm) {
-		try {
-			await authClient.signIn.email(
-				{
-					...data,
-					callbackURL: "/properties/dashboard",
-				},
-				{
-					onError: (error) => {
-						if (error.error.code === "EMAIL_NOT_VERIFIED") {
-							navigate(`/auth/verify-email/${encodeURIComponent(data.email)}`);
-						}
-						toast.error(error?.error?.message ?? "Failed to sign In");
-					},
-					onSuccess: () => {},
-				}
-			);
-		} catch (err: any) {
-			toast.error(err?.message ?? "Failed to sign In");
-		}
-	}
+  const { isSubmitting } = form.formState;
 
-	// TODO: add check to see if user is already logged in and redirect if needed
+  async function handleSignIn(data: SignInForm) {
+    try {
+      await authClient.signIn.email(
+        {
+          ...data,
+          callbackURL: "/properties/dashboard",
+        },
+        {
+          onError: (error) => {
+            if (error.error.code === "EMAIL_NOT_VERIFIED") {
+              navigate(`/auth/verify-email/${encodeURIComponent(data.email)}`);
+            }
+            toast.error(error?.error?.message ?? "Failed to sign In");
+          },
+          onSuccess: () => {},
+        }
+      );
+    } catch (err: any) {
+      toast.error(err?.message ?? "Failed to sign In");
+    }
+  }
 
-	return (
-		<div className="min-h-screen bg-[#f8f8f8]">
-			<main className="relative flex min-h-[calc(100vh-88px)] items-center justify-center px-6">
-				<div
-					className="absolute right-[10%] top-[20%] h-[300px] w-[300px] animate-pulse rounded-full bg-linear-to-br from-pink-400 via-orange-300 to-yellow-200 opacity-70 blur-3xl"
-					aria-hidden="true"
-				/>
+  // TODO: add check to see if user is already logged in and redirect if needed
 
-				<div className="relative w-full max-w-md space-y-8">
-					<div className="space-y-2">
-						<h1 className="text-5xl font-light tracking-tight">Welcome back</h1>
-						<p className="text-sm text-gray-600">
-							Sign in to your account to continue
-						</p>
-					</div>
-					<Form {...form}>
-						<form
-							onSubmit={form.handleSubmit(handleSignIn)}
-							className="space-y-6"
-						>
-							<TextInput
-								form={form}
-								label="Email"
-								name="email"
-								placeholder="you@example.com"
-								type="email"
-								autoComplete="email webauthn"
-							/>
-							<CustomPasswordInput
-								name="password"
-								form={form}
-								label="Password"
-								placeholder="••••••••"
-								autoComplete="current-password webauthn"
-							/>
+  return (
+    <div className="min-h-screen bg-[#f8f8f8]">
+      <main className="relative flex min-h-[calc(100vh-88px)] items-center justify-center px-6">
+        <div
+          className="absolute right-[10%] top-[20%] h-[300px] w-[300px] animate-pulse rounded-full bg-linear-to-br from-pink-400 via-orange-300 to-yellow-200 opacity-70 blur-3xl"
+          aria-hidden="true"
+        />
 
-							<div className="flex items-center justify-between">
-								<Link
-									to="/auth/forgot-password"
-									className="text-sm text-gray-600 hover:text-black hover:underline"
-								>
-									Forgot password?
-								</Link>
-							</div>
+        <div className="relative w-full max-w-md space-y-8">
+          <div className="space-y-2">
+            <h1 className="text-5xl font-light tracking-tight">Welcome back</h1>
+            <p className="text-sm text-gray-600">
+              Sign in to your account to continue
+            </p>
+          </div>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleSignIn)}
+              className="space-y-6"
+            >
+              <TextInput
+                form={form}
+                label="Email"
+                name="email"
+                placeholder="you@example.com"
+                type="email"
+                autoComplete="email webauthn"
+              />
+              <CustomPasswordInput
+                name="password"
+                form={form}
+                label="Password"
+                placeholder="••••••••"
+                autoComplete="current-password webauthn"
+              />
 
-							<Button
-								type="submit"
-								className="h-12 w-full rounded-full bg-black text-sm font-medium text-white hover:bg-black/90"
-							>
-								<LoadingSwap isLoading={isSubmitting}>SIGN IN</LoadingSwap>
-							</Button>
-						</form>
-					</Form>
+              <div className="flex items-center justify-between">
+                <Link
+                  to="/auth/forgot-password"
+                  className="text-sm text-gray-600 hover:text-black hover:underline"
+                >
+                  Forgot password?
+                </Link>
+              </div>
 
-					<PasskeyButton />
+              <Button
+                type="submit"
+                className="h-12 w-full rounded-full bg-black text-sm font-medium text-white hover:bg-black/90"
+              >
+                <LoadingSwap isLoading={isSubmitting}>SIGN IN</LoadingSwap>
+              </Button>
+            </form>
+          </Form>
 
-					<div className="space-y-4">
-						<div className="flex items-center gap-3">
-							<div className="h-px flex-1 bg-gray-300" />
-							<span className="text-xs uppercase tracking-widest text-gray-400">
-								or continue with
-							</span>
-							<div className="h-px flex-1 bg-gray-300" />
-						</div>
+          <PasskeyButton />
 
-						<div className="flex gap-3 justify-center">
-							<OAuthButtons />
-						</div>
-					</div>
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="h-px flex-1 bg-gray-300" />
+              <span className="text-xs uppercase tracking-widest text-gray-400">
+                or continue with
+              </span>
+              <div className="h-px flex-1 bg-gray-300" />
+            </div>
 
-					<p className="text-center text-sm text-gray-600">
-						Don&apos;t have an account?{" "}
-						<Link
-							to="/auth/signup"
-							className="font-medium text-black hover:underline"
-						>
-							Sign up
-						</Link>
-					</p>
-				</div>
-			</main>
-		</div>
-	);
+            <div className="flex gap-3 justify-center">
+              <OAuthButtons />
+            </div>
+          </div>
+
+          <p className="text-center text-sm text-gray-600">
+            Don&apos;t have an account?{" "}
+            <Link
+              to="/auth/signup"
+              className="font-medium text-black hover:underline"
+            >
+              Sign up
+            </Link>
+          </p>
+        </div>
+      </main>
+    </div>
+  );
 };
 
 export default SignInPage;
 
-export function loader() {
-	const session = useAuthStore.getState().session;
-
-	if (session) return redirect("/properties/dashboard");
-}
+export function loader() {}

@@ -12,60 +12,60 @@ import EmailVerification from "@/pages/auth/email-verification";
 import TwoFactorAuth from "@/pages/auth/two-factor-auth";
 
 const auth = {
-	path: "/auth",
-	element: <Root />,
-	children: [
-		{ index: true, element: <Navigate to="/" replace /> },
-		{
-			path: "login",
-			element: <Login />,
-		},
-		{
-			path: "signup",
-			element: <Signup />,
-		},
-		{
-			// protected
-			path: "settings",
-			element: <UserSettings />,
-		},
-		{
-			path: "forgot-password",
-			element: <ForgotPassword />,
-		},
-		{
-			path: "reset-password",
-			element: <ResetPassword />,
-		},
-		{
-			path: "verify-email/:email",
-			element: <EmailVerification />,
-		},
-		{
-			path: "2fa",
-			element: <TwoFactorAuth />,
-		},
-	],
+  path: "/auth",
+  element: <Root />,
+  children: [
+    { index: true, element: <Navigate to="/" replace /> },
+    {
+      path: "login",
+      element: <Login />,
+    },
+    {
+      path: "signup",
+      element: <Signup />,
+    },
+    {
+      // protected
+      path: "settings",
+      element: <UserSettings />,
+    },
+    {
+      path: "forgot-password",
+      element: <ForgotPassword />,
+    },
+    {
+      path: "reset-password",
+      element: <ResetPassword />,
+    },
+    {
+      path: "verify-email/:email",
+      element: <EmailVerification />,
+    },
+    {
+      path: "2fa",
+      element: <TwoFactorAuth />,
+    },
+  ],
 };
 const properties = {
-	path: "/",
-	element: <Root />,
-	children: [
-		{
-			index: true,
-			element: <Home />,
-		},
-		{
-			// protected
-			path: "properties/:propertyId",
-			element: <Property />,
-		},
-		{
-			// protected
-			path: "properties/dashboard",
-			element: <PropertiesDashboard />,
-		},
-	],
+  path: "/",
+  element: <Root />,
+  children: [
+    {
+      index: true,
+      element: <Home />,
+    },
+    {
+      // protected
+      path: "properties/dashboard",
+      element: <PropertiesDashboard />,
+    },
+    {
+      // protected
+      path: "properties/:propertyId",
+      element: <Property />,
+    },
+  ],
 };
 
 export const router = createBrowserRouter([auth, properties]);
