@@ -1,7 +1,7 @@
 import { Link, Navigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Plus } from "lucide-react";
-import TransactionsTable from "@/components/transaction-table";
+import TransactionsTable from "@/components/property-overview/transaction-table";
 import AddTransactionModal from "@/components/modals/add-transaction-modal";
 import { motion } from "motion/react";
 import PropertyOverview from "@/components/property-overview/property-overview";

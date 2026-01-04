@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import {
   Dialog,
   DialogContent,
@@ -30,11 +30,11 @@ import { toast } from "sonner";
 
 type FormFields = z.input<typeof schema>;
 
-const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
+const EditTransactionModal = ({
   isOpen,
   onClose,
   propertyId,
-}) => {
+}: AddTransactionModalProps) => {
   const form = useForm<FormFields>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -175,4 +175,4 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
   );
 };
 
-export default AddTransactionModal;
+export default EditTransactionModal;
