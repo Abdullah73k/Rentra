@@ -1,8 +1,8 @@
 import type { Request, Response } from "express";
-import { StatusCodes } from "../constants/status-codes.constants.js";
-import { validateUUID } from "../utils/validation.utils.js";
-import { ValidationError } from "../errors/validation.errors.js";
-import { UserService } from "../services/user.services.js";
+import { StatusCodes } from "../../constants/status-codes.constants.js";
+import { validateUUID } from "../../utils/validation.utils.js";
+import { ValidationError } from "../../errors/validation.errors.js";
+import { UserService } from "../../services/user.services.js";
 
 export const patchUserAvatar = async (req: Request, res: Response) => {
 	const userId = req.user?.id;

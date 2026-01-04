@@ -12,12 +12,7 @@ import { fetchProperties } from "@/utils/http";
 const DashboardPage: React.FC = () => {
   const session = useAuthStore((s) => s.session);
   const isPending = useAuthStore((s) => s.isPending);
-
-  if (!session) return <Navigate to="/auth/login" replace />;
-
-  if (isPending) {
-    return null; // TODO: render a spinner or loading screen
-  }
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const {
     data,
@@ -26,12 +21,30 @@ const DashboardPage: React.FC = () => {
     isError,
   } = useQuery({
     queryKey: ["properties"],
-    queryFn: () => fetchProperties(session.user.id),
+    queryFn: () => fetchProperties(session?.user.id!),
+    enabled: !!session?.user.id,
   });
 
-  const isEmpty = data?.length === 0;
+  if (isPending) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div
+          className="flex items-center gap-3 text-muted-foreground"
+          role="status"
+          aria-live="polite"
+        >
+          <span className="h-4 w-4 animate-spin rounded-full border-2 border-muted-foreground border-t-transparent" />
+          <span>Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  if (!session) {
+    return <Navigate to="/auth/login" replace />;
+  }
+
+  const isEmpty = data?.length === 0;
 
   return (
     <motion.div
@@ -98,7 +111,9 @@ const DashboardPage: React.FC = () => {
             </div>
           )}
           {isError && (
-            <p>{error.message || "Failed to create property try again"}</p> // TODO: create an error component to display errors
+            <p>
+              {error.message || "Failed to load properties, please try again"}
+            </p> // TODO: create an error component to display errors
           )}
         </div>
 

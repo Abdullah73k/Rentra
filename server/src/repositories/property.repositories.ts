@@ -16,6 +16,9 @@ import {
 	updateRowFromTableWithId,
 } from "../utils/repository.utils.js";
 import { property } from "../db/schemas/property.db.js";
+import { loan } from "../db/schemas/loan.db.js";
+import { lease } from "../db/schemas/lease.db.js";
+import { tenant } from "../db/schemas/tenant.db.js";
 
 export const PropertyRepository = {
 	async createProperty(propertyObject: DB.CreateProperty, client?: PoolClient) {
@@ -23,7 +26,7 @@ export const PropertyRepository = {
 			() => insertIntoTable(property, propertyObject, client),
 			StatusCodes.BAD_REQUEST,
 			failedDbInsertMessage("Property")
-		);   
+		);
 
 		return query;
 	},
@@ -71,6 +74,42 @@ export const PropertyRepository = {
 			() => dbFn(propertyObject, client),
 			StatusCodes.BAD_REQUEST,
 			failedDbUpdateMessage("Property")
+		);
+
+		return query;
+	},
+	async createOptionalData(
+		option: "loan" | "lease" | "tenant",
+		data: DB.Optional,
+		client?: PoolClient
+	) {
+		const table =
+			option === "loan" ? loan : option === "lease" ? lease : tenant;
+		const query = await executeDataBaseOperation(
+			() => insertIntoTable(table, data, client),
+			StatusCodes.BAD_REQUEST,
+			failedDbInsertMessage(
+				(option.slice(0, 1).toUpperCase() +
+					option.slice(1)) as DB.DatabaseTables
+			)
+		);
+
+		return query;
+	},
+	async deleteOptionalData(
+		option: "loan" | "lease" | "tenant",
+		referenceId: string,
+		client?: PoolClient
+	) {
+		const table =
+			option === "loan" ? loan : option === "lease" ? lease : tenant;
+		const query = await executeDataBaseOperation(
+			() => deleteRowFromTableWithId(table, referenceId, client),
+			StatusCodes.BAD_REQUEST,
+			failedDbDeleteMessage(
+				(option.slice(0, 1).toUpperCase() +
+					option.slice(1)) as DB.DatabaseTables
+			)
 		);
 
 		return query;

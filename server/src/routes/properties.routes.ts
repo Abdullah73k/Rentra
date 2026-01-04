@@ -5,17 +5,19 @@ import {
 	getUserPropertyData,
 	patchPropertyData,
 	postPropertyData,
-} from "../controllers/properties.controllers.js";
+	postOptionalData,
+	deleteOptionalData,
+} from "../controllers/property/properties.controllers.js";
 import {
 	deleteTransaction,
 	patchTransaction,
 	postCreateTransaction,
-} from "../controllers/property-transactions.controllers.js";
+} from "../controllers/property/property-transactions.controllers.js";
 import {
 	deletePropertyDoc,
 	getPropertyPrivateDocs,
 	postPropertyPhotos,
-} from "../controllers/property-documents.controllers.js";
+} from "../controllers/property/property-documents.controllers.js";
 import { asyncHandler } from "../utils/async-handler.utils.js";
 import {
 	DOCUMENTS_MAX_FILES,
@@ -26,7 +28,6 @@ import {
 const router: Router = Router();
 
 router.get("/all", asyncHandler(getUserProperties));
-
 router.get("/:propertyId", asyncHandler(getUserPropertyData));
 router.get(
 	"/privateDocs/:referenceId",
@@ -47,6 +48,7 @@ router.post(
 	),
 	asyncHandler(postPropertyPhotos)
 );
+router.post("/optional/:propertyId", asyncHandler(postOptionalData));
 
 router.delete("/delete/:propertyId", asyncHandler(deleteUserProperty));
 router.delete(
@@ -54,6 +56,7 @@ router.delete(
 	asyncHandler(deleteTransaction)
 );
 router.delete("/document/:documentId", asyncHandler(deletePropertyDoc));
+router.delete("/optional/:optionId", asyncHandler(deleteOptionalData));
 
 router.patch("/update/:propertyId", asyncHandler(patchPropertyData));
 router.patch(
