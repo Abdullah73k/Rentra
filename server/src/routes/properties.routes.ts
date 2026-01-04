@@ -7,17 +7,17 @@ import {
 	postPropertyData,
 	postOptionalData,
 	deleteOptionalData,
-} from "../controllers/properties.controllers.js";
+} from "../controllers/property/properties.controllers.js";
 import {
 	deleteTransaction,
 	patchTransaction,
 	postCreateTransaction,
-} from "../controllers/property-transactions.controllers.js";
+} from "../controllers/property/property-transactions.controllers.js";
 import {
 	deletePropertyDoc,
 	getPropertyDoc,
 	postPropertyPhotos,
-} from "../controllers/property-documents.controllers.js";
+} from "../controllers/property/property-documents.controllers.js";
 import { asyncHandler } from "../utils/async-handler.utils.js";
 import { uploadPropertyPhotos } from "../middlewares/multer.middleware.js";
 

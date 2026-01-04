@@ -1,19 +1,19 @@
 import type { Request, Response } from "express";
-import { StatusCodes } from "../constants/status-codes.constants.js";
+import { StatusCodes } from "../../constants/status-codes.constants.js";
 import {
 	validateUUID,
 	validatePropertyData,
-} from "../utils/validation.utils.js";
-import * as API from "../types/api.types.js";
-import { PropertyService } from "../services/property.services.js";
-import { ValidationError } from "../errors/validation.errors.js";
+} from "../../utils/validation.utils.js";
+import * as API from "../../types/api.types.js";
+import { PropertyService } from "../../services/property.services.js";
+import { ValidationError } from "../../errors/validation.errors.js";
 import {
 	leaseSchema,
 	loanSchema,
 	tenantSchema,
-} from "../schemas/post.schemas.js";
-import * as DB from "../types/db.types.js";
-import { validateOption } from "../utils/validation.utils.js";
+} from "../../schemas/post.schemas.js";
+import * as DB from "../../types/db.types.js";
+import { validateOption } from "../../utils/validation.utils.js";
 
 export const getUserPropertyData = async (
 	req: Request<{ propertyId: string }, {}, {}, {}>,

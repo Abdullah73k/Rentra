@@ -130,7 +130,7 @@ export const updateRowFromTableWithId = {
 		const pool = dbConnection(client);
 		return await pool
 			.update(user)
-			.set({ avatar })
+			.set({ image: avatar })
 			.where(eq(user.id, id))
 			.returning();
 	},
