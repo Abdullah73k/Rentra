@@ -3,12 +3,10 @@ import { StatusCodes } from "../../constants/status-codes.constants.js";
 import { validateUUID } from "../../utils/validation.utils.js";
 import { ValidationError } from "../../errors/validation.errors.js";
 import { DocumentService } from "../../services/document.services.js";
-
-export type PrivateDocs = "leaseDocs" | "loanDocs" | "tenantDocs";
-export type PrivateDocsIds =
-	| { leaseId: string; loanId?: never; tenantId?: never }
-	| { leaseId?: never; loanId: string; tenantId?: never }
-	| { leaseId?: never; loanId?: never; tenantId: string };
+import {
+	propertyPrivateDocsSchema,
+} from "../../schemas/util.schemas.js";
+import type { PropertyPrivateDocs } from "../../types/api.types.js";
 
 /**
  *
@@ -78,31 +76,20 @@ export const deletePropertyDoc = async (
 };
 
 export const getPropertyPrivateDocs = async (
-	req: Request<PrivateDocsIds, {}, {}, { label: PrivateDocs }>,
+	req: Request<{}, {}, {}, PropertyPrivateDocs>,
 	res: Response
 ) => {
-	const { label } = req.query;
-	const { leaseId, loanId, tenantId } = req.params;
+	const result = propertyPrivateDocsSchema.safeParse(req.query);
 
-	const leaseIdResult = validateUUID(leaseId);
-	const loanIdResult = validateUUID(loanId);
-	const tenantIdResult = validateUUID(tenantId);
-
-	if (
-		!leaseIdResult.success &&
-		!loanIdResult.success &&
-		!tenantIdResult.success
-	) {
-		throw new ValidationError("Invalid Ids");
+	if (!result.success) {
+		throw new ValidationError("Invalid Ids or label");
 	}
 
-	const id = [
-		leaseIdResult.data,
-		loanIdResult.data,
-		tenantIdResult.data,
-	].filter((id) => id !== undefined);
+	const { label, leaseId, loanId, tenantId } = result.data;
 
-	const documents = await DocumentService.getPrivateDocs({ label, id: id[0]! });
+	const id = leaseId || loanId || tenantId;
+
+	const documents = await DocumentService.getPrivateDocs({ label, id: id! });
 
 	return res.status(StatusCodes.SUCCESS).json({
 		error: false,
@@ -112,50 +99,38 @@ export const getPropertyPrivateDocs = async (
 };
 
 export const postPropertyPrivateDocs = async (
-	req: Request<
-		PrivateDocsIds & { propertyId: string },
-		{},
-		{},
-		{ type: "photo" | "document"; label: PrivateDocs }
-	>,
+	req: Request<{}, {}, {}, PropertyPrivateDocs>,
 	res: Response
 ) => {
-	const { type } = req.query;
-	const { leaseId, loanId, tenantId } = req.params;
-	const { label } = req.query;
 	const files = req.files;
 
 	if (!files || !Array.isArray(files) || files.length === 0) {
 		throw new ValidationError("No file uploaded");
 	}
 
-	const leaseIdResult = validateUUID(leaseId);
-	const loanIdResult = validateUUID(loanId);
-	const tenantIdResult = validateUUID(tenantId);
+	const result = propertyPrivateDocsSchema.safeParse(req.query);
 
-	if (
-		!leaseIdResult.success &&
-		!loanIdResult.success &&
-		!tenantIdResult.success
-	) {
-		throw new ValidationError("Invalid Ids");
+	if (!result.success) {
+		throw new ValidationError("Invalid Ids or label");
 	}
 
-	const id = [
-		leaseIdResult.data,
-		loanIdResult.data,
-		tenantIdResult.data,
-	].filter((id) => id !== undefined);
+	const { label, leaseId, loanId, tenantId, type, propertyId } = result.data;
+
+	if (!propertyId) {
+		throw new ValidationError("Property Id is required");
+	}
+
+	const id = leaseId || loanId || tenantId;
 
 	const urls: string[] = [];
 
 	for (const file of files) {
 		const documentsUrl = await DocumentService.create({
-			propertyId: req.params.propertyId,
-			referenceId: id[0]!,
+			propertyId: propertyId!,
+			referenceId: id!,
 			userId: req.user?.id!,
 			file,
-			type,
+			type: type!,
 			label,
 		});
 		urls.push(documentsUrl!);

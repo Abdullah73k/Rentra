@@ -31,7 +31,7 @@ const router: Router = Router();
 router.get("/all", asyncHandler(getUserProperties));
 router.get("/:propertyId", asyncHandler(getUserPropertyData));
 router.get(
-	"/privateDocs/:referenceId",
+	"/privateDocs",
 	uploadPropertyDocs({ type: "document" }).array(
 		"document",
 		DOCUMENTS_MAX_FILES
@@ -51,7 +51,7 @@ router.post(
 );
 router.post("/optional/:propertyId", asyncHandler(postOptionalData));
 router.post(
-	"/privateDocs/:referenceId",
+	"/privateDocs",
 	uploadPropertyDocs({ type: "document" }).array(
 		"document",
 		DOCUMENTS_MAX_FILES

@@ -1,3 +1,6 @@
+import type z from "zod";
+import type { privateDocsLabel } from "../schemas/util.schemas.js";
+
 export type DeepPartial<T> = T extends Array<infer U>
 	? Array<DeepPartial<U>>
 	: T extends object
@@ -7,3 +10,4 @@ export type DeepPartial<T> = T extends Array<infer U>
 	: T;
 
 export type MulterFile = Express.Multer.File;
+export type PrivateDocs = z.infer<typeof privateDocsLabel>;
