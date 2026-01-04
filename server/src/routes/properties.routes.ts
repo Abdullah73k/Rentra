@@ -16,6 +16,7 @@ import {
 import {
 	deletePropertyDoc,
 	getPropertyPrivateDocs,
+	postPropertyPrivateDocs,
 	postPropertyPhotos,
 } from "../controllers/property/property-documents.controllers.js";
 import { asyncHandler } from "../utils/async-handler.utils.js";
@@ -49,6 +50,14 @@ router.post(
 	asyncHandler(postPropertyPhotos)
 );
 router.post("/optional/:propertyId", asyncHandler(postOptionalData));
+router.post(
+	"/privateDocs/:referenceId",
+	uploadPropertyDocs({ type: "document" }).array(
+		"document",
+		DOCUMENTS_MAX_FILES
+	),
+	asyncHandler(postPropertyPrivateDocs)
+);
 
 router.delete("/delete/:propertyId", asyncHandler(deleteUserProperty));
 router.delete(
