@@ -13,7 +13,7 @@ import type { CreateDocument } from "../types/db.types.js";
 import { documentSchema } from "../schemas/post.schemas.js";
 import { ValidationError } from "../errors/validation.errors.js";
 import type { MulterFile } from "../types/util.types.js";
-import type { PrivateDocs } from "../controllers/property-documents.controllers.js";
+import type { PrivateDocs } from "../controllers/property/property-documents.controllers.js";
 import {
 	photoPathBuilder,
 	privateDocsPathBuilder,
