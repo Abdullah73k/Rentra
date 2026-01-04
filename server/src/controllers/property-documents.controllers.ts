@@ -78,10 +78,10 @@ export const deletePropertyDoc = async (
 };
 
 export const getPropertyPrivateDocs = async (
-	req: Request<PrivateDocsIds, {}, {}, { type: PrivateDocs }>,
+	req: Request<PrivateDocsIds, {}, {}, { label: PrivateDocs }>,
 	res: Response
 ) => {
-	const { type } = req.query;
+	const { label } = req.query;
 	const { leaseId, loanId, tenantId } = req.params;
 
 	const leaseIdResult = validateUUID(leaseId);
@@ -102,11 +102,68 @@ export const getPropertyPrivateDocs = async (
 		tenantIdResult.data,
 	].filter((id) => id !== undefined);
 
-	const documents = await DocumentService.getPrivateDocs({ type, id: id[0]! });
+	const documents = await DocumentService.getPrivateDocs({ label, id: id[0]! });
 
 	return res.status(StatusCodes.SUCCESS).json({
 		error: false,
 		message: "Successfully retrieved document",
 		data: documents,
+	});
+};
+
+export const postPropertyPrivateDocs = async (
+	req: Request<
+		PrivateDocsIds & { propertyId: string },
+		{},
+		{},
+		{ type: "photo" | "document"; label: PrivateDocs }
+	>,
+	res: Response
+) => {
+	const { type } = req.query;
+	const { leaseId, loanId, tenantId } = req.params;
+	const { label } = req.query;
+	const files = req.files;
+
+	if (!files || !Array.isArray(files) || files.length === 0) {
+		throw new ValidationError("No file uploaded");
+	}
+
+	const leaseIdResult = validateUUID(leaseId);
+	const loanIdResult = validateUUID(loanId);
+	const tenantIdResult = validateUUID(tenantId);
+
+	if (
+		!leaseIdResult.success &&
+		!loanIdResult.success &&
+		!tenantIdResult.success
+	) {
+		throw new ValidationError("Invalid Ids");
+	}
+
+	const id = [
+		leaseIdResult.data,
+		loanIdResult.data,
+		tenantIdResult.data,
+	].filter((id) => id !== undefined);
+
+	const urls: string[] = [];
+
+	for (const file of files) {
+		const documentsUrl = await DocumentService.create({
+			propertyId: req.params.propertyId,
+			referenceId: id[0]!,
+			userId: req.user?.id!,
+			file,
+			type,
+			label,
+		});
+		urls.push(documentsUrl!);
+	}
+
+	return res.status(StatusCodes.SUCCESS).json({
+		error: false,
+		message: "Successfully created document",
+		data: urls,
 	});
 };
