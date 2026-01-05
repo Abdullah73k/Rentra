@@ -49,7 +49,7 @@ export const postPropertyPhotos = async (
 	}
 	return res.status(StatusCodes.SUCCESS).json({
 		error: false,
-		message: "Successfully created document",
+		message: "Successfully created documents",
 		data: response,
 	});
 };
@@ -93,7 +93,7 @@ export const getPropertyPrivateDocs = async (
 
 	return res.status(StatusCodes.SUCCESS).json({
 		error: false,
-		message: "Successfully retrieved document",
+		message: "Successfully retrieved documents",
 		data: documents,
 	});
 };
@@ -138,7 +138,7 @@ export const postPropertyPrivateDocs = async (
 
 	return res.status(StatusCodes.SUCCESS).json({
 		error: false,
-		message: "Successfully created document",
+		message: "Successfully created documents",
 		data: urls,
 	});
 };

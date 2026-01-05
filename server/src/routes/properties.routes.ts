@@ -30,14 +30,7 @@ const router: Router = Router();
 
 router.get("/all", asyncHandler(getUserProperties));
 router.get("/:propertyId", asyncHandler(getUserPropertyData));
-router.get(
-	"/privateDocs",
-	uploadPropertyDocs({ type: "document" }).array(
-		"document",
-		DOCUMENTS_MAX_FILES
-	),
-	asyncHandler(getPropertyPrivateDocs)
-);
+router.get("/privateDocs", asyncHandler(getPropertyPrivateDocs));
 
 router.post("/create", asyncHandler(postPropertyData));
 router.post("/create/transaction", asyncHandler(postCreateTransaction));
