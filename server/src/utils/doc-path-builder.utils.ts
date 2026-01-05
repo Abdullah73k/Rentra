@@ -27,3 +27,21 @@ export function avatarPathBuilder({
 export function avatarFolderPathBuilder({ userId }: { userId: string }) {
 	return `users/${userId}/avatar`;
 }
+
+export function privateDocsPathBuilder({
+	userId,
+	referenceId,
+	documentId,
+	documentName,
+	propertyId,
+	label,
+}: {
+	userId: string;
+	referenceId: string;
+	documentId: string;
+	documentName: string;
+	propertyId: string;
+	label: "leases" | "loans" | "tenants";
+}) {
+	return `users/${userId}/privateDocs/${propertyId}/${label}/${referenceId}/${documentId}-${documentName}`;
+}

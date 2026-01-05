@@ -95,7 +95,6 @@ export const patchPropertyData = async (
 	res: Response
 ) => {
 	const propertyInfo = req.body;
-
 	const { propertyId } = req.params;
 
 	const propertyInfoResult = validatePropertyData(propertyInfo, true);

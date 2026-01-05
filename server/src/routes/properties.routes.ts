@@ -15,39 +15,59 @@ import {
 } from "../controllers/property/property-transactions.controllers.js";
 import {
 	deletePropertyDoc,
-	getPropertyDoc,
+	getPropertyPrivateDocs,
+	postPropertyPrivateDocs,
 	postPropertyPhotos,
 } from "../controllers/property/property-documents.controllers.js";
 import { asyncHandler } from "../utils/async-handler.utils.js";
-import { uploadPropertyPhotos } from "../middlewares/multer.middleware.js";
+import {
+	DOCUMENTS_MAX_FILES,
+	PROPERTY_PHOTOS_MAX_FILES,
+	uploadPropertyDocs,
+} from "../middlewares/multer.middleware.js";
 
 const router: Router = Router();
 
+// GET
 router.get("/all", asyncHandler(getUserProperties));
+router.get("/docs/private", asyncHandler(getPropertyPrivateDocs));
 router.get("/:propertyId", asyncHandler(getUserPropertyData));
-router.get("/documents/:propertyId", asyncHandler(getPropertyDoc));
 
-router.post("/create", asyncHandler(postPropertyData));
+// POST
 router.post("/create/transaction", asyncHandler(postCreateTransaction));
+router.post("/create", asyncHandler(postPropertyData));
 router.post(
 	"/photo/:propertyId",
-	uploadPropertyPhotos,
+	uploadPropertyDocs({ type: "photo" }).array(
+		"photo",
+		PROPERTY_PHOTOS_MAX_FILES
+	),
 	asyncHandler(postPropertyPhotos)
 );
 router.post("/optional/:propertyId", asyncHandler(postOptionalData));
+router.post(
+	"/docs/private",
+	uploadPropertyDocs({ type: "document" }).array(
+		"document",
+		DOCUMENTS_MAX_FILES
+	),
+	asyncHandler(postPropertyPrivateDocs)
+);
 
-router.delete("/delete/:propertyId", asyncHandler(deleteUserProperty));
+// DELETE
 router.delete(
 	"/delete/transaction/:transactionId",
 	asyncHandler(deleteTransaction)
 );
+router.delete("/delete/:propertyId", asyncHandler(deleteUserProperty));
 router.delete("/document/:documentId", asyncHandler(deletePropertyDoc));
 router.delete("/optional/:optionId", asyncHandler(deleteOptionalData));
 
-router.patch("/update/:propertyId", asyncHandler(patchPropertyData));
+// PATCH
 router.patch(
 	"/update/transaction/:transactionId",
 	asyncHandler(patchTransaction)
 );
+router.patch("/update/:propertyId", asyncHandler(patchPropertyData));
 
 export default router;

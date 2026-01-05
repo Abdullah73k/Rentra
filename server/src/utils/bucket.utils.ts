@@ -1,32 +1,24 @@
 import { StatusCodes } from "../constants/status-codes.constants.js";
-import { SUPABASE_PUBLIC_BUCKET_NAME } from "../constants/supabase.constants.js";
+import {
+	SUPABASE_PRIVATE_BUCKET_NAME,
+	SUPABASE_PUBLIC_BUCKET_NAME,
+} from "../constants/supabase.constants.js";
 import { supabase } from "../db/configs/supabase.config.js";
 import { DBError } from "../errors/db.errors.js";
 import type { MulterFile } from "../types/util.types.js";
 import {
 	avatarPathBuilder,
-	photoPathBuilder,
-	type PhotoPathBuilderConfig,
 } from "./doc-path-builder.utils.js";
 
 export async function insertFileInBucket({
 	file,
-	userId,
-	propertyId,
-	documentId,
-	documentName,
+	path,
 	bucketName,
-}: PhotoPathBuilderConfig & {
+}: {
 	file: MulterFile;
+	path: string;
 	bucketName: string;
 }) {
-	const path = photoPathBuilder({
-		propertyId,
-		documentId,
-		documentName,
-		userId,
-	});
-
 	const { data, error } = await supabase.storage
 		.from(bucketName)
 		.upload(path, file.buffer, {
@@ -136,4 +128,17 @@ export async function deleteFolderContents({
 			removeError.message,
 			removeError.name
 		);
+}
+
+export async function createSignedURLs(path: string[]) {
+	const EXPIRY = 60 * 10; // 10 minutes
+
+	const { data, error } = await supabase.storage
+		.from(SUPABASE_PRIVATE_BUCKET_NAME)
+		.createSignedUrls(path, EXPIRY);
+
+	if (error)
+		throw new DBError(StatusCodes.BAD_REQUEST, error.message, error.name);
+
+	return data;
 }

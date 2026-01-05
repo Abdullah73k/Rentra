@@ -3,6 +3,12 @@ import { StatusCodes } from "../../constants/status-codes.constants.js";
 import { validateUUID } from "../../utils/validation.utils.js";
 import { ValidationError } from "../../errors/validation.errors.js";
 import { DocumentService } from "../../services/document.services.js";
+import { propertyPrivateDocsSchema } from "../../schemas/util.schemas.js";
+import type {
+	PropertyPrivateDocOptions,
+	PropertyPrivateDocsIds,
+	PropertyPrivateDocsLabel,
+} from "../../types/api.types.js";
 
 /**
  *
@@ -45,7 +51,7 @@ export const postPropertyPhotos = async (
 	}
 	return res.status(StatusCodes.SUCCESS).json({
 		error: false,
-		message: "Successfully created document",
+		message: "Successfully created documents",
 		data: response,
 	});
 };
@@ -71,4 +77,74 @@ export const deletePropertyDoc = async (
 	});
 };
 
-export const getPropertyDoc = async (req: Request, res: Response) => {};
+export const getPropertyPrivateDocs = async (
+	req: Request<{}, {}, PropertyPrivateDocsIds, PropertyPrivateDocsLabel>,
+	res: Response
+) => {
+	const result = propertyPrivateDocsSchema.safeParse({
+		...req.body,
+		...req.query,
+	});
+
+	if (!result.success) {
+		throw new ValidationError("Invalid Ids or label");
+	}
+
+	const { label, leaseId, loanId, tenantId } = result.data;
+
+	const id = leaseId || loanId || tenantId;
+
+	const documents = await DocumentService.getPrivateDocs({ label, id: id! });
+
+	return res.status(StatusCodes.SUCCESS).json({
+		error: false,
+		message: "Successfully retrieved documents",
+		data: documents,
+	});
+};
+
+export const postPropertyPrivateDocs = async (
+	req: Request<{}, {}, PropertyPrivateDocsIds, PropertyPrivateDocOptions>,
+	res: Response
+) => {
+	const files = req.files;
+
+	if (!files || !Array.isArray(files) || files.length === 0) {
+		throw new ValidationError("No file uploaded");
+	}
+
+	const result = propertyPrivateDocsSchema.safeParse({
+		...req.body,
+		...req.query,
+	});
+
+	if (!result.success) {
+		throw new ValidationError("Invalid Ids or label");
+	}
+
+	const { label, leaseId, loanId, tenantId, type, propertyId } = result.data;
+	const id = leaseId || loanId || tenantId;
+
+	if (!propertyId || !type || !id) {
+		throw new ValidationError("Property Id, reference Id or type is required");
+	}
+
+	const urls = await Promise.all(
+		files.map((file) =>
+			DocumentService.create({
+				propertyId,
+				referenceId: id,
+				userId: req.user?.id!,
+				file,
+				type,
+				label,
+			})
+		)
+	);
+
+	return res.status(StatusCodes.SUCCESS).json({
+		error: false,
+		message: "Successfully created documents",
+		data: urls,
+	});
+};
