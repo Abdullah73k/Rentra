@@ -3,10 +3,12 @@ import { StatusCodes } from "../../constants/status-codes.constants.js";
 import { validateUUID } from "../../utils/validation.utils.js";
 import { ValidationError } from "../../errors/validation.errors.js";
 import { DocumentService } from "../../services/document.services.js";
-import {
-	propertyPrivateDocsSchema,
-} from "../../schemas/util.schemas.js";
-import type { PropertyPrivateDocs } from "../../types/api.types.js";
+import { propertyPrivateDocsSchema } from "../../schemas/util.schemas.js";
+import type {
+	PropertyPrivateDocOptions,
+	PropertyPrivateDocsIds,
+	PropertyPrivateDocsLabel,
+} from "../../types/api.types.js";
 
 /**
  *
@@ -76,10 +78,13 @@ export const deletePropertyDoc = async (
 };
 
 export const getPropertyPrivateDocs = async (
-	req: Request<{}, {}, {}, PropertyPrivateDocs>,
+	req: Request<{}, {}, PropertyPrivateDocsIds, PropertyPrivateDocsLabel>,
 	res: Response
 ) => {
-	const result = propertyPrivateDocsSchema.safeParse(req.query);
+	const result = propertyPrivateDocsSchema.safeParse({
+		...req.body,
+		...req.query,
+	});
 
 	if (!result.success) {
 		throw new ValidationError("Invalid Ids or label");
@@ -99,7 +104,7 @@ export const getPropertyPrivateDocs = async (
 };
 
 export const postPropertyPrivateDocs = async (
-	req: Request<{}, {}, {}, PropertyPrivateDocs>,
+	req: Request<{}, {}, PropertyPrivateDocsIds, PropertyPrivateDocOptions>,
 	res: Response
 ) => {
 	const files = req.files;
@@ -108,7 +113,10 @@ export const postPropertyPrivateDocs = async (
 		throw new ValidationError("No file uploaded");
 	}
 
-	const result = propertyPrivateDocsSchema.safeParse(req.query);
+	const result = propertyPrivateDocsSchema.safeParse({
+		...req.body,
+		...req.query,
+	});
 
 	if (!result.success) {
 		throw new ValidationError("Invalid Ids or label");
@@ -122,19 +130,18 @@ export const postPropertyPrivateDocs = async (
 
 	const id = leaseId || loanId || tenantId;
 
-	const urls: string[] = [];
-
-	for (const file of files) {
-		const documentsUrl = await DocumentService.create({
-			propertyId: propertyId!,
-			referenceId: id!,
-			userId: req.user?.id!,
-			file,
-			type: type!,
-			label,
-		});
-		urls.push(documentsUrl!);
-	}
+	const urls = await Promise.all(
+		files.map((file) =>
+			DocumentService.create({
+				propertyId: propertyId!,
+				referenceId: id!,
+				userId: req.user?.id!,
+				file,
+				type: type!,
+				label,
+			})
+		)
+	);
 
 	return res.status(StatusCodes.SUCCESS).json({
 		error: false,

@@ -2,12 +2,6 @@ import z from "zod";
 
 export const option = z.enum(["loan", "lease", "tenant"]);
 
-export const privateDocsLabelSchema = z.object({
-	leaseDocs: z.string(),
-	loanDocs: z.string(),
-	tenantDocs: z.string(),
-});
-
 export const docTypeSchema = z.enum(["photo", "document"]);
 
 export const privateDocsLabel = z.enum(["leaseDocs", "loanDocs", "tenantDocs"]);
