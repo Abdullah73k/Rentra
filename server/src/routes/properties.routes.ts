@@ -28,12 +28,14 @@ import {
 
 const router: Router = Router();
 
+// GET
 router.get("/all", asyncHandler(getUserProperties));
+router.get("/docs/private", asyncHandler(getPropertyPrivateDocs));
 router.get("/:propertyId", asyncHandler(getUserPropertyData));
-router.get("/privateDocs", asyncHandler(getPropertyPrivateDocs));
 
-router.post("/create", asyncHandler(postPropertyData));
+// POST
 router.post("/create/transaction", asyncHandler(postCreateTransaction));
+router.post("/create", asyncHandler(postPropertyData));
 router.post(
 	"/photo/:propertyId",
 	uploadPropertyDocs({ type: "photo" }).array(
@@ -44,7 +46,7 @@ router.post(
 );
 router.post("/optional/:propertyId", asyncHandler(postOptionalData));
 router.post(
-	"/privateDocs",
+	"/docs/private",
 	uploadPropertyDocs({ type: "document" }).array(
 		"document",
 		DOCUMENTS_MAX_FILES
@@ -52,18 +54,20 @@ router.post(
 	asyncHandler(postPropertyPrivateDocs)
 );
 
-router.delete("/delete/:propertyId", asyncHandler(deleteUserProperty));
+// DELETE
 router.delete(
 	"/delete/transaction/:transactionId",
 	asyncHandler(deleteTransaction)
 );
+router.delete("/delete/:propertyId", asyncHandler(deleteUserProperty));
 router.delete("/document/:documentId", asyncHandler(deletePropertyDoc));
 router.delete("/optional/:optionId", asyncHandler(deleteOptionalData));
 
-router.patch("/update/:propertyId", asyncHandler(patchPropertyData));
+// PATCH
 router.patch(
 	"/update/transaction/:transactionId",
 	asyncHandler(patchTransaction)
 );
+router.patch("/update/:propertyId", asyncHandler(patchPropertyData));
 
 export default router;
