@@ -123,21 +123,20 @@ export const postPropertyPrivateDocs = async (
 	}
 
 	const { label, leaseId, loanId, tenantId, type, propertyId } = result.data;
-
-	if (!propertyId) {
-		throw new ValidationError("Property Id is required");
-	}
-
 	const id = leaseId || loanId || tenantId;
+
+	if (!propertyId || !type || !id) {
+		throw new ValidationError("Property Id, reference Id or type is required");
+	}
 
 	const urls = await Promise.all(
 		files.map((file) =>
 			DocumentService.create({
-				propertyId: propertyId!,
-				referenceId: id!,
+				propertyId,
+				referenceId: id,
 				userId: req.user?.id!,
 				file,
-				type: type!,
+				type,
 				label,
 			})
 		)
