@@ -12,6 +12,7 @@ import type { WithId } from "@/lib/types";
 import type { Transaction } from "@/lib/types";
 import { Button } from "../ui/button";
 import { Pencil, Trash } from "lucide-react";
+import { usePropertyStore } from "@/stores/property.store";
 
 interface TransactionsTableProps {
   transactions: WithId<Transaction>[] | undefined;
@@ -20,6 +21,12 @@ interface TransactionsTableProps {
 const TransactionsTable: React.FC<TransactionsTableProps> = ({
   transactions,
 }) => {
+  const setCurrentTransaction = usePropertyStore(
+    (s) => s.setCurrentTransaction
+  );
+  const setIsEditTransactionOpen = usePropertyStore(
+    (s) => s.setIsEditTransactionOpen
+  );
   if (!transactions || transactions.length === 0) {
     return (
       <Card>
@@ -103,7 +110,14 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({
                   )}
                 </TableCell>
                 <TableCell className="w-full text-right font-semibold flex justify-end space-x-4">
-                  <Button type="button" variant="outline">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setCurrentTransaction(transaction);
+                      setIsEditTransactionOpen(true);
+                    }}
+                  >
                     <Pencil />
                   </Button>
                   <Button type="button" variant="destructive">

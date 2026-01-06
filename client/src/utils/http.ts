@@ -1,7 +1,9 @@
 import { API_URL } from "@/constants/api.constants";
+import type { patchTransactionSchema } from "@/lib/schemas";
 import type { EditPropertyBuildType, FetchPropertyReturnType, NewPropertyBuildType, Transaction, WithId } from "@/lib/types";
 import { QueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import type z from "zod";
 
 export const queryClient = new QueryClient();
 
@@ -65,6 +67,14 @@ export async function fetchPropertyInfo(propertyId: string): Promise<FetchProper
 export async function editPropertyInfo(data: Omit<EditPropertyBuildType, "optionalSections">) {
 	try {
 		const res = await axios.patch(API_URL + "/api/properties/update/" + data.property.id, data)
+		return res.data.data
+	} catch (error) {
+		
+	}
+}
+export async function editTransaction(data: z.input<typeof patchTransactionSchema>) {
+	try {
+		const res = await axios.patch(API_URL + "/api/properties/update/transaction/" + data.id, data)
 		return res.data.data
 	} catch (error) {
 		

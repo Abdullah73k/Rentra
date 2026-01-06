@@ -7,13 +7,8 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import {
-  INITIAL_TRANSACTION_FORM,
-  PAYMENT_METHODS,
-  TRANSACTION_TYPES,
-} from "@/constants/form.constants";
-import type { AddTransactionModalProps } from "@/lib/types";
-import { buildTransactionFromForm } from "@/lib/build-transaction-from-form";
+import { PAYMENT_METHODS, TRANSACTION_TYPES } from "@/constants/form.constants";
+import { buildEditTransactionFromForm } from "@/lib/build-edit-transaction-from-form";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,37 +16,68 @@ import { Form } from "../ui/form";
 import TextInput from "../form/text-input";
 import SelectField from "../form/select-field";
 import NotesInput from "../form/notes-input";
-import { transactionSchema as schema } from "@/lib/schemas";
+import { patchTransactionSchema as schema } from "@/lib/schemas";
 import { useMutation } from "@tanstack/react-query";
-import { createNewTransaction } from "@/utils/http";
+import { editTransaction, queryClient } from "@/utils/http";
 import { CURRENCY_OPTIONS } from "@/constants/auth.constants";
 import DateInput from "../form/date-input";
 import { toast } from "sonner";
+import { usePropertyStore } from "@/stores/property.store";
 
 type FormFields = z.input<typeof schema>;
 
 const EditTransactionModal = ({
   isOpen,
   onClose,
-  propertyId,
-}: AddTransactionModalProps) => {
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) => {
+  const transaction = usePropertyStore((s) => s.currentTransaction);
+
   const form = useForm<FormFields>({
     resolver: zodResolver(schema),
     defaultValues: {
-      ...INITIAL_TRANSACTION_FORM,
-      propertyId,
+      ...transaction,
+      fxRateToBase: String(transaction?.fxRateToBase || "1"),
+      taxAmount: String(transaction?.taxAmount || "0"),
+      taxRate: String(transaction?.taxRate || "0"),
+      amount: String(transaction?.amount || "0"),
+      // Handle potential nulls from backend for optional string fields
+      notes: transaction?.notes || "",
+      subcategory: transaction?.subcategory || "",
+      leaseId: transaction?.leaseId || undefined,
     },
   });
 
   const { mutate } = useMutation({
-    mutationFn: createNewTransaction,
+    mutationFn: editTransaction,
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["property", transaction?.propertyId],
+      });
       onClose();
     },
     onError: () => {
-      toast.error("Failed to add transaction, please try again");
+      toast.error("Failed to edit transaction, please try again");
     },
   });
+
+  useEffect(() => {
+    if (!transaction) return;
+
+    form.reset({
+      ...transaction,
+      fxRateToBase: String(transaction.fxRateToBase || "1"),
+      taxAmount: String(transaction.taxAmount || "0"),
+      taxRate: String(transaction.taxRate || "0"),
+      amount: String(transaction.amount || "0"),
+      // Handle potential nulls from backend for optional string fields
+      notes: transaction.notes || "",
+      subcategory: transaction.subcategory || "",
+      leaseId: transaction.leaseId || undefined,
+    });
+  }, [transaction, form]);
 
   const formData = form.watch();
 
@@ -66,11 +92,7 @@ const EditTransactionModal = ({
   }, [taxAmount, form]);
 
   const handleSave = () => {
-    const transaction = buildTransactionFromForm(
-      form.getValues(),
-      propertyId,
-      taxAmount
-    );
+    const transaction = buildEditTransactionFromForm(form.getValues(), taxAmount);
     mutate(transaction);
     form.reset();
   };
@@ -81,7 +103,7 @@ const EditTransactionModal = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-h-[90vh] overflow-y-auto max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Add Transaction</DialogTitle>
+          <DialogTitle>Edit Transaction</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSave)}>
