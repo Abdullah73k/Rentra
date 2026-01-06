@@ -6,10 +6,13 @@ const server = app.listen(PORT, () => {
 	console.log(`server running on port ${PORT}`);
 });
 
-process.on("SIGTERM", () => {
+const gracefulShutdown = () => {
 	console.log("server is closing");
 	server.close(() => {
 		console.log("server closed");
 		process.exit(0);
 	});
-});
+};
+
+process.on("SIGTERM", gracefulShutdown);
+process.on("SIGINT", gracefulShutdown);

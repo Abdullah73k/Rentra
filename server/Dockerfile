@@ -2,11 +2,9 @@ FROM node:24.11.1-slim AS builder
 
 WORKDIR /app
 
-RUN npm install pnpm -g
-
 COPY package.json pnpm-lock.yaml ./
 
-RUN pnpm install --frozen-lockfile
+RUN corepack enable && corepack enable npm && pnpm install --frozen-lockfile
 
 COPY . .
 
@@ -30,7 +28,7 @@ EXPOSE 4000
 
 COPY package.json pnpm-lock.yaml ./
 
-RUN npm install -g pnpm && pnpm install --frozen-lockfile --prod
+RUN corepack enable && corepack enable npm && pnpm install --frozen-lockfile --prod
 
 COPY --from=builder /app/dist ./dist
 
