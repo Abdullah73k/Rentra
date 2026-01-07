@@ -38,7 +38,7 @@ export const transactionSchema = POST.transactionSchema.extend({
 export const propertyDataSchema = z.object({
 	property: propertySchema,
 	propertyInfo: propertyInfoSchema,
-	loan: loanSchema,
-	tenant: tenantSchema,
-	lease: leaseSchema,
+	loan: loanSchema.optional(),
+	tenant: tenantSchema.optional(),
+	lease: leaseSchema.optional(),
 });

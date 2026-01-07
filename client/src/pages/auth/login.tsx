@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, redirect, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import OAuthButtons from "@/components/form/o-auth-buttons";
 import { Form } from "@/components/ui/form";
@@ -13,6 +13,7 @@ import { authClient } from "@/utils/auth-client";
 import { toast } from "sonner";
 import { PasswordSchema } from "@/lib/schemas";
 import PasskeyButton from "@/components/form/passkey-button";
+import { useAuthStore } from "@/stores/auth.store";
 
 const signInSchema = z.object({
   email: z.email(),
@@ -23,6 +24,7 @@ type SignInForm = z.infer<typeof signInSchema>;
 
 const SignInPage: React.FC = () => {
   const navigate = useNavigate();
+  const session = useAuthStore((s) => s.session);
 
   const form = useForm<SignInForm>({
     resolver: zodResolver(signInSchema),
@@ -31,6 +33,8 @@ const SignInPage: React.FC = () => {
       password: "",
     },
   });
+
+  if (session) return <Navigate to="/properties/dashboard" />;
 
   const { isSubmitting } = form.formState;
 
@@ -144,3 +148,5 @@ const SignInPage: React.FC = () => {
 };
 
 export default SignInPage;
+
+export function loader() {}

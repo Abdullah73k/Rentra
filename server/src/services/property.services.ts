@@ -7,6 +7,7 @@ import { PropertyInfoRepository } from "../repositories/propertyInfo.repositorie
 import { TenantRepository } from "../repositories/tenant.repositories.js";
 import { TransactionRepository } from "../repositories/transaction.repositories.js";
 import * as API from "../types/api.types.js";
+import * as DB from "../types/db.types.js";
 import { getFilePublicURL } from "../utils/bucket.utils.js";
 import { queryInTransaction, type PoolClient } from "../utils/service.utils.js";
 
@@ -131,21 +132,15 @@ export const PropertyService = {
 				data.propertyInfo,
 				client
 			);
-			const loan = await LoanRepository.updateLoan(
-				propertyId,
-				data.loan,
-				client
-			);
-			const tenant = await TenantRepository.updateTenant(
-				propertyId,
-				data.tenant,
-				client
-			);
-			const lease = await LeaseRepository.updateLease(
-				propertyId,
-				data.lease,
-				client
-			);
+			const loan = data.loan
+				? await LoanRepository.updateLoan(propertyId, data.loan, client)
+				: undefined;
+			const tenant = data.tenant
+				? await TenantRepository.updateTenant(propertyId, data.tenant, client)
+				: undefined;
+			const lease = data.lease
+				? await LeaseRepository.updateLease(propertyId, data.lease, client)
+				: undefined;
 			return {
 				property,
 				propertyInfo,
@@ -161,5 +156,18 @@ export const PropertyService = {
 			"Update property failed transaction"
 		);
 		return query;
+	},
+	async createOptionalData(
+		option: "loan" | "lease" | "tenant",
+		data: DB.Optional
+	) {
+		const response = await PropertyRepository.createOptionalData(option, data);
+
+		return response;
+	},
+	async deleteOptionalData(option: "loan" | "lease" | "tenant", referenceId: string) {
+		const response = await PropertyRepository.deleteOptionalData(option, referenceId);
+
+		return response;
 	},
 };

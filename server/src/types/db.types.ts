@@ -29,6 +29,7 @@ export type TableObjects =
 	| CreateTransaction;
 
 export const DatabaseTables = [
+	"User",
 	"Property",
 	"PropertyInfo",
 	"Loan",
@@ -68,6 +69,7 @@ export type Tenant = NonNullable<PATCHPropertyData["tenant"]>;
 export type Lease = NonNullable<PATCHPropertyData["lease"]>;
 export type Transaction = z.output<typeof PATCH.transactionSchema>;
 export type Document = z.output<typeof PATCH.documentSchema>;
+export type Optional = CreateOptional & { propertyId: string };
 
 export type CreateProperty = POSTPropertyData["property"];
 export type CreatePropertyInfo = POSTPropertyData["propertyInfo"];
@@ -78,3 +80,4 @@ export type CreateTransaction = z.output<typeof POST.transactionSchema>;
 export type CreateDocument = z.output<typeof POST.documentSchema> & {
 	id: string;
 };
+export type CreateOptional = CreateLease | CreateLoan | CreateTenant;

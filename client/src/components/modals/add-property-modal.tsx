@@ -22,7 +22,7 @@ import { useMutation } from "@tanstack/react-query";
 import { createNewProperty } from "@/utils/http";
 import { useAuthStore } from "@/stores/auth.store";
 
-export type FormFields = z.infer<typeof schema>;
+export type FormFields = z.input<typeof schema>;
 interface AddPropertyModalProps {
   isOpen: boolean;
   onClose: () => void;

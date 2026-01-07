@@ -10,13 +10,16 @@ import Lease from "./lease";
 import Loan from "./loan";
 import Tenant from "./tenant";
 import type { UseFormReturn, Path } from "react-hook-form";
-import type { EditPropertyFormFields } from "../modals/edit-property-modal";
+import { type z } from "zod";
+import { propertyDataSchema } from "@/lib/schemas";
 
-type OptionalSectionsProps<T extends EditPropertyFormFields> = {
+type FormFields = z.input<typeof propertyDataSchema>;
+
+type OptionalSectionsProps<T extends FormFields> = {
 	form: UseFormReturn<T>;
 };
 
-const OptionalSections = <T extends EditPropertyFormFields>({
+const OptionalSections = <T extends FormFields>({
 	form,
 }: OptionalSectionsProps<T>) => {
 	// We need to cast the watch argument because TypeScript can't verify 'optionalSections' exists on T

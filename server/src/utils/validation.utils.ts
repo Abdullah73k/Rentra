@@ -2,8 +2,9 @@ import * as POST from "../schemas/post.schemas.js";
 import * as PATCH from "../schemas/patch.schemas.js";
 import { z } from "zod";
 import * as API from "../types/api.types.js";
+import { option } from "../schemas/util.schemas.js";
 
-export function validateUUID(userId: string) {
+export function validateUUID(userId: string | undefined | null) {
 	const schema = z.uuid();
 	const result = schema.safeParse(userId);
 	return result;
@@ -49,4 +50,8 @@ export function validateTransactionDetails<
 
 	const validatedData = { success: true as const, data: result.data };
 	return validatedData;
+}
+
+export function validateOption(opt: string) {
+	return option.safeParse(opt);
 }

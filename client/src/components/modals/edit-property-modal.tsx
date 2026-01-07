@@ -23,7 +23,7 @@ import { useAuthStore } from "@/stores/auth.store";
 import { usePropertyStore } from "@/stores/property.store";
 import { buildEditPropertyFromForm } from "@/lib/build-edit-property-from-form";
 
-export type EditPropertyFormFields = z.infer<typeof schema>;
+export type EditPropertyFormFields = z.input<typeof schema>;
 
 type props = {
   property: Omit<EditPropertyFormFields, "optionalSections">;
