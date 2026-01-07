@@ -1,15 +1,9 @@
 import { Banknote, FileText, Plus, Users, type LucideIcon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
-import { usePropertyStore } from "@/stores/property.store";
 
-const AddNewField = ({ name, message }: { name: string; message: string }) => {
+const AddNewField = ({ name, message, onClick }: { name: string; message: string; onClick: () => void }) => {
 	let Icon: LucideIcon | null = null;
-
-	const setIsEditPropertyOpen = usePropertyStore(
-		(s) => s.setIsEditPropertyOpen
-	);
-	const setStep = usePropertyStore((s) => s.setEditPropertyStep);
 
 	if (name === "Loan") {
 		Icon = Banknote;
@@ -33,10 +27,7 @@ const AddNewField = ({ name, message }: { name: string; message: string }) => {
 					variant="outline"
 					size="sm"
 					className="gap-1 bg-transparent"
-					onClick={() => {
-						setIsEditPropertyOpen(true);
-						setStep(3);
-					}}
+					onClick={onClick}
 				>
 					<Plus className="h-4 w-4" />
 					Add {name}
