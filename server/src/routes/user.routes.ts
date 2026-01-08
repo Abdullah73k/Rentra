@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { patchUserAvatar } from "../controllers/user-avatar.controllers.js";
+import { patchUserAvatar } from "../controllers/user/user-avatar.controllers.js";
 import { uploadAvatar } from "../middlewares/multer.middleware.js";
 import { asyncHandler } from "../utils/async-handler.utils.js";
 

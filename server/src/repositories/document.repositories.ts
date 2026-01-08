@@ -14,6 +14,7 @@ import {
 } from "../utils/repository.utils.js";
 import type { PoolClient } from "../utils/service.utils.js";
 import { documents } from "../db/schemas/document.db.js";
+import type { PrivateDocs } from "../types/util.types.js";
 
 export const DocumentRepository = {
 	async createDocument(document: DB.CreateDocument, client?: PoolClient) {
@@ -62,6 +63,19 @@ export const DocumentRepository = {
 	async getDocumentsPath(documentIds: string[], client?: PoolClient) {
 		const query = await executeDataBaseOperation(
 			() => getRowsFromTableWithId.documentsPath(documentIds, client),
+			StatusCodes.BAD_REQUEST,
+			failedDbGetMessage("Documents")
+		);
+
+		return query;
+	},
+	async getPrivateDocuments(
+		type: PrivateDocs,
+		id: string,
+		client?: PoolClient
+	) {
+		const query = await executeDataBaseOperation(
+			() => getRowsFromTableWithId[type](id, client),
 			StatusCodes.BAD_REQUEST,
 			failedDbGetMessage("Documents")
 		);

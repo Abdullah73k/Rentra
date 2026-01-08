@@ -2,6 +2,7 @@ import { fromNodeHeaders } from "better-auth/node";
 import { auth } from "../utils/auth.js";
 import type { RequestHandler } from "express";
 import { StatusCodes } from "../constants/status-codes.constants.js";
+import type { User } from "../db/schemas/auth-schema.db.js";
 
 export const authenticate: RequestHandler = async (req, res, next) => {
 	console.log("DEBUG: Authenticate Middleware Hit");
@@ -27,7 +28,7 @@ export const authenticate: RequestHandler = async (req, res, next) => {
 			});
 		}
 
-		req.user = response.user;
+		req.user = response.user as User;
 		req.session = response.session;
 		console.log("DEBUG: calling next()");
 		next();
