@@ -6,6 +6,8 @@ import LoanCard from "./loan-card";
 import AddNewField from "./add-new-field";
 import PropertyDetailsCard from "./property-details-card";
 import AddTenantModal from "../modals/add-tenant-modal";
+import AddLoanModal from "../modals/add-loan-modal";
+import { usePropertyStore } from "@/stores/property.store";
 
 const PropertyOverview = ({
 	property,
@@ -20,6 +22,8 @@ const PropertyOverview = ({
 	lease: NewPropertyBuildType["lease"];
 	loan: NewPropertyBuildType["loan"];
 }) => {
+	const { setIsAddTenantOpen, setIsAddLoanOpen } = usePropertyStore();
+
 	return (
 		<div className="p-6">
 			<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -33,23 +37,24 @@ const PropertyOverview = ({
 				{tenant ? (
 					<TenantCard tenant={tenant} />
 				) : (
-					<AddNewField name="Tenant" message="No tenant added yet" onClick={() => {}} />
+					<AddNewField name="Tenant" message="No tenant added yet" onClick={() => setIsAddTenantOpen(true)} />
 				)}
 
 				{/* Lease Card */}
 				{lease ? (
 					<LeaseCard lease={lease} />
 				) : (
-					<AddNewField name="Lease" message="No lease added yet" onClick={() => {}} />
+					<AddNewField name="Lease" message="No lease added yet" onClick={() => { }} />
 				)}
 
 				{/* Loan Card */}
 				{loan ? (
 					<LoanCard loan={loan} />
 				) : (
-					<AddNewField name="Loan" message="No loan added yet" onClick={() => {}} />
+					<AddNewField name="Loan" message="No loan added yet" onClick={() => setIsAddLoanOpen(true)} />
 				)}
 				<AddTenantModal />
+				<AddLoanModal />
 			</div>
 		</div>
 	);

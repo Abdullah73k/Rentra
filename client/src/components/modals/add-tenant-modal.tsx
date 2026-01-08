@@ -5,14 +5,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { tenantSchema } from "@/lib/schemas";
 import { Dialog, DialogContent, DialogTitle } from "@radix-ui/react-dialog";
 import { DialogHeader } from "../ui/dialog";
-import { useState } from "react";
+import { usePropertyStore } from "@/stores/property.store";
 import { Form } from "../ui/form";
 import { Button } from "../ui/button";
 
 type FormType = z.infer<typeof tenantSchema>;
 
 const AddTenantModal = () => {
-    const [isOpen, setIsOpen] = useState(false);
+    const isAddTenantOpen = usePropertyStore(s => s.isAddTenantOpen);
+    const setIsAddTenantOpen = usePropertyStore(s => s.setIsAddTenantOpen);
 
     const form = useForm<FormType>({
         resolver: zodResolver(tenantSchema),
@@ -22,7 +23,7 @@ const AddTenantModal = () => {
 
     }
     return (
-        <Dialog open={isOpen} onOpenChange={() => setIsOpen(false)}>
+        <Dialog open={isAddTenantOpen} onOpenChange={setIsAddTenantOpen}>
 
             <DialogContent className="max-h-[90vh] overflow-y-auto max-w-2xl">
                 <DialogHeader>
@@ -54,6 +55,7 @@ const AddTenantModal = () => {
                                 placeholder="john@example.com"
                                 type="email"
                             />
+                            <Button type="button" variant="outline" onClick={() => setIsAddTenantOpen(false)}>Cancel</Button>
                             <Button type="submit">Add Tenant</Button>
                         </form>
                     </Form>
