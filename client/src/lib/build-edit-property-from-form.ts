@@ -1,32 +1,26 @@
-import type { FormFields } from "@/components/modals/add-property-modal";
+import type { EditPropertyBuildType } from "./types";
+import { useAuthStore } from "@/stores/auth.store";
+import type { EditPropertyFormFields } from "@/components/modals/edit-property-modal";
 import {
   isCompleteLease,
   isCompleteLoan,
   isCompleteTenant,
 } from "@/utils/property.utils";
-import type { NewPropertyBuildType } from "./types";
-import { useAuthStore } from "@/stores/auth.store";
 
-export interface PropertyPayload {
-  // TODO: type this properly later
-  [key: string]: any;
-}
-
-export function buildPropertyFromForm(
-  formValues: FormFields
-): Omit<NewPropertyBuildType, "optionalSections"> {
-  const { property, propertyInfo, optionalSections, tenant, lease, loan } =
+export function buildEditPropertyFromForm(
+  formValues: EditPropertyFormFields
+): Omit<EditPropertyBuildType, "optionalSections"> {
+  const { property, propertyInfo, tenant, lease, loan, optionalSections } =
     formValues;
   const session = useAuthStore.getState().session;
   if (!session) {
     throw new Error("Invalid session");
   }
-
-  const userId = session.user.id;
-
-  const newPropertyBuild: Omit<NewPropertyBuildType, "optionalSections"> = {
+  const today = new Date();
+  const newPropertyBuild: Omit<EditPropertyBuildType, "optionalSections"> = {
     property: {
-      userId: userId,
+      id: property.id,
+      userId: property.userId,
       purpose: property.purpose,
       type: property.type,
       address: property.address,
@@ -39,8 +33,12 @@ export function buildPropertyFromForm(
       currentValue: String(property.currentValue),
       sold: false,
       photos: [],
+      createdAt: property.createdAt,
+      updatedAt: today,
     },
     propertyInfo: {
+      id: propertyInfo.id,
+      propertyId: propertyInfo.propertyId,
       propertyNumber: propertyInfo.propertyNumber,
       bedrooms: propertyInfo.bedrooms,
       bathrooms: String(propertyInfo.bathrooms),
@@ -50,20 +48,26 @@ export function buildPropertyFromForm(
       parking: propertyInfo.parking || undefined,
       notes: propertyInfo.notes || undefined,
       lockerNumbers: propertyInfo.lockerNumbers,
+      createdAt: propertyInfo.createdAt,
+      updatedAt: today,
     },
 
     tenant:
       optionalSections.addTenant && isCompleteTenant(tenant)
         ? {
+            id: tenant.id,
+            propertyId: tenant.propertyId,
             name: tenant.name,
             phone: tenant.phone || undefined,
             email: tenant.email,
           }
         : undefined,
-
     lease:
       optionalSections.addLease && isCompleteLease(lease)
         ? {
+            id: lease.id,
+            propertyId: lease.propertyId,
+            tenantId: lease.tenantId,
             start: lease.start,
             end: lease.end,
             rentAmount: String(lease.rentAmount),
@@ -73,10 +77,11 @@ export function buildPropertyFromForm(
             deposit: String(lease.deposit),
           }
         : undefined,
-
     loan:
       optionalSections.addLoan && isCompleteLoan(loan)
         ? {
+            id: loan.id,
+            propertyId: loan.propertyId,
             lender: loan.lender,
             termMonths: loan.termMonths,
             monthlyPayment: String(loan.monthlyPayment),

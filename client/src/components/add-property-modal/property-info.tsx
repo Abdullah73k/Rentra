@@ -1,22 +1,28 @@
 import { FURNISHING_TYPES, PROPERTY_STATUS } from "@/constants/form.constants";
 import TextInput from "../form/text-input";
-import type { UseFormReturn } from "react-hook-form";
-import type { FormFields } from "../modals/add-property-modal";
+import type { UseFormReturn, FieldValues, Path } from "react-hook-form";
 import SelectField from "../form/select-field";
 import NotesInput from "../form/notes-input";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
+import { usePropertyStore } from "@/stores/property.store";
 
-type PropertyInfoProps = {
-  form: UseFormReturn<FormFields>;
+type PropertyInfoProps<T extends FieldValues> = {
+  form: UseFormReturn<T>;
 };
 
-const PropertyInfo = ({ form }: PropertyInfoProps) => {
+const PropertyInfo = <T extends FieldValues>({
+  form,
+}: PropertyInfoProps<T>) => {
   const [currentLockerNum, setCurrentLockerNum] = useState("");
-  const [lockerNumArray, setLockerNumArray] = useState<string[]>([]);
+  const lockerNumArray = usePropertyStore((s) => s.lockerNumArray);
+  const setLockerNumArray = usePropertyStore((s) => s.setLockerNumArray);
 
   useEffect(() => {
-    form.setValue("propertyInfo.lockerNumbers", lockerNumArray);
+    form.setValue(
+      "propertyInfo.lockerNumbers" as Path<T>,
+      lockerNumArray as any
+    );
   }, [lockerNumArray, form]);
 
   return (
@@ -24,13 +30,13 @@ const PropertyInfo = ({ form }: PropertyInfoProps) => {
       <div className="grid grid-cols-2 gap-4">
         <TextInput
           form={form}
-          name="propertyInfo.propertyNumber"
+          name={"propertyInfo.propertyNumber" as Path<T>}
           label="Property Number *"
           placeholder="4B"
         />
         <SelectField
           form={form}
-          name="propertyInfo.status"
+          name={"propertyInfo.status" as Path<T>}
           label="Status *"
           options={PROPERTY_STATUS}
         />
@@ -39,33 +45,33 @@ const PropertyInfo = ({ form }: PropertyInfoProps) => {
       <div className="grid grid-cols-3 gap-4">
         <TextInput
           form={form}
-          name="propertyInfo.bedrooms"
+          name={"propertyInfo.bedrooms" as Path<T>}
           label="Bedrooms *"
           type="number"
         />
         <TextInput
           form={form}
-          name="propertyInfo.bathrooms"
+          name={"propertyInfo.bathrooms" as Path<T>}
           label="Bathrooms *"
           type="decimal"
         />
         <TextInput
           form={form}
-          name="propertyInfo.sizeSqm"
+          name={"propertyInfo.sizeSqm" as Path<T>}
           label="Size (sqm) *"
           type="decimal"
         />
       </div>
       <SelectField
         form={form}
-        name="propertyInfo.furnishing"
+        name={"propertyInfo.furnishing" as Path<T>}
         label="Furnishing *"
         options={FURNISHING_TYPES}
       />
 
       <TextInput
         form={form}
-        name="propertyInfo.parking"
+        name={"propertyInfo.parking" as Path<T>}
         label="Parking"
         placeholder="Covered Parking - Spot B12"
       />
@@ -90,7 +96,7 @@ const PropertyInfo = ({ form }: PropertyInfoProps) => {
                   if (e.key === "Enter") {
                     e.preventDefault();
                     if (currentLockerNum) {
-                      setLockerNumArray((prev) => [...prev, currentLockerNum]);
+                      setLockerNumArray([...lockerNumArray, currentLockerNum]);
                       setCurrentLockerNum("");
                     }
                   }
@@ -102,7 +108,7 @@ const PropertyInfo = ({ form }: PropertyInfoProps) => {
                 variant="secondary"
                 onClick={() => {
                   if (!currentLockerNum) return;
-                  setLockerNumArray((prev) => [...prev, currentLockerNum]);
+                  setLockerNumArray([...lockerNumArray, currentLockerNum]);
                   setCurrentLockerNum("");
                 }}
               >
@@ -123,8 +129,8 @@ const PropertyInfo = ({ form }: PropertyInfoProps) => {
                       type="button"
                       className="ml-1 rounded-full p-0.5 hover:bg-destructive/20 hover:text-destructive focus:outline-none"
                       onClick={() => {
-                        setLockerNumArray((prev) =>
-                          prev.filter((_, i) => i !== index)
+                        setLockerNumArray(
+                          lockerNumArray.filter((_, i) => i !== index)
                         );
                       }}
                     >
@@ -159,7 +165,7 @@ const PropertyInfo = ({ form }: PropertyInfoProps) => {
         </div>
       </div>
 
-      <NotesInput form={form} name="propertyInfo.notes" />
+      <NotesInput form={form} name={"propertyInfo.notes" as Path<T>} />
     </div>
   );
 };

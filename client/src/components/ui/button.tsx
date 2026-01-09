@@ -52,8 +52,7 @@ function Button({
   return (
     <motion.div
       whileHover={{ scale: 1.01 }}
-      whileTap={{ scale: 0.5 }}
-      onHoverStart={() => console.log("hover started!")}
+      whileTap={{ scale: 0.99 }}
     >
       <Comp
         data-slot="button"

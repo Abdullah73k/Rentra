@@ -1,29 +1,28 @@
 import { PROPERTY_PURPOSES, PROPERTY_TYPES } from "@/constants/form.constants";
 import TextInput from "../form/text-input";
-import type { UseFormReturn } from "react-hook-form";
-import type { FormFields } from "../modals/add-property-modal";
+import type { UseFormReturn, FieldValues, Path } from "react-hook-form";
 import DateInput from "../form/date-input";
 import SelectField from "../form/select-field";
 import { COUNTRY_OPTIONS, CURRENCY_OPTIONS } from "@/constants/auth.constants";
 
-type PropertyProps = {
-  form: UseFormReturn<FormFields>;
+type PropertyProps<T extends FieldValues> = {
+  form: UseFormReturn<T>;
 };
 
-const Property = ({ form }: PropertyProps) => {
+const Property = <T extends FieldValues>({ form }: PropertyProps<T>) => {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <SelectField
           form={form}
-          name="property.purpose"
+          name={"property.purpose" as Path<T>}
           label="Purpose *"
           placeholder="Select purpose"
           options={PROPERTY_PURPOSES}
         />
         <SelectField
           form={form}
-          name="property.type"
+          name={"property.type" as Path<T>}
           label="Type *"
           placeholder="Select type"
           options={PROPERTY_TYPES}
@@ -31,7 +30,7 @@ const Property = ({ form }: PropertyProps) => {
       </div>
       <TextInput
         form={form}
-        name="property.address"
+        name={"property.address" as Path<T>}
         label="Address *"
         placeholder="123 Main Street, Apt 4B"
       />
@@ -39,14 +38,14 @@ const Property = ({ form }: PropertyProps) => {
       <div className="grid grid-cols-2 gap-4">
         <SelectField
           form={form}
-          name="property.country"
+          name={"property.country" as Path<T>}
           label="Country *"
           placeholder="United Arab Emirates"
           options={COUNTRY_OPTIONS}
         />
         <SelectField
           form={form}
-          name="property.currency"
+          name={"property.currency" as Path<T>}
           label="Currency *"
           placeholder="AED"
           options={CURRENCY_OPTIONS}
@@ -56,14 +55,14 @@ const Property = ({ form }: PropertyProps) => {
       <div className="grid grid-cols-2 gap-4">
         <TextInput
           form={form}
-          name="property.purchasePrice"
+          name={"property.purchasePrice" as Path<T>}
           label="Purchase Price *"
           placeholder="0"
           type="decimal"
         />
         <TextInput
           form={form}
-          name="property.closingCosts"
+          name={"property.closingCosts" as Path<T>}
           label="Closing Costs *"
           placeholder="0"
           type="decimal"
@@ -73,12 +72,12 @@ const Property = ({ form }: PropertyProps) => {
       <div className="grid grid-cols-2 gap-4">
         <DateInput
           form={form}
-          name="property.acquisitionDate"
+          name={"property.acquisitionDate" as Path<T>}
           label="Acquisition Date *"
         />
         <DateInput
           form={form}
-          name="property.valuationDate"
+          name={"property.valuationDate" as Path<T>}
           label="Valuation Date *"
         />
         {/* TODO: add a photo input here */}
@@ -87,14 +86,14 @@ const Property = ({ form }: PropertyProps) => {
       <div className="grid grid-cols-2 gap-4">
         <TextInput
           form={form}
-          name="property.currentValue"
+          name={"property.currentValue" as Path<T>}
           label="Current Value *"
           placeholder="0"
           type="decimal"
         />
         <SelectField
           form={form}
-          name="property.sold"
+          name={"property.sold" as Path<T>}
           label="Sold *"
           placeholder="Select"
           options={[

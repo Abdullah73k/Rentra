@@ -21,7 +21,7 @@ const DashboardPage: React.FC = () => {
     isError,
   } = useQuery({
     queryKey: ["properties"],
-    queryFn: () => fetchProperties(session?.user.id!),
+    queryFn: () => fetchProperties(),
     enabled: !!session?.user.id,
   });
 

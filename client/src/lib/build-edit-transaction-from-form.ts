@@ -1,14 +1,13 @@
-import type { Transaction } from "./types";
-import { transactionSchema } from "./schemas";
+import { patchTransactionSchema } from "./schemas";
 import { z } from "zod";
 
-export function buildTransactionFromForm(
-  formData: z.input<typeof transactionSchema>,
-  propertyId: string,
+export function buildEditTransactionFromForm(
+  formData: z.input<typeof patchTransactionSchema>,
   taxAmount: number
-): Transaction {
+): z.input<typeof patchTransactionSchema> {
   return {
-    propertyId,
+    id: formData.id,
+    propertyId: formData.propertyId,
     type: formData.type,
     subcategory: formData.subcategory,
     amount: String(formData.amount),

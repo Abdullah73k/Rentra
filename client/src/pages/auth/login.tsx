@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, Navigate, redirect, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import OAuthButtons from "@/components/form/o-auth-buttons";
 import { Form } from "@/components/ui/form";
