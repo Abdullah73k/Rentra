@@ -25,19 +25,19 @@ export function buildPropertyFromForm(formValues: FormFields): Omit<NewPropertyB
       address: property.address,
       country: property.country,
       currency: property.currency,
-      purchasePrice: property.purchasePrice,
-      closingCosts: property.closingCosts,
+      purchasePrice: String(property.purchasePrice),
+      closingCosts: String(property.closingCosts),
       acquisitionDate: property.acquisitionDate,
       valuationDate: property.valuationDate,
-      currentValue: property.currentValue,
+      currentValue: String(property.currentValue),
       sold: false,
       photos: [],
     },
     propertyInfo: {
       propertyNumber: propertyInfo.propertyNumber,
       bedrooms: propertyInfo.bedrooms,
-      bathrooms: propertyInfo.bathrooms,
-      sizeSqm: propertyInfo.sizeSqm,
+      bathrooms: String(propertyInfo.bathrooms),
+      sizeSqm: String(propertyInfo.sizeSqm),
       status: propertyInfo.status,
       furnishing: propertyInfo.furnishing,
       parking: propertyInfo.parking || undefined,
@@ -59,11 +59,11 @@ export function buildPropertyFromForm(formValues: FormFields): Omit<NewPropertyB
         ? {
           start: lease.start,
           end: lease.end,
-          rentAmount: lease.rentAmount,
+          rentAmount: String(lease.rentAmount),
           currency: property.currency,
           frequency: lease.frequency,
           paymentDay: lease.paymentDay,
-          deposit: lease.deposit,
+          deposit: String(lease.deposit),
         }
         : undefined,
 
@@ -72,9 +72,9 @@ export function buildPropertyFromForm(formValues: FormFields): Omit<NewPropertyB
         ? {
           lender: loan.lender,
           termMonths: loan.termMonths,
-          monthlyPayment: loan.monthlyPayment,
-          totalMortgageAmount: loan.totalMortgageAmount,
-          interestRate: loan.interestRate,
+          monthlyPayment: String(loan.monthlyPayment),
+          totalMortgageAmount: String(loan.totalMortgageAmount),
+          interestRate: String(loan.interestRate),
         }
         : undefined,
   };
