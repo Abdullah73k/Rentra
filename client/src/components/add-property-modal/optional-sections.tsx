@@ -17,10 +17,16 @@ type FormFields = z.input<typeof propertyDataSchema>;
 
 type OptionalSectionsProps<T extends FormFields> = {
 	form: UseFormReturn<T>;
+	disabledOptions?: {
+		addTenant?: boolean;
+		addLease?: boolean;
+		addLoan?: boolean;
+	};
 };
 
 const OptionalSections = <T extends FormFields>({
 	form,
+	disabledOptions,
 }: OptionalSectionsProps<T>) => {
 	// We need to cast the watch argument because TypeScript can't verify 'optionalSections' exists on T
 	// But we know it does in our usage.
@@ -35,6 +41,7 @@ const OptionalSections = <T extends FormFields>({
 				<h3 className="font-semibold text-foreground">Optional Sections</h3>
 				<div className="space-y-3">
 					<FormField
+						disabled={disabledOptions?.addTenant}
 						control={form.control}
 						name={"optionalSections.addTenant" as Path<T>}
 						render={({ field }) => (
@@ -43,6 +50,7 @@ const OptionalSections = <T extends FormFields>({
 									<Checkbox
 										checked={!!field.value}
 										onCheckedChange={field.onChange}
+										disabled={disabledOptions?.addTenant}
 									/>
 								</FormControl>
 								<FormLabel className="text-sm cursor-pointer">
@@ -53,6 +61,7 @@ const OptionalSections = <T extends FormFields>({
 						)}
 					/>
 					<FormField
+					disabled={disabledOptions?.addLease}
 						control={form.control}
 						name={"optionalSections.addLease" as Path<T>}
 						render={({ field }) => (
@@ -61,6 +70,7 @@ const OptionalSections = <T extends FormFields>({
 									<Checkbox
 										checked={!!field.value}
 										onCheckedChange={field.onChange}
+										disabled={disabledOptions?.addLease}
 									/>
 								</FormControl>
 								<FormLabel className="text-sm cursor-pointer">
@@ -71,6 +81,7 @@ const OptionalSections = <T extends FormFields>({
 						)}
 					/>
 					<FormField
+						disabled={disabledOptions?.addLoan}
 						control={form.control}
 						name={"optionalSections.addLoan" as Path<T>}
 						render={({ field }) => (
@@ -79,6 +90,7 @@ const OptionalSections = <T extends FormFields>({
 									<Checkbox
 										checked={!!field.value}
 										onCheckedChange={field.onChange}
+										disabled={disabledOptions?.addLoan}
 									/>
 								</FormControl>
 								<FormLabel className="text-sm cursor-pointer">

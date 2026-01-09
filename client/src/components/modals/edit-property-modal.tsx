@@ -12,7 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "../ui/form";
 import { patchPropertyDataSchema as schema } from "@/lib/schemas";
 import { useMutation } from "@tanstack/react-query";
-import { editPropertyInfo } from "@/utils/http";
+import { editPropertyInfo, queryClient } from "@/utils/http";
 import { toast } from "sonner";
 import Property from "../add-property-modal/property";
 import PropertyInfo from "../add-property-modal/property-info";
@@ -42,6 +42,9 @@ const EditPropertyModal = ({ property }: props) => {
     resolver: zodResolver(schema) as Resolver<EditPropertyFormFields>,
     defaultValues: {
       ...property,
+      loan: property?.loan || undefined,
+      lease: property?.lease || undefined,
+      tenant: property?.tenant || undefined,
       optionalSections: {
         addLease: !!property.lease,
         addTenant: !!property.tenant,
@@ -53,10 +56,13 @@ const EditPropertyModal = ({ property }: props) => {
   const { mutate } = useMutation({
     mutationFn: editPropertyInfo,
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["properties", property.property.id],
+      });
       setIsEditPropertyOpen(false);
     },
     onError: () => {
-      toast.error("Failed to add transaction, please try again");
+      toast.error("Failed to edit property, please try again");
     },
   });
 
@@ -138,7 +144,16 @@ const EditPropertyModal = ({ property }: props) => {
               {step === 2 && <PropertyInfo form={form} />}
 
               {/* Step 3: Optional Sections */}
-              {step === 3 && <OptionalSections form={form} />}
+              {step === 3 && (
+                <OptionalSections
+                  form={form}
+                  disabledOptions={{
+                    addTenant: !property.tenant,
+                    addLease: !property.lease,
+                    addLoan: !property.loan,
+                  }}
+                />
+              )}
             </div>
           </form>
         </Form>

@@ -71,6 +71,8 @@ export async function fetchPropertyInfo(
     const res = await axios.get(`${API_URL}/api/properties/${propertyId}`, {
       withCredentials: true,
     });
+    console.log(res.data.data);
+    
     return res.data.data;
   } catch (error) {
     throw new Error("An error occurred while fetching the property info");
