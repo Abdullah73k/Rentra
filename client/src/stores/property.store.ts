@@ -18,6 +18,8 @@ type PropertyStore = {
   setIsAddTenantOpen: (isAddTenantOpen: boolean) => void;
   isAddLoanOpen: boolean;
   setIsAddLoanOpen: (isAddLoanOpen: boolean) => void;
+  isAddLeaseOpen: boolean;
+  setIsAddLeaseOpen: (isAddLeaseOpen: boolean) => void;
 };
 
 export const usePropertyStore = create<PropertyStore>((set) => ({
@@ -41,4 +43,6 @@ export const usePropertyStore = create<PropertyStore>((set) => ({
   setIsAddTenantOpen: (isAddTenantOpen: boolean) => set({ isAddTenantOpen }),
   isAddLoanOpen: false,
   setIsAddLoanOpen: (isAddLoanOpen: boolean) => set({ isAddLoanOpen }),
+  isAddLeaseOpen: false,
+  setIsAddLeaseOpen: (isAddLeaseOpen: boolean) => set({ isAddLeaseOpen }),
 }));

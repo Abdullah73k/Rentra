@@ -7,6 +7,7 @@ import AddNewField from "./add-new-field";
 import PropertyDetailsCard from "./property-details-card";
 import AddTenantModal from "../modals/add-tenant-modal";
 import AddLoanModal from "../modals/add-loan-modal";
+import AddLeaseModal from "../modals/add-lease-modal";
 import { usePropertyStore } from "@/stores/property.store";
 
 const PropertyOverview = ({
@@ -22,7 +23,7 @@ const PropertyOverview = ({
 	lease: NewPropertyBuildType["lease"];
 	loan: NewPropertyBuildType["loan"];
 }) => {
-	const { setIsAddTenantOpen, setIsAddLoanOpen } = usePropertyStore();
+	const { setIsAddTenantOpen, setIsAddLoanOpen, setIsAddLeaseOpen } = usePropertyStore();
 
 	return (
 		<div className="p-6">
@@ -44,7 +45,7 @@ const PropertyOverview = ({
 				{lease ? (
 					<LeaseCard lease={lease} />
 				) : (
-					<AddNewField name="Lease" message="No lease added yet" onClick={() => { }} />
+					<AddNewField name="Lease" message="No lease added yet" onClick={() => setIsAddLeaseOpen(true)} />
 				)}
 
 				{/* Loan Card */}
@@ -55,6 +56,7 @@ const PropertyOverview = ({
 				)}
 				<AddTenantModal />
 				<AddLoanModal />
+				<AddLeaseModal />
 			</div>
 		</div>
 	);
