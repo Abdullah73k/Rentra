@@ -1,5 +1,5 @@
 import PropertyInfoCard from "./property-info-card";
-import type { NewPropertyBuildType } from "@/lib/types";
+import type { FetchPropertyReturnType } from "@/lib/types";
 import TenantCard from "./tenant-card";
 import LeaseCard from "./lease-card";
 import LoanCard from "./loan-card";
@@ -17,11 +17,11 @@ const PropertyOverview = ({
 	lease,
 	loan,
 }: {
-	property: NewPropertyBuildType["property"];
-	propertyInfo: NewPropertyBuildType["propertyInfo"];
-	tenant: NewPropertyBuildType["tenant"];
-	lease: NewPropertyBuildType["lease"];
-	loan: NewPropertyBuildType["loan"];
+	property: FetchPropertyReturnType["property"][0];
+	propertyInfo: FetchPropertyReturnType["propertyInfo"][0];
+	tenant: FetchPropertyReturnType["tenant"][0];
+	lease: FetchPropertyReturnType["lease"][0];
+	loan: FetchPropertyReturnType["loan"][0];
 }) => {
 	const { setIsAddTenantOpen, setIsAddLoanOpen, setIsAddLeaseOpen } = usePropertyStore();
 
@@ -54,9 +54,9 @@ const PropertyOverview = ({
 				) : (
 					<AddNewField name="Loan" message="No loan added yet" onClick={() => setIsAddLoanOpen(true)} />
 				)}
-				<AddTenantModal />
-				<AddLoanModal />
-				<AddLeaseModal />
+				<AddTenantModal propertyId={property.id} />
+				<AddLoanModal propertyId={property.id} />
+				<AddLeaseModal propertyId={property.id} />
 			</div>
 		</div>
 	);

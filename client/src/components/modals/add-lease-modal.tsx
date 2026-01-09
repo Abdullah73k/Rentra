@@ -9,10 +9,12 @@ import { usePropertyStore } from "@/stores/property.store";
 import TextInput from "../form/text-input";
 import SelectField from "../form/select-field";
 import DateInput from "../form/date-input";
+import { useMutation } from "@tanstack/react-query";
+import { addOptionalData, queryClient } from "@/utils/http";
 
 type FormType = z.input<typeof leaseSchema>;
 
-const AddLeaseModal = () => {
+const AddLeaseModal = ({ propertyId }: { propertyId: string }) => {
     const isAddLeaseOpen = usePropertyStore(s => s.isAddLeaseOpen);
     const setIsAddLeaseOpen = usePropertyStore(s => s.setIsAddLeaseOpen);
 
@@ -20,9 +22,21 @@ const AddLeaseModal = () => {
         resolver: zodResolver(leaseSchema),
     });
 
+    const { mutate } = useMutation({
+        mutationKey: ["add-lease"],
+        mutationFn: (data: z.infer<typeof leaseSchema>) =>
+            addOptionalData("lease", data, propertyId),
+        onSuccess: () => {
+            setIsAddLeaseOpen(false);
+            queryClient.invalidateQueries({
+                queryKey: ["property", propertyId],
+            })
+        },
+    });
+
     function handleAddLease(data: FormType) {
         console.log("Lease Data:", data);
-        setIsAddLeaseOpen(false);
+        mutate(data as z.infer<typeof leaseSchema>);
     }
 
     return (

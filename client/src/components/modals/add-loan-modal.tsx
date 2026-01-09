@@ -8,10 +8,12 @@ import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 import { AlertDialogHeader } from "../ui/alert-dialog";
 import { Form } from "../ui/form";
 import { Button } from "../ui/button";
+import { useMutation } from "@tanstack/react-query";
+import { addOptionalData, queryClient } from "@/utils/http";
 
 type FormType = z.input<typeof loanSchema>
 
-const AddLoanModal = () => {
+const AddLoanModal = ({ propertyId }: { propertyId: string }) => {
     const isAddLoanOpen = usePropertyStore(s => s.isAddLoanOpen);
     const setIsAddLoanOpen = usePropertyStore(s => s.setIsAddLoanOpen);
 
@@ -19,8 +21,20 @@ const AddLoanModal = () => {
         resolver: zodResolver(loanSchema),
     })
 
-    function handleAddLoan() {
-        console.log(form.getValues())
+    const { mutate } = useMutation({
+        mutationKey: ["add-lease"],
+        mutationFn: (data: z.infer<typeof loanSchema>) =>
+            addOptionalData("loan", data, propertyId),
+        onSuccess: () => {
+            setIsAddLoanOpen(false);
+            queryClient.invalidateQueries({
+                queryKey: ["property", propertyId],
+            })
+        },
+    });
+
+    function handleAddLoan(data: FormType) {
+        mutate(data as z.infer<typeof loanSchema>)
     }
     return (
         <Dialog open={isAddLoanOpen} onOpenChange={setIsAddLoanOpen}>
@@ -68,8 +82,10 @@ const AddLoanModal = () => {
                                     type="number"
                                 />
                             </div>
-                            <Button type="button" variant="outline" onClick={() => setIsAddLoanOpen(false)}>Cancel</Button>
-                            <Button type="submit">Add Loan</Button>
+                            <div className="flex justify-end gap-2 pt-4">
+                                <Button type="button" variant="outline" onClick={() => setIsAddLoanOpen(false)}>Cancel</Button>
+                                <Button type="submit">Add Loan</Button>
+                            </div>
                         </form>
                     </Form>
                 </div>
