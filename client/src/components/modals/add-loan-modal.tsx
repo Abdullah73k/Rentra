@@ -22,7 +22,7 @@ const AddLoanModal = ({ propertyId }: { propertyId: string }) => {
     })
 
     const { mutate } = useMutation({
-        mutationKey: ["add-lease"],
+        mutationKey: ["add-loan"],
         mutationFn: (data: z.infer<typeof loanSchema>) =>
             addOptionalData("loan", data, propertyId),
         onSuccess: () => {

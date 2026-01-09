@@ -13,6 +13,9 @@ import { fetchPropertyInfo } from "@/utils/http";
 import EditPropertyModal from "@/components/modals/edit-property-modal";
 import { usePropertyStore } from "@/stores/property.store";
 import EditTransactionModal from "@/components/modals/edit-transaction-modal";
+import AddTenantModal from "@/components/modals/add-tenant-modal";
+import AddLoanModal from "@/components/modals/add-loan-modal";
+import AddLeaseModal from "@/components/modals/add-lease-modal";
 
 export default function PropertyDetailPage() {
   const isAddTransactionOpen = usePropertyStore((s) => s.isAddTransactionOpen);
@@ -113,13 +116,13 @@ export default function PropertyDetailPage() {
                   <span className="inline-block px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm">
                     {property?.purpose &&
                       property?.purpose.charAt(0).toUpperCase() +
-                        property?.purpose.slice(1)}
+                      property?.purpose.slice(1)}
                   </span>
 
                   <span className="inline-block px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm">
                     {property?.type &&
                       property?.type.charAt(0).toUpperCase() +
-                        property?.type.slice(1)}
+                      property?.type.slice(1)}
                   </span>
 
                   <span className="inline-block px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm">
@@ -219,13 +222,13 @@ export default function PropertyDetailPage() {
         </div>
 
         {/* Add Transaction Modal */}
-        {propertyId && (
-          <AddTransactionModal
-            isOpen={isAddTransactionOpen}
-            onClose={() => setIsAddTransactionOpen(false)}
-            propertyId={propertyId}
-          />
-        )}
+
+        <AddTransactionModal
+          isOpen={isAddTransactionOpen}
+          onClose={() => setIsAddTransactionOpen(false)}
+          propertyId={propertyId}
+        />
+
         <EditTransactionModal
           isOpen={isEditTransactionOpen}
           onClose={() => setIsEditTransactionOpen(false)}
@@ -239,6 +242,9 @@ export default function PropertyDetailPage() {
             loan,
           }}
         />
+        <AddTenantModal propertyId={property.id} />
+        <AddLoanModal propertyId={property.id} />
+        <AddLeaseModal propertyId={property.id} />
       </div>
     </motion.div>
   );

@@ -1,5 +1,9 @@
 import type { FormFields } from "@/components/modals/add-property-modal";
-import { isCompleteLease, isCompleteLoan, isCompleteTenant } from "@/utils/property.utils";
+import {
+  isCompleteLease,
+  isCompleteLoan,
+  isCompleteTenant,
+} from "@/utils/property.utils";
 import type { NewPropertyBuildType } from "./types";
 import { useAuthStore } from "@/stores/auth.store";
 
@@ -8,14 +12,17 @@ export interface PropertyPayload {
   [key: string]: any;
 }
 
-export function buildPropertyFromForm(formValues: FormFields): Omit<NewPropertyBuildType, "optionalSections"> {
-  const { property, propertyInfo, optionalSections, tenant, lease, loan } = formValues;
-  const session = useAuthStore.getState().session
+export function buildPropertyFromForm(
+  formValues: FormFields
+): Omit<NewPropertyBuildType, "optionalSections"> {
+  const { property, propertyInfo, optionalSections, tenant, lease, loan } =
+    formValues;
+  const session = useAuthStore.getState().session;
   if (!session) {
-    throw new Error("Invalid session")
+    throw new Error("Invalid session");
   }
 
-  const userId = session.user.id
+  const userId = session.user.id;
 
   const newPropertyBuild: Omit<NewPropertyBuildType, "optionalSections"> = {
     property: {
@@ -48,36 +55,36 @@ export function buildPropertyFromForm(formValues: FormFields): Omit<NewPropertyB
     tenant:
       optionalSections.addTenant && isCompleteTenant(tenant)
         ? {
-          name: tenant.name,
-          phone: tenant.phone || undefined,
-          email: tenant.email,
-        }
+            name: tenant.name,
+            phone: tenant.phone || undefined,
+            email: tenant.email,
+          }
         : undefined,
 
     lease:
       optionalSections.addLease && isCompleteLease(lease)
         ? {
-          start: lease.start,
-          end: lease.end,
-          rentAmount: String(lease.rentAmount),
-          currency: property.currency,
-          frequency: lease.frequency,
-          paymentDay: lease.paymentDay,
-          deposit: String(lease.deposit),
-        }
+            start: lease.start,
+            end: lease.end,
+            rentAmount: String(lease.rentAmount),
+            currency: property.currency,
+            frequency: lease.frequency,
+            paymentDay: lease.paymentDay,
+            deposit: String(lease.deposit),
+          }
         : undefined,
 
     loan:
       optionalSections.addLoan && isCompleteLoan(loan)
         ? {
-          lender: loan.lender,
-          termMonths: loan.termMonths,
-          monthlyPayment: String(loan.monthlyPayment),
-          totalMortgageAmount: String(loan.totalMortgageAmount),
-          interestRate: String(loan.interestRate),
-        }
+            lender: loan.lender,
+            termMonths: loan.termMonths,
+            monthlyPayment: String(loan.monthlyPayment),
+            totalMortgageAmount: String(loan.totalMortgageAmount),
+            interestRate: String(loan.interestRate),
+          }
         : undefined,
   };
 
-  return newPropertyBuild
+  return newPropertyBuild;
 }

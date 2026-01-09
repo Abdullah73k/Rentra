@@ -70,7 +70,7 @@ const EditPropertyModal = ({ property }: props) => {
     mutationFn: editPropertyInfo,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["properties", property.property.id],
+        queryKey: ["property", property.property.id],
       });
       setIsEditPropertyOpen(false);
     },
@@ -78,8 +78,6 @@ const EditPropertyModal = ({ property }: props) => {
       toast.error("Failed to edit property, please try again");
     },
   });
-
-
 
   useEffect(() => {
     if (session?.user.id) {
@@ -91,7 +89,7 @@ const EditPropertyModal = ({ property }: props) => {
 
   useEffect(() => {
     setLockerNumArray(property.propertyInfo.lockerNumbers);
-  }, [property.propertyInfo.lockerNumbers]);
+  }, [property.propertyInfo.lockerNumbers, setLockerNumArray]);
 
   const handleSave = async () => {
     const isValid = await form.trigger();
@@ -109,7 +107,6 @@ const EditPropertyModal = ({ property }: props) => {
         "An unexpected error occurred while saving the property. Please try again." // TODO: switch to toast component
       );
     }
-    setIsEditPropertyOpen(false);
   };
 
   const watchedProperty = form.watch("property");

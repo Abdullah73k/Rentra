@@ -61,7 +61,7 @@ const OptionalSections = <T extends FormFields>({
 						)}
 					/>
 					<FormField
-					disabled={disabledOptions?.addLease}
+						disabled={disabledOptions?.addLease}
 						control={form.control}
 						name={"optionalSections.addLease" as Path<T>}
 						render={({ field }) => (

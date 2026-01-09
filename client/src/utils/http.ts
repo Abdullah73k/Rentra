@@ -27,17 +27,15 @@ export async function createNewProperty(
         withCredentials: true,
       }
     );
-    console.log(res); // TODO: remove when getting ready for production
-
     const { property } = res.data;
-    console.log(property); // TODO: remove when getting ready for production
-
     return property;
   } catch (error) {
     throw new Error("An error occurred while creating the property");
   }
 }
-export async function fetchProperties(): Promise<WithId<NewPropertyBuildType["property"]>[]> {
+export async function fetchProperties(): Promise<
+  WithId<NewPropertyBuildType["property"]>[]
+> {
   try {
     const res = await axios.get(`${API_URL}/api/properties/all/`, {
       withCredentials: true,
@@ -71,8 +69,6 @@ export async function fetchPropertyInfo(
     const res = await axios.get(`${API_URL}/api/properties/${propertyId}`, {
       withCredentials: true,
     });
-    console.log(res.data.data);
-    
     return res.data.data;
   } catch (error) {
     throw new Error("An error occurred while fetching the property info");
@@ -105,7 +101,9 @@ export async function editPropertyInfo(
       }
     );
     return res.data.data;
-  } catch (error) {}
+  } catch (error) {
+    throw new Error("An error occurred while updating the property info");
+  }
 }
 export async function editTransaction(
   data: z.input<typeof patchTransactionSchema>
@@ -119,7 +117,9 @@ export async function editTransaction(
       }
     );
     return res.data.data;
-  } catch (error) {}
+  } catch (error) {
+    throw new Error("An error occurred while updating the transaction");
+  }
 }
 export async function addOptionalData(
   option: "lease" | "tenant" | "loan",

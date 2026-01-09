@@ -3,7 +3,7 @@ import { z } from "zod";
 
 export function buildEditTransactionFromForm(
   formData: z.input<typeof patchTransactionSchema>,
-  taxAmount: number,
+  taxAmount: number
 ): z.input<typeof patchTransactionSchema> {
   return {
     id: formData.id,

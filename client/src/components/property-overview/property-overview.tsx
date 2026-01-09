@@ -5,9 +5,6 @@ import LeaseCard from "./lease-card";
 import LoanCard from "./loan-card";
 import AddNewField from "./add-new-field";
 import PropertyDetailsCard from "./property-details-card";
-import AddTenantModal from "../modals/add-tenant-modal";
-import AddLoanModal from "../modals/add-loan-modal";
-import AddLeaseModal from "../modals/add-lease-modal";
 import { usePropertyStore } from "@/stores/property.store";
 
 const PropertyOverview = ({
@@ -54,9 +51,7 @@ const PropertyOverview = ({
 				) : (
 					<AddNewField name="Loan" message="No loan added yet" onClick={() => setIsAddLoanOpen(true)} />
 				)}
-				<AddTenantModal propertyId={property.id} />
-				<AddLoanModal propertyId={property.id} />
-				<AddLeaseModal propertyId={property.id} />
+
 			</div>
 		</div>
 	);

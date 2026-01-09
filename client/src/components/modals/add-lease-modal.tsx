@@ -35,7 +35,6 @@ const AddLeaseModal = ({ propertyId }: { propertyId: string }) => {
     });
 
     function handleAddLease(data: FormType) {
-        console.log("Lease Data:", data);
         mutate(data as z.infer<typeof leaseSchema>);
     }
 
