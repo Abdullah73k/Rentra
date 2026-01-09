@@ -30,6 +30,7 @@ type props = {
 };
 
 const EditPropertyModal = ({ property }: props) => {
+  const session = useAuthStore((s) => s.session);
   const setLockerNumArray = usePropertyStore((s) => s.setLockerNumArray);
   const isOpen = usePropertyStore((s) => s.isEditPropertyOpen);
   const setIsEditPropertyOpen = usePropertyStore(
@@ -42,9 +43,21 @@ const EditPropertyModal = ({ property }: props) => {
     resolver: zodResolver(schema) as Resolver<EditPropertyFormFields>,
     defaultValues: {
       ...property,
-      loan: property?.loan || undefined,
-      lease: property?.lease || undefined,
-      tenant: property?.tenant || undefined,
+      property: {
+        ...property.property,
+        userId: property.property.userId || session?.user.id || "",
+        photos: property.property.photos || [],
+      },
+      propertyInfo: {
+        ...property.propertyInfo,
+        propertyNumber: property.propertyInfo.propertyNumber || "",
+        parking: property.propertyInfo.parking || undefined,
+        notes: property.propertyInfo.notes || undefined,
+        lockerNumbers: property.propertyInfo.lockerNumbers || [],
+      },
+      loan: property.loan || undefined,
+      lease: property.lease || undefined,
+      tenant: property.tenant || undefined,
       optionalSections: {
         addLease: !!property.lease,
         addTenant: !!property.tenant,
@@ -66,7 +79,7 @@ const EditPropertyModal = ({ property }: props) => {
     },
   });
 
-  const session = useAuthStore((s) => s.session);
+
 
   useEffect(() => {
     if (session?.user.id) {
@@ -82,16 +95,12 @@ const EditPropertyModal = ({ property }: props) => {
 
   const handleSave = async () => {
     const isValid = await form.trigger();
-    console.log(form.getValues());
 
-    console.log(isValid);
-
-    // if (!isValid) return;
+    if (!isValid) return;
 
     const values = form.getValues();
     try {
       const property = buildEditPropertyFromForm(values);
-      console.log(property); // TODO: remove when getting ready for production
 
       mutate(property);
     } catch (error) {
