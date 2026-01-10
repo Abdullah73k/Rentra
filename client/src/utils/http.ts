@@ -138,3 +138,12 @@ export async function addOptionalData(
     throw new Error("An error occurred while adding the optional data");
   }
 }
+export async function deleteTransaction(transactionId: string) {
+  try {
+    await axios.delete(API_URL + "/api/properties/delete/transaction/" + transactionId, {
+      withCredentials: true,
+    });
+  } catch (error) {
+    throw new Error("An error occurred while deleting the transaction");
+  }
+}

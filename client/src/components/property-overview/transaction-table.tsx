@@ -13,6 +13,9 @@ import type { Transaction } from "@/lib/types";
 import { Button } from "../ui/button";
 import { Pencil, Trash } from "lucide-react";
 import { usePropertyStore } from "@/stores/property.store";
+import { useMutation } from "@tanstack/react-query";
+import { deleteTransaction, queryClient } from "@/utils/http";
+import { toast } from "sonner";
 
 interface TransactionsTableProps {
   transactions: WithId<Transaction>[] | undefined;
@@ -27,6 +30,20 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({
   const setIsEditTransactionOpen = usePropertyStore(
     (s) => s.setIsEditTransactionOpen
   );
+
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["delete-transaction"],
+    mutationFn: deleteTransaction,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["property", transactions?.[0]?.propertyId],
+      });
+    },
+    onError: () => {
+     toast.error("An error occurred while deleting the transaction"); 
+    }
+  })
+
   if (!transactions || transactions.length === 0) {
     return (
       <Card>
@@ -120,7 +137,7 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({
                   >
                     <Pencil />
                   </Button>
-                  <Button type="button" variant="destructive">
+                  <Button type="button" variant="destructive" onClick={() => mutate(transaction.id)} disabled={isPending}>
                     <Trash />
                   </Button>
                 </TableCell>
