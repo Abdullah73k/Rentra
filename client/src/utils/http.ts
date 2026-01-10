@@ -138,3 +138,23 @@ export async function addOptionalData(
     throw new Error("An error occurred while adding the optional data");
   }
 }
+export async function deleteTransaction(transactionId: string) {
+  try {
+    const res = await axios.delete(API_URL + "/api/properties/delete/transaction/" + transactionId, {
+      withCredentials: true,
+    });
+    return res.data.data;
+  } catch (error) {
+    throw new Error("An error occurred while deleting the transaction");
+  }
+}
+export async function deleteProperty(propertyId: string) {
+  try {
+    const res = await axios.delete(API_URL + "/api/properties/delete/" + propertyId, {
+      withCredentials: true,
+    });
+    return res.data.data;
+  } catch (error) {
+    throw new Error("An error occurred while deleting the property");
+  }
+}

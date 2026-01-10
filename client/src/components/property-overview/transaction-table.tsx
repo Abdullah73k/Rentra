@@ -11,15 +11,20 @@ import { Card, CardContent } from "@/components/ui/card";
 import type { WithId } from "@/lib/types";
 import type { Transaction } from "@/lib/types";
 import { Button } from "../ui/button";
-import { Pencil, Trash } from "lucide-react";
+import { Loader2, Pencil, Trash } from "lucide-react";
 import { usePropertyStore } from "@/stores/property.store";
+import { useMutation } from "@tanstack/react-query";
+import { deleteTransaction, queryClient } from "@/utils/http";
+import { toast } from "sonner";
 
 interface TransactionsTableProps {
   transactions: WithId<Transaction>[] | undefined;
+  propertyId: string;
 }
 
 const TransactionsTable: React.FC<TransactionsTableProps> = ({
   transactions,
+  propertyId
 }) => {
   const setCurrentTransaction = usePropertyStore(
     (s) => s.setCurrentTransaction
@@ -27,6 +32,21 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({
   const setIsEditTransactionOpen = usePropertyStore(
     (s) => s.setIsEditTransactionOpen
   );
+
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["delete-transaction"],
+    mutationFn: deleteTransaction,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["property", propertyId],
+      });
+      toast.success("Transaction deleted successfully");
+    },
+    onError: () => {
+      toast.error("An error occurred while deleting the transaction");
+    }
+  })
+
   if (!transactions || transactions.length === 0) {
     return (
       <Card>
@@ -70,11 +90,10 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({
                 </TableCell>
 
                 <TableCell
-                  className={`capitalize ${
-                    transaction.type === "income"
-                      ? "text-green-500"
-                      : "text-red-500"
-                  }`}
+                  className={`capitalize ${transaction.type === "income"
+                    ? "text-green-500"
+                    : "text-red-500"
+                    }`}
                 >
                   {transaction.type}
                 </TableCell>
@@ -105,7 +124,7 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({
                   {transaction.type === "expense" ? "-" : ""}
                   {formatCurrency(
                     parseFloat(transaction.amount) +
-                      parseFloat(transaction.taxAmount),
+                    parseFloat(transaction.taxAmount),
                     transaction.currency
                   )}
                 </TableCell>
@@ -120,8 +139,8 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({
                   >
                     <Pencil />
                   </Button>
-                  <Button type="button" variant="destructive">
-                    <Trash />
+                  <Button type="button" variant="destructive" onClick={() => mutate(transaction.id)} disabled={isPending} >
+                    {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash />}
                   </Button>
                 </TableCell>
               </TableRow>

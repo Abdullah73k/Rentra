@@ -1,6 +1,6 @@
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Plus } from "lucide-react";
+import { ArrowLeft, Loader2, Plus } from "lucide-react";
 import TransactionsTable from "@/components/property-overview/transaction-table";
 import AddTransactionModal from "@/components/modals/add-transaction-modal";
 import { motion } from "motion/react";
@@ -8,8 +8,8 @@ import PropertyOverview from "@/components/property-overview/property-overview";
 import watercolorHouse from "@/assets/pictures/watercolorHouse.png";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PropertyDashboard from "@/components/property-dashboard";
-import { useQuery } from "@tanstack/react-query";
-import { fetchPropertyInfo } from "@/utils/http";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { deleteProperty, fetchPropertyInfo, queryClient } from "@/utils/http";
 import EditPropertyModal from "@/components/modals/edit-property-modal";
 import { usePropertyStore } from "@/stores/property.store";
 import EditTransactionModal from "@/components/modals/edit-transaction-modal";
@@ -17,7 +17,11 @@ import AddTenantModal from "@/components/modals/add-tenant-modal";
 import AddLoanModal from "@/components/modals/add-loan-modal";
 import AddLeaseModal from "@/components/modals/add-lease-modal";
 
+import { ActionButton } from "@/components/ui/action-button";
+
 export default function PropertyDetailPage() {
+  const navigate = useNavigate()
+
   const isAddTransactionOpen = usePropertyStore((s) => s.isAddTransactionOpen);
   const setIsAddTransactionOpen = usePropertyStore(
     (s) => s.setIsAddTransactionOpen
@@ -39,6 +43,11 @@ export default function PropertyDetailPage() {
   const { data, isPending, isError, error } = useQuery({
     queryKey: ["property", propertyId],
     queryFn: () => fetchPropertyInfo(propertyId),
+  });
+
+  const { mutateAsync, isPending: isDeleting } = useMutation({
+    mutationKey: ["delete-property"],
+    mutationFn: deleteProperty,
   });
 
   if (isPending) {
@@ -174,6 +183,35 @@ export default function PropertyDetailPage() {
                   >
                     Edit
                   </Button>
+                  <ActionButton
+                    requireAreYouSure
+                    action={async () => {
+                      try {
+                        await mutateAsync(property.id);
+                        queryClient.invalidateQueries({
+                          queryKey: ["properties"],
+                        });
+                        navigate("/properties/dashboard");
+                        return {
+                          error: false,
+                          message: "Property deleted successfully",
+                        };
+                      } catch (error) {
+                        return {
+                          error: true,
+                          message: "An error occurred while deleting the property",
+                        };
+                      }
+                    }}
+                    variant="destructive"
+                    disabled={isDeleting}
+                  >
+                    {isDeleting ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      "Delete"
+                    )}
+                  </ActionButton>
                 </div>
               </div>
 
@@ -203,7 +241,7 @@ export default function PropertyDetailPage() {
                     </Button>
                   </div>
 
-                  <TransactionsTable transactions={transactions} />
+                  <TransactionsTable transactions={transactions} propertyId={propertyId!} />
                 </div>
               </TabsContent>
 
