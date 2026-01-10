@@ -147,3 +147,12 @@ export async function deleteTransaction(transactionId: string) {
     throw new Error("An error occurred while deleting the transaction");
   }
 }
+export async function deleteProperty(propertyId: string) {
+  try {
+    await axios.delete(API_URL + "/api/properties/delete/" + propertyId, {
+      withCredentials: true,
+    });
+  } catch (error) {
+    throw new Error("An error occurred while deleting the property");
+  }
+}
