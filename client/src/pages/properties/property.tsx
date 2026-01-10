@@ -16,7 +16,8 @@ import EditTransactionModal from "@/components/modals/edit-transaction-modal";
 import AddTenantModal from "@/components/modals/add-tenant-modal";
 import AddLoanModal from "@/components/modals/add-loan-modal";
 import AddLeaseModal from "@/components/modals/add-lease-modal";
-import { toast } from "sonner";
+
+import { ActionButton } from "@/components/ui/action-button";
 
 export default function PropertyDetailPage() {
   const navigate = useNavigate()
@@ -44,19 +45,10 @@ export default function PropertyDetailPage() {
     queryFn: () => fetchPropertyInfo(propertyId),
   });
 
-  const { mutate, isPending: isDeleting } = useMutation({
+  const { mutateAsync, isPending: isDeleting } = useMutation({
     mutationKey: ["delete-property"],
     mutationFn: deleteProperty,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["properties"],
-      });
-      navigate("/properties/dashboard")
-    },
-    onError: () => {
-      toast.error("An error occurred while deleting the property");
-    },
-  })
+  });
 
   if (isPending) {
     return (
@@ -191,9 +183,35 @@ export default function PropertyDetailPage() {
                   >
                     Edit
                   </Button>
-                  <Button variant="destructive" onClick={() => mutate(property.id)} disabled={isDeleting}>
-                    {isDeleting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Delete"}
-                  </Button>
+                  <ActionButton
+                    requireAreYouSure
+                    action={async () => {
+                      try {
+                        await mutateAsync(property.id);
+                        queryClient.invalidateQueries({
+                          queryKey: ["properties"],
+                        });
+                        navigate("/properties/dashboard");
+                        return {
+                          error: false,
+                          message: "Property deleted successfully",
+                        };
+                      } catch (error) {
+                        return {
+                          error: true,
+                          message: "An error occurred while deleting the property",
+                        };
+                      }
+                    }}
+                    variant="destructive"
+                    disabled={isDeleting}
+                  >
+                    {isDeleting ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      "Delete"
+                    )}
+                  </ActionButton>
                 </div>
               </div>
 
@@ -223,7 +241,7 @@ export default function PropertyDetailPage() {
                     </Button>
                   </div>
 
-                  <TransactionsTable transactions={transactions} />
+                  <TransactionsTable transactions={transactions} propertyId={propertyId!} />
                 </div>
               </TabsContent>
 

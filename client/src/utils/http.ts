@@ -140,18 +140,20 @@ export async function addOptionalData(
 }
 export async function deleteTransaction(transactionId: string) {
   try {
-    await axios.delete(API_URL + "/api/properties/delete/transaction/" + transactionId, {
+    const res = await axios.delete(API_URL + "/api/properties/delete/transaction/" + transactionId, {
       withCredentials: true,
     });
+    return res.data.data;
   } catch (error) {
     throw new Error("An error occurred while deleting the transaction");
   }
 }
 export async function deleteProperty(propertyId: string) {
   try {
-    await axios.delete(API_URL + "/api/properties/delete/" + propertyId, {
+    const res = await axios.delete(API_URL + "/api/properties/delete/" + propertyId, {
       withCredentials: true,
     });
+    return res.data.data;
   } catch (error) {
     throw new Error("An error occurred while deleting the property");
   }
