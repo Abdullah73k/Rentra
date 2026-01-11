@@ -158,3 +158,18 @@ export async function deleteProperty(propertyId: string) {
     throw new Error("An error occurred while deleting the property");
   }
 }
+export async function addPropertyPicture(propertyId: string, data: File) {
+  try {
+    const formData = new FormData();
+    formData.append("photo", data);
+    const res = await axios.post(`${API_URL}/api/properties/photo/${propertyId}?type=photo`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error) {
+    throw new Error("An error occurred while adding the property picture");
+  }
+}
