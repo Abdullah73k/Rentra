@@ -5,7 +5,8 @@ import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle }
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
-import { addPropertyPicture } from "@/utils/http";
+import { addPropertyPicture, queryClient } from "@/utils/http";
+import type { NewPropertyBuildType, WithId } from "@/lib/types";
 
 const PropertyPhotos = ({ propertyId }: { propertyId: string }) => {
     const [file, setFile] = useState<File | null>(null);
@@ -23,6 +24,13 @@ const PropertyPhotos = ({ propertyId }: { propertyId: string }) => {
             setFile(file);
         }
     };
+
+    const cashedPhotos = queryClient.getQueryData<WithId<NewPropertyBuildType["property"]>[]>([
+        "properties"
+    ]);
+
+    const photos = cashedPhotos?.filter((property) => property.id === propertyId)[0].photos;
+
 
     const { mutate } = useMutation({
         mutationKey: ["add-property-picture", propertyId],
@@ -90,12 +98,19 @@ const PropertyPhotos = ({ propertyId }: { propertyId: string }) => {
             </CardHeader>
             <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="aspect-video rounded-xl bg-muted/40 border border-dashed flex flex-col items-center justify-center text-muted-foreground gap-2 hover:bg-muted/60 transition-colors">
+
+
+                    {photos ? photos.map((photo, index) => (
+                        <div
+                            key={`${photo}-${index}`}
+                            className="aspect-video rounded-xl bg-muted/40 border border-dashed flex flex-col items-center justify-center text-muted-foreground gap-2 hover:bg-muted/60 transition-colors"
+                        >
+                            <img src={photo} alt="" />
+                        </div>
+                    )) : <div className="aspect-video rounded-xl bg-muted/40 border border-dashed flex flex-col items-center justify-center text-muted-foreground gap-2 hover:bg-muted/60 transition-colors">
                         <ImageIcon className="h-8 w-8 opacity-40" />
                         <span className="text-xs font-medium">No photos</span>
-                    </div>
-                    {/* Placeholder slots for layout demonstration */}
-                 
+                    </div>}
                 </div>
             </CardContent>
         </Card>
