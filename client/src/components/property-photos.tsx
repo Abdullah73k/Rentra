@@ -17,7 +17,7 @@ const PropertyPhotos = ({ propertyId }: { propertyId: string }) => {
             const file = e.target.files[0];
             if (file.size > 5 * 1024 * 1024) {
                 // 5 mb max size
-                toast("File size must be less that 5MB");
+                toast("File size must be less than 5MB");
                 e.target.value = "";
                 return;
             }
@@ -25,16 +25,31 @@ const PropertyPhotos = ({ propertyId }: { propertyId: string }) => {
         }
     };
 
-    const cashedPhotos = queryClient.getQueryData<WithId<NewPropertyBuildType["property"]>[]>([
+    const cachedPhotos = queryClient.getQueryData<WithId<NewPropertyBuildType["property"]>[]>([
         "properties"
     ]);
 
-    const photos = cashedPhotos?.filter((property) => property.id === propertyId)[0].photos;
-
+    const property = cachedPhotos?.find((property) => property.id === propertyId);
+    const photos = property?.photos ?? [];
 
     const { mutate } = useMutation({
         mutationKey: ["add-property-picture", propertyId],
-        mutationFn: (file: File) => addPropertyPicture(propertyId, file)
+        mutationFn: (file: File) => addPropertyPicture(propertyId, file),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["properties"] });
+            setFile(null);
+            if (fileInputRef.current) {
+                fileInputRef.current.value = "";
+            }
+            toast("Photo uploaded successfully");
+        },
+        onError: (error: unknown) => {
+            let message = "Failed to upload photo";
+            if (error instanceof Error && error.message) {
+                message = `Failed to upload photo: ${error.message}`;
+            }
+            toast(message);
+        }
     })
 
     function handleSavePropertyPicture(file: File) {
@@ -53,7 +68,7 @@ const PropertyPhotos = ({ propertyId }: { propertyId: string }) => {
                             type="file"
                             ref={fileInputRef}
                             className="hidden"
-                            accept="image/jpeg, image/png, image/jpg"
+                            accept="image/jpeg, image/png, image/jpg, image/gif"
                             onChange={handleFileChange}
                         />
 
@@ -100,12 +115,12 @@ const PropertyPhotos = ({ propertyId }: { propertyId: string }) => {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
 
 
-                    {photos ? photos.map((photo, index) => (
+                    {photos && photos.length > 0 ? photos.map((photo, index) => (
                         <div
                             key={`${photo}-${index}`}
                             className="aspect-video rounded-xl bg-muted/40 border border-dashed flex flex-col items-center justify-center text-muted-foreground gap-2 hover:bg-muted/60 transition-colors"
                         >
-                            <img src={photo} alt="" />
+                            <img src={photo} alt={`Property photo ${index + 1}`} />
                         </div>
                     )) : <div className="aspect-video rounded-xl bg-muted/40 border border-dashed flex flex-col items-center justify-center text-muted-foreground gap-2 hover:bg-muted/60 transition-colors">
                         <ImageIcon className="h-8 w-8 opacity-40" />
