@@ -66,21 +66,27 @@ export const PropertyService = {
 		return query;
 	},
 	async getAll(userId: string) {
-		let response = [];
-
 		const properties = await PropertyRepository.getProperties(userId);
-		for (const property of properties) {
-			let paths = [];
-			const documents = await DocumentRepository.getAllDocuments(property.id);
-			for (const document of documents) {
-				const path = getFilePublicURL({
-					path: document.path,
-					bucket: SUPABASE_PUBLIC_BUCKET_NAME,
-				});
-				paths.push(path);
-			}
-			response.push({ ...property, photos: paths });
-		}
+
+		const documents = await DocumentRepository.getAllDocuments(
+			properties.map((p) => p.id)
+		);
+		const paths = documents.map((doc) => {
+			return getFilePublicURL({
+				path: doc.path,
+				bucket: SUPABASE_PUBLIC_BUCKET_NAME,
+				id: doc.propertyId!,
+			});
+		});
+
+		let response: DB.Property[] = [];
+
+		properties.forEach((property) => {
+			const photos = paths
+				.filter((path) => path.id === property.id)
+				.map((p) => p.publicUrl);
+			response.push({ ...property, photos });
+		});
 
 		return response;
 	},
@@ -165,8 +171,14 @@ export const PropertyService = {
 
 		return response;
 	},
-	async deleteOptionalData(option: "loan" | "lease" | "tenant", referenceId: string) {
-		const response = await PropertyRepository.deleteOptionalData(option, referenceId);
+	async deleteOptionalData(
+		option: "loan" | "lease" | "tenant",
+		referenceId: string
+	) {
+		const response = await PropertyRepository.deleteOptionalData(
+			option,
+			referenceId
+		);
 
 		return response;
 	},
