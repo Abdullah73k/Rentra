@@ -9,11 +9,13 @@ import { StatusCodes } from "./constants/status-codes.constants.js";
 import { authenticate } from "./middlewares/authenticate.middleware.js";
 import userRouter from "./routes/user.routes.js";
 import helmet from "helmet";
-import { DEVELOPMENT_DOMAIN, PRODUCTION_DOMAIN } from "./constants/domain.constants.js";
+import {
+	DEVELOPMENT_DOMAIN,
+	PRODUCTION_DOMAIN,
+} from "./constants/domain.constants.js";
 
 const app: Express = express();
 
-app.disable("x-powered-by");
 app.use(
 	helmet({
 		contentSecurityPolicy: false,
