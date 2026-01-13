@@ -93,7 +93,8 @@ export function getFilePublicURL({
 	const {
 		data: { publicUrl },
 	} = supabase.storage.from(bucket).getPublicUrl(path);
-	return { publicUrl, id };
+
+	return { publicUrl, id: id ?? null };
 }
 
 export async function deleteFolderContents({

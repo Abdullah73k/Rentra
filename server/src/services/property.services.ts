@@ -96,6 +96,12 @@ export const PropertyService = {
 	async getAllData(propertyId: string) {
 		const queryFn = async (propertyId: string, client: PoolClient) => {
 			const property = await PropertyRepository.getProperty(propertyId, client);
+
+			const documents = await DocumentRepository.getAllDocuments(
+				propertyId,
+				client
+			);
+
 			const propertyInfo = await PropertyInfoRepository.getPropertyInfo(
 				propertyId,
 				client
@@ -115,15 +121,27 @@ export const PropertyService = {
 				tenant,
 				lease,
 				transaction,
+				documents,
 			};
 		};
 
-		const result = await queryInTransaction(
+		const { documents, property, ...rest } = await queryInTransaction(
 			queryFn,
 			propertyId,
 			"Could not fetch all property data"
 		);
-		return result;
+
+		const paths = documents.map((doc) => {
+			return getFilePublicURL({
+				path: doc.path,
+				bucket: SUPABASE_PUBLIC_BUCKET_NAME,
+			});
+		});
+
+		return {
+			...rest,
+			property: [{ ...property[0]!, photos: paths.map((p) => p.publicUrl) }],
+		};
 	},
 	async update(data: API.PATCHPropertyData) {
 		const queryFn = async (data: API.PATCHPropertyData, client: PoolClient) => {
