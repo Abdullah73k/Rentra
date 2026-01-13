@@ -13,6 +13,7 @@ import { DEVELOPMENT_DOMAIN, PRODUCTION_DOMAIN } from "./constants/domain.consta
 
 const app: Express = express();
 
+app.disable("x-powered-by");
 app.use(
 	helmet({
 		contentSecurityPolicy: false,
