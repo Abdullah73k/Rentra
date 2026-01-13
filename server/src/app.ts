@@ -9,6 +9,7 @@ import { StatusCodes } from "./constants/status-codes.constants.js";
 import { authenticate } from "./middlewares/authenticate.middleware.js";
 import userRouter from "./routes/user.routes.js";
 import helmet from "helmet";
+import { DEVELOPMENT_DOMAIN, PRODUCTION_DOMAIN } from "./constants/domain.constants.js";
 
 const app: Express = express();
 
@@ -20,7 +21,7 @@ app.use(
 );
 app.use(
 	cors({
-		origin: "http://localhost:5173",
+		origin: [PRODUCTION_DOMAIN, DEVELOPMENT_DOMAIN],
 		methods: ["GET", "POST", "PATCH", "DELETE"],
 		credentials: true,
 	})
