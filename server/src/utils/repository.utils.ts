@@ -87,7 +87,9 @@ export const getRowsFromTableWithId = {
 		| { propertyId?: never; documentId: string }
 	)) {
 		const pool = dbConnection(client);
-		
+
+		if (propertyId?.length === 0) return [];
+
 		// Query by document ID
 		if (documentId) {
 			return await pool
@@ -95,7 +97,7 @@ export const getRowsFromTableWithId = {
 				.from(documents)
 				.where(eq(documents.id, documentId));
 		}
-		
+
 		// Query by array of property IDs
 		if (Array.isArray(propertyId)) {
 			return await pool
@@ -103,7 +105,7 @@ export const getRowsFromTableWithId = {
 				.from(documents)
 				.where(inArray(documents.propertyId, propertyId));
 		}
-		
+
 		// Query by single property ID (propertyId must be a string here)
 		if (propertyId) {
 			return await pool
@@ -111,7 +113,7 @@ export const getRowsFromTableWithId = {
 				.from(documents)
 				.where(eq(documents.propertyId, propertyId));
 		}
-		
+
 		// This should never happen due to the discriminated union, but TypeScript needs it
 		return [];
 	},
