@@ -106,6 +106,13 @@ export const getRowsFromTableWithId = {
 
 		return paths.map((p) => p.path);
 	},
+	async propertyDocs(propertyId: string, client: PoolClient | undefined) {
+		const pool = dbConnection(client);
+		return await pool
+			.select()
+			.from(documents)
+			.where(eq(documents.propertyId, propertyId));
+	},
 	async loanDocs(loanId: string, client: PoolClient | undefined) {
 		const pool = dbConnection(client);
 		return await pool
