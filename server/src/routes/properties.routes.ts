@@ -30,10 +30,10 @@ const router: Router = Router();
 
 // GET
 router.get("/all", asyncHandler(getUserProperties));
-router.get("/docs/private", asyncHandler(getPropertyPrivateDocs));
 router.get("/:propertyId", asyncHandler(getUserPropertyData));
 
 // POST
+router.post("/docs/private", asyncHandler(getPropertyPrivateDocs)); // Use post to send body
 router.post("/create/transaction", asyncHandler(postCreateTransaction));
 router.post("/create", asyncHandler(postPropertyData));
 router.post(
