@@ -4,7 +4,7 @@ import { StatusCodes } from "../constants/status-codes.constants.js";
 import { dbConnection } from "./db-connects.utils.js";
 import type { PoolClient } from "../utils/service.utils.js";
 import type { PgTable, PgTableWithColumns } from "drizzle-orm/pg-core";
-import { eq, inArray, type InferInsertModel } from "drizzle-orm";
+import { eq, inArray, type InferInsertModel, and, isNull } from "drizzle-orm";
 import { property } from "../db/schemas/property.db.js";
 import { propertyInfo } from "../db/schemas/property-info.db.js";
 import { loan } from "../db/schemas/loan.db.js";
@@ -111,7 +111,14 @@ export const getRowsFromTableWithId = {
 		return await pool
 			.select()
 			.from(documents)
-			.where(eq(documents.propertyId, propertyId));
+			.where(
+				and(
+					eq(documents.propertyId, propertyId),
+					isNull(documents.loanId),
+					isNull(documents.leaseId),
+					isNull(documents.tenantId)
+				)
+			);
 	},
 	async loanDocs(loanId: string, client: PoolClient | undefined) {
 		const pool = dbConnection(client);

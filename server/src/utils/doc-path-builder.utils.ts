@@ -43,7 +43,7 @@ export function privateDocsPathBuilder({
 	referenceId: string | undefined;
 	label: "leases" | "loans" | "tenants" | undefined;
 }) {
-	if (!label && !referenceId)
+	if (!label || !referenceId)
 		return `users/${userId}/privateDocs/${propertyId}/${documentId}-${documentName}`;
 	else
 		return `users/${userId}/privateDocs/${propertyId}/${label}/${referenceId}/${documentId}-${documentName}`;
