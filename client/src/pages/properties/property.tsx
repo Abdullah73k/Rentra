@@ -45,6 +45,9 @@ export default function PropertyDetailPage() {
     queryFn: () => fetchPropertyInfo(propertyId),
   });
 
+  console.log(data);
+  
+
   const { mutateAsync, isPending: isDeleting } = useMutation({
     mutationKey: ["delete-property"],
     mutationFn: deleteProperty,
@@ -226,7 +229,7 @@ export default function PropertyDetailPage() {
                 />
 
                 {/* Transactions Section */}
-                <div className="p-6 ">
+                <div className="p-6 space-y-6">
                   <div className="flex items-center justify-between mb-6 ">
                     <h2 className="text-2xl font-semibold text-foreground">
                       Transactions
@@ -243,7 +246,7 @@ export default function PropertyDetailPage() {
 
 
                   <TransactionsTable transactions={transactions} propertyId={propertyId!} />
-                  <PropertyPhotos propertyId={propertyId!} />
+                  <PropertyPhotos propertyId={propertyId!} photos={property.photos} />
                 </div>
               </TabsContent>
 

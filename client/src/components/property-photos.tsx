@@ -1,4 +1,4 @@
-import { Upload, X, Image as ImageIcon } from "lucide-react";
+import { Upload, X, Image as ImageIcon, Loader2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import {
@@ -13,9 +13,8 @@ import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { addPropertyPicture, queryClient } from "@/utils/http";
-import type { NewPropertyBuildType, WithId } from "@/lib/types";
 
-const PropertyPhotos = ({ propertyId }: { propertyId: string }) => {
+const PropertyPhotos = ({ propertyId, photos }: { propertyId: string; photos: string[] }) => {
   const [file, setFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -32,20 +31,11 @@ const PropertyPhotos = ({ propertyId }: { propertyId: string }) => {
     }
   };
 
-  const cachedPhotos = queryClient.getQueryData<
-    WithId<NewPropertyBuildType["property"]>[]
-  >(["properties"]);
-
-  const property = cachedPhotos?.find((property) => property.id === propertyId);
-  const photos = property?.photos ?? [];
-
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationKey: ["add-property-picture", propertyId],
     mutationFn: (file: File) => addPropertyPicture(propertyId, file),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["property", propertyId] });
-      queryClient.invalidateQueries({ queryKey: ["properties"] });
-
       setFile(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
@@ -98,8 +88,9 @@ const PropertyPhotos = ({ propertyId }: { propertyId: string }) => {
                   onClick={() => handleSavePropertyPicture(file)}
                   size="sm"
                   className="h-8"
+                  disabled={isPending}
                 >
-                  Save
+                  {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save"}
                 </Button>
                 <Button
                   variant="ghost"
@@ -125,7 +116,7 @@ const PropertyPhotos = ({ propertyId }: { propertyId: string }) => {
                 key={photo}
                 className="aspect-video rounded-xl bg-muted/40 border border-dashed flex flex-col items-center justify-center text-muted-foreground gap-2 hover:bg-muted/60 transition-colors"
               >
-                <img src={photo} alt={`Property photo ${index + 1}`} height={256} width={256} />
+                <img src={photo} alt={`Property photo ${index + 1}`} height={512} width={512} className="w-[512px] h-[512px] object-cover" />
               </div>
             ))
           ) : (
