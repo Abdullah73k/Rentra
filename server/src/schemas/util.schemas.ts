@@ -27,7 +27,7 @@ export const propertyPrivateDocsSchema = z
 		},
 		{
 			message:
-				"Exactly one of propertyId, leaseId, loanId, or tenantId must be provided, and the others must be undefined.",
+				"Either provide propertyId alone, or propertyId together with exactly one of leaseId, loanId, or tenantId.",
 			path: ["leaseId", "loanId", "tenantId", "propertyId"],
 		}
 	);
