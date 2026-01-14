@@ -164,6 +164,74 @@ export async function deleteProperty(propertyId: string) {
     throw new Error("An error occurred while deleting the property");
   }
 }
+export async function fetchPrivateDocs(
+  label: "leaseDocs" | "loanDocs" | "tenantDocs",
+  referenceId: string
+) {
+  try {
+    let queryParam = "";
+    if (label === "leaseDocs") queryParam = `leaseId=${referenceId}`;
+    if (label === "loanDocs") queryParam = `loanId=${referenceId}`;
+    if (label === "tenantDocs") queryParam = `tenantId=${referenceId}`;
+
+    const res = await axios.get(
+      `${API_URL}/api/properties/docs/private?label=${label}&${queryParam}`,
+      {
+        withCredentials: true,
+      }
+    );
+    return res.data.data as string[];
+  } catch (error) {
+    throw new Error("An error occurred while fetching private documents");
+  }
+}
+
+export async function uploadPrivateDocs(
+  propertyId: string,
+  referenceId: string,
+  label: "leaseDocs" | "loanDocs" | "tenantDocs",
+  files: File[]
+) {
+  try {
+    const formData = new FormData();
+    files.forEach((file) => formData.append("document", file));
+    formData.append("propertyId", propertyId);
+    formData.append("label", label);
+    formData.append("type", "document");
+
+    if (label === "leaseDocs") formData.append("leaseId", referenceId);
+    if (label === "loanDocs") formData.append("loanId", referenceId);
+    if (label === "tenantDocs") formData.append("tenantId", referenceId);
+
+    const res = await axios.post(
+      `${API_URL}/api/properties/docs/private`,
+      formData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true,
+      }
+    );
+    return res.data;
+  } catch (error) {
+    throw new Error("An error occurred while uploading documents");
+  }
+}
+
+export async function deletePropertyDoc(documentId: string) {
+  try {
+    const res = await axios.delete(
+      `${API_URL}/api/properties/document/${documentId}`,
+      {
+        data: { documentIds: [documentId] },
+        withCredentials: true,
+      }
+    );
+    return res.data;
+  } catch (error) {
+    throw new Error("An error occurred while deleting the document");
+  }
+}
+
 export async function addPropertyPicture(propertyId: string, data: File) {
   try {
     const formData = new FormData();
@@ -172,11 +240,11 @@ export async function addPropertyPicture(propertyId: string, data: File) {
       `${API_URL}/api/properties/photo/${propertyId}?type=photo`,
       formData,
       {
-        withCredentials: true,
+          withCredentials: true,
       }
     );
     return res.data;
   } catch (error) {
-    throw new Error("An error occurred while adding the property picture");
+     throw new Error("An error occurred while adding the property picture");
   }
 }
