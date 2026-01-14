@@ -5,6 +5,7 @@ import { ValidationError } from "../../errors/validation.errors.js";
 import { DocumentService } from "../../services/document.services.js";
 import { propertyPrivateDocsSchema } from "../../schemas/util.schemas.js";
 import * as API from "../../types/api.types.js";
+import { property } from "zod";
 
 /**
  *
@@ -74,7 +75,12 @@ export const deletePropertyDoc = async (
 };
 
 export const getPropertyPrivateDocs = async (
-	req: Request<{}, {}, API.PropertyPrivateDocsIds, API.PropertyPrivateDocsLabel>,
+	req: Request<
+		{},
+		{},
+		API.PropertyPrivateDocsIds,
+		API.PropertyPrivateDocsLabel
+	>,
 	res: Response
 ) => {
 	const result = propertyPrivateDocsSchema.safeParse({
@@ -86,11 +92,11 @@ export const getPropertyPrivateDocs = async (
 		throw new ValidationError("Invalid Ids or label");
 	}
 
-	const { label, leaseId, loanId, tenantId } = result.data;
+	const { label, leaseId, loanId, tenantId, propertyId } = result.data;
 
-	const id = leaseId || loanId || tenantId;
+	const id = leaseId || loanId || tenantId || propertyId;
 
-	const documents = await DocumentService.getPrivateDocs({ label, id: id! });
+	const documents = await DocumentService.getPrivateDocs({ label, id });
 
 	return res.status(StatusCodes.SUCCESS).json({
 		error: false,
@@ -100,7 +106,12 @@ export const getPropertyPrivateDocs = async (
 };
 
 export const postPropertyPrivateDocs = async (
-	req: Request<{}, {}, API.PropertyPrivateDocsIds, API.PropertyPrivateDocOptions>,
+	req: Request<
+		{},
+		{},
+		API.PropertyPrivateDocsIds,
+		API.PropertyPrivateDocOptions
+	>,
 	res: Response
 ) => {
 	const files = req.files;
