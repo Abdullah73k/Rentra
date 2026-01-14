@@ -37,11 +37,14 @@ export function privateDocsPathBuilder({
 	label,
 }: {
 	userId: string;
-	referenceId: string;
 	documentId: string;
 	documentName: string;
 	propertyId: string;
-	label: "leases" | "loans" | "tenants";
+	referenceId: string | undefined;
+	label: "leases" | "loans" | "tenants" | undefined;
 }) {
-	return `users/${userId}/privateDocs/${propertyId}/${label}/${referenceId}/${documentId}-${documentName}`;
+	if (!label || !referenceId)
+		return `users/${userId}/privateDocs/${propertyId}/${documentId}-${documentName}`;
+	else
+		return `users/${userId}/privateDocs/${propertyId}/${label}/${referenceId}/${documentId}-${documentName}`;
 }
