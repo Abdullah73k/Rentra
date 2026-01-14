@@ -105,6 +105,8 @@ export const DocumentService = {
 	async getPrivateDocs({ label, id }: { label: PrivateDocs; id: string }) {
 		const privateDocs = await DocumentRepository.getPrivateDocuments(label, id);
 		const paths = privateDocs.map((doc) => doc.path);
+		if (paths.length === 0) return [];
+
 		const signedURLs = await createSignedURLs(paths);
 
 		return signedURLs.map((url) => url.signedUrl);
