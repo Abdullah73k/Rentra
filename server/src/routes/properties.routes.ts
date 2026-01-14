@@ -33,7 +33,7 @@ router.get("/all", asyncHandler(getUserProperties));
 router.get("/:propertyId", asyncHandler(getUserPropertyData));
 
 // POST
-router.post("/get/docs/private", asyncHandler(getPropertyPrivateDocs)); // Use post to send body
+router.post("/docs/private/fetch", asyncHandler(getPropertyPrivateDocs)); // Use post to send body
 router.post("/create/transaction", asyncHandler(postCreateTransaction));
 router.post("/create", asyncHandler(postPropertyData));
 router.post(
