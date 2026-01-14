@@ -4,11 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "pnpm i && vite --host 0.0.0.0 --port 5173",
+    "dev": "vite --host 0.0.0.0 --port 5173",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
+  "packageManager": "pnpm@10.26.0",
   "dependencies": {
     "@better-auth/passkey": "^1.4.9",
     "@hookform/resolvers": "^5.2.2",
