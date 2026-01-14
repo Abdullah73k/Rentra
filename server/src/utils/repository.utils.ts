@@ -83,19 +83,39 @@ export const getRowsFromTableWithId = {
 		propertyId,
 		documentId,
 	}: { client: PoolClient | undefined } & (
-		| { propertyId: string; documentId?: never }
+		| { propertyId: string | string[]; documentId?: never }
 		| { propertyId?: never; documentId: string }
 	)) {
 		const pool = dbConnection(client);
-		return await pool
-			.select()
-			.from(documents)
-			.where(
-				eq(
-					propertyId ? documents.propertyId : documents.id,
-					(propertyId ?? documentId)!
-				)
-			);
+
+		if (propertyId?.length === 0) return [];
+
+		// Query by document ID
+		if (documentId) {
+			return await pool
+				.select()
+				.from(documents)
+				.where(eq(documents.id, documentId));
+		}
+
+		// Query by array of property IDs
+		if (Array.isArray(propertyId)) {
+			return await pool
+				.select()
+				.from(documents)
+				.where(inArray(documents.propertyId, propertyId));
+		}
+
+		// Query by single property ID (propertyId must be a string here)
+		if (propertyId) {
+			return await pool
+				.select()
+				.from(documents)
+				.where(eq(documents.propertyId, propertyId));
+		}
+
+		// This should never happen due to the discriminated union, but TypeScript needs it
+		return [];
 	},
 	async documentsPath(ids: string[], client: PoolClient | undefined) {
 		const pool = dbConnection();

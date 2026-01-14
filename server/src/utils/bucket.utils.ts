@@ -6,9 +6,7 @@ import {
 import { supabase } from "../db/configs/supabase.config.js";
 import { DBError } from "../errors/db.errors.js";
 import type { MulterFile } from "../types/util.types.js";
-import {
-	avatarPathBuilder,
-} from "./doc-path-builder.utils.js";
+import { avatarPathBuilder } from "./doc-path-builder.utils.js";
 
 export async function insertFileInBucket({
 	file,
@@ -86,14 +84,17 @@ export async function deleteFileFromBucket({
 export function getFilePublicURL({
 	path,
 	bucket,
+	id,
 }: {
 	path: string;
 	bucket: string;
+	id?: string;
 }) {
 	const {
 		data: { publicUrl },
 	} = supabase.storage.from(bucket).getPublicUrl(path);
-	return publicUrl;
+
+	return { publicUrl, id: id ?? null };
 }
 
 export async function deleteFolderContents({

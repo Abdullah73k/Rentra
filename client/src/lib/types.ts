@@ -245,7 +245,7 @@ export type WithId<T> = T & {
 	id: string;
 };
 export type FetchPropertyReturnType = {
-	property: EditPropertyBuildType["property"][];
+	property: (EditPropertyBuildType["property"] & { photos: string[] })[];
 	propertyInfo: EditPropertyBuildType["propertyInfo"][];
 	tenant: EditPropertyBuildType["tenant"][];
 	lease: EditPropertyBuildType["lease"][];

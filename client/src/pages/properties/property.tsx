@@ -16,8 +16,8 @@ import EditTransactionModal from "@/components/modals/edit-transaction-modal";
 import AddTenantModal from "@/components/modals/add-tenant-modal";
 import AddLoanModal from "@/components/modals/add-loan-modal";
 import AddLeaseModal from "@/components/modals/add-lease-modal";
-
 import { ActionButton } from "@/components/ui/action-button";
+import PropertyPhotos from "@/components/property-photos";
 
 export default function PropertyDetailPage() {
   const navigate = useNavigate()
@@ -44,6 +44,9 @@ export default function PropertyDetailPage() {
     queryKey: ["property", propertyId],
     queryFn: () => fetchPropertyInfo(propertyId),
   });
+
+  console.log(data);
+  
 
   const { mutateAsync, isPending: isDeleting } = useMutation({
     mutationKey: ["delete-property"],
@@ -226,7 +229,7 @@ export default function PropertyDetailPage() {
                 />
 
                 {/* Transactions Section */}
-                <div className="p-6 ">
+                <div className="p-6 space-y-6">
                   <div className="flex items-center justify-between mb-6 ">
                     <h2 className="text-2xl font-semibold text-foreground">
                       Transactions
@@ -241,7 +244,9 @@ export default function PropertyDetailPage() {
                     </Button>
                   </div>
 
+
                   <TransactionsTable transactions={transactions} propertyId={propertyId!} />
+                  <PropertyPhotos propertyId={propertyId!} photos={property.photos} />
                 </div>
               </TabsContent>
 

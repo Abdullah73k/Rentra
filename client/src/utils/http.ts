@@ -140,9 +140,12 @@ export async function addOptionalData(
 }
 export async function deleteTransaction(transactionId: string) {
   try {
-    const res = await axios.delete(API_URL + "/api/properties/delete/transaction/" + transactionId, {
-      withCredentials: true,
-    });
+    const res = await axios.delete(
+      API_URL + "/api/properties/delete/transaction/" + transactionId,
+      {
+        withCredentials: true,
+      }
+    );
     return res.data.data;
   } catch (error) {
     throw new Error("An error occurred while deleting the transaction");
@@ -150,11 +153,30 @@ export async function deleteTransaction(transactionId: string) {
 }
 export async function deleteProperty(propertyId: string) {
   try {
-    const res = await axios.delete(API_URL + "/api/properties/delete/" + propertyId, {
-      withCredentials: true,
-    });
+    const res = await axios.delete(
+      API_URL + "/api/properties/delete/" + propertyId,
+      {
+        withCredentials: true,
+      }
+    );
     return res.data.data;
   } catch (error) {
     throw new Error("An error occurred while deleting the property");
+  }
+}
+export async function addPropertyPicture(propertyId: string, data: File) {
+  try {
+    const formData = new FormData();
+    formData.append("photo", data);
+    const res = await axios.post(
+      `${API_URL}/api/properties/photo/${propertyId}?type=photo`,
+      formData,
+      {
+        withCredentials: true,
+      }
+    );
+    return res.data;
+  } catch (error) {
+    throw new Error("An error occurred while adding the property picture");
   }
 }
