@@ -164,7 +164,6 @@ export async function deleteProperty(propertyId: string) {
     throw new Error("An error occurred while deleting the property");
   }
 }
-
 export async function fetchPrivateDocs(
   label: "leaseDocs" | "loanDocs" | "tenantDocs",
   referenceId: string
@@ -230,5 +229,22 @@ export async function deletePropertyDoc(documentId: string) {
     return res.data;
   } catch (error) {
     throw new Error("An error occurred while deleting the document");
+  }
+}
+
+export async function addPropertyPicture(propertyId: string, data: File) {
+  try {
+    const formData = new FormData();
+    formData.append("photo", data);
+    const res = await axios.post(
+      `${API_URL}/api/properties/photo/${propertyId}?type=photo`,
+      formData,
+      {
+          withCredentials: true,
+      }
+    );
+    return res.data;
+  } catch (error) {
+     throw new Error("An error occurred while adding the property picture");
   }
 }

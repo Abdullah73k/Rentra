@@ -66,23 +66,29 @@ export const PropertyService = {
 		return query;
 	},
 	async getAll(userId: string) {
-		let response = [];
-
 		const properties = await PropertyRepository.getProperties(userId);
-		// for (const property of properties) {
-		// 	let paths = [];
-		// 	const documents = await DocumentRepository.getAllDocuments(property.id);
-		// 	for (const document of documents) {
-		// 		const path = getFilePublicURL({
-		// 			path: document.path,
-		// 			bucket: SUPABASE_PUBLIC_BUCKET_NAME,
-		// 		});
-		// 		paths.push(path);
-		// 	}
-		// 	response.push({ ...property}); // TODO: add photos
-		// }
 
-		return properties;
+		const documents = await DocumentRepository.getAllDocuments(
+			properties.map((p) => p.id)
+		);
+		const paths = documents.map((doc) => {
+			return getFilePublicURL({
+				path: doc.path,
+				bucket: SUPABASE_PUBLIC_BUCKET_NAME,
+				id: doc.propertyId!,
+			});
+		});
+
+		let response: DB.Property[] = [];
+
+		properties.forEach((property) => {
+			const photos = paths
+				.filter((path) => path.id === property.id)
+				.map((p) => p.publicUrl);
+			response.push({ ...property, photos });
+		});
+
+		return response;
 	},
 	async delete(propertyId: string) {
 		await PropertyRepository.deleteProperty(propertyId);
@@ -90,6 +96,12 @@ export const PropertyService = {
 	async getAllData(propertyId: string) {
 		const queryFn = async (propertyId: string, client: PoolClient) => {
 			const property = await PropertyRepository.getProperty(propertyId, client);
+
+			const documents = await DocumentRepository.getAllDocuments(
+				propertyId,
+				client
+			);
+
 			const propertyInfo = await PropertyInfoRepository.getPropertyInfo(
 				propertyId,
 				client
@@ -109,15 +121,27 @@ export const PropertyService = {
 				tenant,
 				lease,
 				transaction,
+				documents,
 			};
 		};
 
-		const result = await queryInTransaction(
+		const { documents, property, ...rest } = await queryInTransaction(
 			queryFn,
 			propertyId,
 			"Could not fetch all property data"
 		);
-		return result;
+
+		const paths = documents.map((doc) => {
+			return getFilePublicURL({
+				path: doc.path,
+				bucket: SUPABASE_PUBLIC_BUCKET_NAME,
+			});
+		});
+
+		return {
+			...rest,
+			property: [{ ...property[0]!, photos: paths.map((p) => p.publicUrl) }],
+		};
 	},
 	async update(data: API.PATCHPropertyData) {
 		const queryFn = async (data: API.PATCHPropertyData, client: PoolClient) => {
@@ -165,8 +189,14 @@ export const PropertyService = {
 
 		return response;
 	},
-	async deleteOptionalData(option: "loan" | "lease" | "tenant", referenceId: string) {
-		const response = await PropertyRepository.deleteOptionalData(option, referenceId);
+	async deleteOptionalData(
+		option: "loan" | "lease" | "tenant",
+		referenceId: string
+	) {
+		const response = await PropertyRepository.deleteOptionalData(
+			option,
+			referenceId
+		);
 
 		return response;
 	},

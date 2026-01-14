@@ -42,7 +42,10 @@ export const DocumentService = {
 				? "leases"
 				: label === "loanDocs"
 				? "loans"
-				: "tenants";
+				: label === "tenantDocs"
+				? "tenants"
+				: undefined;
+		const id = labelName?.slice(0, -1) + "Id";
 
 		const bucketName =
 			type === "photo"
@@ -74,6 +77,7 @@ export const DocumentService = {
 
 		const documentData: CreateDocument = {
 			id: documentId,
+			...(id && { [id]: referenceId }), // Dynamic key based on document type, leaseId, loanId, or tenantId
 			propertyId,
 			userId,
 			name: file.originalname,
@@ -105,6 +109,8 @@ export const DocumentService = {
 	async getPrivateDocs({ label, id }: { label: PrivateDocs; id: string }) {
 		const privateDocs = await DocumentRepository.getPrivateDocuments(label, id);
 		const paths = privateDocs.map((doc) => doc.path);
+		if (paths.length === 0) return [];
+
 		const signedURLs = await createSignedURLs(paths);
 
 		return signedURLs.map((url) => url.signedUrl);

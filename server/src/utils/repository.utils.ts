@@ -4,7 +4,7 @@ import { StatusCodes } from "../constants/status-codes.constants.js";
 import { dbConnection } from "./db-connects.utils.js";
 import type { PoolClient } from "../utils/service.utils.js";
 import type { PgTable, PgTableWithColumns } from "drizzle-orm/pg-core";
-import { eq, inArray, type InferInsertModel } from "drizzle-orm";
+import { eq, inArray, type InferInsertModel, and, isNull } from "drizzle-orm";
 import { property } from "../db/schemas/property.db.js";
 import { propertyInfo } from "../db/schemas/property-info.db.js";
 import { loan } from "../db/schemas/loan.db.js";
@@ -83,19 +83,39 @@ export const getRowsFromTableWithId = {
 		propertyId,
 		documentId,
 	}: { client: PoolClient | undefined } & (
-		| { propertyId: string; documentId?: never }
+		| { propertyId: string | string[]; documentId?: never }
 		| { propertyId?: never; documentId: string }
 	)) {
 		const pool = dbConnection(client);
-		return await pool
-			.select()
-			.from(documents)
-			.where(
-				eq(
-					propertyId ? documents.propertyId : documents.id,
-					(propertyId ?? documentId)!
-				)
-			);
+
+		if (propertyId?.length === 0) return [];
+
+		// Query by document ID
+		if (documentId) {
+			return await pool
+				.select()
+				.from(documents)
+				.where(eq(documents.id, documentId));
+		}
+
+		// Query by array of property IDs
+		if (Array.isArray(propertyId)) {
+			return await pool
+				.select()
+				.from(documents)
+				.where(inArray(documents.propertyId, propertyId));
+		}
+
+		// Query by single property ID (propertyId must be a string here)
+		if (propertyId) {
+			return await pool
+				.select()
+				.from(documents)
+				.where(eq(documents.propertyId, propertyId));
+		}
+
+		// This should never happen due to the discriminated union, but TypeScript needs it
+		return [];
 	},
 	async documentsPath(ids: string[], client: PoolClient | undefined) {
 		const pool = dbConnection();
@@ -105,6 +125,20 @@ export const getRowsFromTableWithId = {
 			.where(inArray(documents.id, ids));
 
 		return paths.map((p) => p.path);
+	},
+	async propertyDocs(propertyId: string, client: PoolClient | undefined) {
+		const pool = dbConnection(client);
+		return await pool
+			.select()
+			.from(documents)
+			.where(
+				and(
+					eq(documents.propertyId, propertyId),
+					isNull(documents.loanId),
+					isNull(documents.leaseId),
+					isNull(documents.tenantId)
+				)
+			);
 	},
 	async loanDocs(loanId: string, client: PoolClient | undefined) {
 		const pool = dbConnection(client);

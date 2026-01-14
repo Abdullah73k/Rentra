@@ -42,7 +42,7 @@ export const DocumentRepository = {
 			failedDbDeleteMessage("Documents")
 		);
 	},
-	async getAllDocuments(propertyId: string, client?: PoolClient) {
+	async getAllDocuments(propertyId: string | string[], client?: PoolClient) {
 		const query = await executeDataBaseOperation(
 			() => getRowsFromTableWithId.document({ propertyId, client }),
 			StatusCodes.BAD_REQUEST,

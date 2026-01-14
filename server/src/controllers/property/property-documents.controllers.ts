@@ -4,11 +4,7 @@ import { validateUUID } from "../../utils/validation.utils.js";
 import { ValidationError } from "../../errors/validation.errors.js";
 import { DocumentService } from "../../services/document.services.js";
 import { propertyPrivateDocsSchema } from "../../schemas/util.schemas.js";
-import type {
-	PropertyPrivateDocOptions,
-	PropertyPrivateDocsIds,
-	PropertyPrivateDocsLabel,
-} from "../../types/api.types.js";
+import * as API from "../../types/api.types.js";
 
 /**
  *
@@ -78,7 +74,7 @@ export const deletePropertyDoc = async (
 };
 
 export const getPropertyPrivateDocs = async (
-	req: Request<{}, {}, PropertyPrivateDocsIds, PropertyPrivateDocsLabel>,
+	req: Request<{}, {}, API.PropertyPrivateDocsIds, API.PropertyPrivateDocsLabel>,
 	res: Response
 ) => {
 	const result = propertyPrivateDocsSchema.safeParse({
@@ -104,7 +100,7 @@ export const getPropertyPrivateDocs = async (
 };
 
 export const postPropertyPrivateDocs = async (
-	req: Request<{}, {}, PropertyPrivateDocsIds, PropertyPrivateDocOptions>,
+	req: Request<{}, {}, API.PropertyPrivateDocsIds, API.PropertyPrivateDocOptions>,
 	res: Response
 ) => {
 	const files = req.files;
@@ -125,15 +121,15 @@ export const postPropertyPrivateDocs = async (
 	const { label, leaseId, loanId, tenantId, type, propertyId } = result.data;
 	const id = leaseId || loanId || tenantId;
 
-	if (!propertyId || !type || !id) {
-		throw new ValidationError("Property Id, reference Id or type is required");
+	if (!propertyId || !type) {
+		throw new ValidationError("Property Id or type is required");
 	}
 
 	const urls = await Promise.all(
 		files.map((file) =>
 			DocumentService.create({
 				propertyId,
-				referenceId: id,
+				...(id && { referenceId: id }),
 				userId: req.user?.id!,
 				file,
 				type,

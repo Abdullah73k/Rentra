@@ -47,8 +47,10 @@ export const propertyInfoSchema = z.object({
 export const documentSchema = z.object({
 	id: ReusableTypes.uuid,
 	userId: ReusableTypes.uuid,
-	propertyId: ReusableTypes.uuid.optional(),
+	propertyId: ReusableTypes.uuid,
 	tenantId: ReusableTypes.uuid.optional(),
+	leaseId: ReusableTypes.uuid.optional(),
+	loanId: ReusableTypes.uuid.optional(),
 	name: z.string(),
 	type: z.enum(["photo", "document"]),
 	path: z.string(),
