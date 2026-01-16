@@ -93,9 +93,7 @@ const HeaderNavigation = () => {
               <div className="grid gap-5 p-6 md:w-[460px] lg:w-[580px] lg:grid-cols-[0.65fr_1fr]">
                 <NavigationMenuLink asChild>
                   <NavLink
-                    to={
-                      isAuthenticated ? "/properties/dashboard" : "/auth/login"
-                    }
+                    to={"/properties/dashboard"}
                     className="flex h-full flex-col justify-between rounded-2xl bg-linear-to-br from-[#ff9770] via-[#fe7e6d] to-[#f04d64] p-6 text-left shadow-lg transition hover:shadow-2xl"
                   >
                     <div>
