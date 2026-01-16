@@ -56,7 +56,7 @@ const DocumentSection = ({
 
     const { data: documents, isLoading } = useQuery({
         queryKey: ["documents", type, referenceId],
-        queryFn: () => fetchPrivateDocs(type, referenceId),
+        queryFn: () => fetchPrivateDocs(type, referenceId, propertyId),
     });
 
     const { mutateAsync: uploadDocs, isPending: isUploading } = useMutation({

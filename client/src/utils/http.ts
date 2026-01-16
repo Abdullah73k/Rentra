@@ -165,23 +165,31 @@ export async function deleteProperty(propertyId: string) {
   }
 }
 export async function fetchPrivateDocs(
-  label: "leaseDocs" | "loanDocs" | "tenantDocs",
-  referenceId: string
+  label: "leaseDocs" | "loanDocs" | "tenantDocs" | "propertyDocs",
+  referenceId: string,
+  propertyId: string
 ) {
   try {
-    let queryParam = "";
-    if (label === "leaseDocs") queryParam = `leaseId=${referenceId}`;
-    if (label === "loanDocs") queryParam = `loanId=${referenceId}`;
-    if (label === "tenantDocs") queryParam = `tenantId=${referenceId}`;
+    let body = {
+      ...(label === "leaseDocs" && { leaseId: referenceId }),
+      ...(label === "loanDocs" && { loanId: referenceId }),
+      ...(label === "tenantDocs" && { tenantId: referenceId }),
+      propertyId,
+    };
 
-    const res = await axios.get(
-      `${API_URL}/api/properties/docs/private?label=${label}&${queryParam}`,
+    const res = await axios.post(
+      `${API_URL}/api/properties/docs/private?label=${label}`,
+      body,
       {
         withCredentials: true,
       }
     );
+    console.log("fetch Private Docs response");
+    console.log(res);
     return res.data.data as string[];
   } catch (error) {
+    console.log("fetch Private Docs error");
+    console.error(error)
     throw new Error("An error occurred while fetching private documents");
   }
 }
@@ -240,11 +248,11 @@ export async function addPropertyPicture(propertyId: string, data: File) {
       `${API_URL}/api/properties/photo/${propertyId}?type=photo`,
       formData,
       {
-          withCredentials: true,
+        withCredentials: true,
       }
     );
     return res.data;
   } catch (error) {
-     throw new Error("An error occurred while adding the property picture");
+    throw new Error("An error occurred while adding the property picture");
   }
 }
