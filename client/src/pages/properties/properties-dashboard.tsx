@@ -8,6 +8,7 @@ import { useAuthStore } from "@/stores/auth.store";
 import { motion } from "motion/react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchProperties } from "@/utils/http";
+import { toast } from "sonner";
 
 const DashboardPage: React.FC = () => {
   const session = useAuthStore((s) => s.session);
@@ -41,6 +42,7 @@ const DashboardPage: React.FC = () => {
   }
 
   if (!session) {
+    toast("You must be logged in to view this page");
     return <Navigate to="/auth/login" replace />;
   }
 
