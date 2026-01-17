@@ -61,8 +61,6 @@ const SignInPage: React.FC = () => {
     }
   }
 
-  // TODO: add check to see if user is already logged in and redirect if needed
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
