@@ -75,7 +75,7 @@ const HeaderNavigation = () => {
       </div>
 
       <NavigationMenu className="absolute right-6 top-6">
-        <NavigationMenuList className="justify-end">
+        <NavigationMenuList className="justify-end ml-60 md:ml-110">
           <NavigationMenuItem>
             <NavigationMenuTrigger
               className="flex items-center justify-between gap-3 rounded-2xl
