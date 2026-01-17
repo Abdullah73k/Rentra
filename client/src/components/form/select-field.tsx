@@ -43,7 +43,7 @@ const SelectField = <T extends FieldValues>({
             </FormLabel>
             <Select onValueChange={field.onChange} defaultValue={field.value}>
               <FormControl>
-                <SelectTrigger className="h-12 bg-white rounded-lg border-gray-300 w-full text-sm focus-visible:ring-1 focus-visible:ring-black">
+                <SelectTrigger className="h-12! w-full rounded-lg border-gray-300 bg-white text-sm focus-visible:ring-1 focus-visible:ring-black">
                   <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
               </FormControl>
@@ -64,7 +64,7 @@ const SelectField = <T extends FieldValues>({
       />
     );
   }
-  const selectOptions = options as SelectOptions[]; 
+  const selectOptions = options as SelectOptions[];
 
   return (
     <FormField
@@ -84,7 +84,7 @@ const SelectField = <T extends FieldValues>({
             defaultValue={String(field.value)}
           >
             <FormControl>
-              <SelectTrigger className="h-12 rounded-lg bg-white border-gray-300 w-full text-sm focus-visible:ring-1 focus-visible:ring-black">
+              <SelectTrigger className="h-12! w-full rounded-lg border-gray-300 bg-white text-sm focus-visible:ring-1 focus-visible:ring-black">
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>
