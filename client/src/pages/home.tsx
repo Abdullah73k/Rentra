@@ -1,10 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import { motion } from "motion/react";
 
 export default function Page() {
   const navigate = useNavigate();
-  document.body.style.overflow = "hidden";
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, []);
   return (
     <motion.div
       initial={{ opacity: 0 }}
