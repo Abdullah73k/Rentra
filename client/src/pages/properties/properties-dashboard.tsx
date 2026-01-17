@@ -53,8 +53,9 @@ const DashboardPage: React.FC = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
+      className="h-fit"
     >
-      <div className="min-h-screen bg-[#f8f8f8]">
+      <div className="h-fit bg-[#f8f8f8]">
         <div className="mx-auto max-w-7xl">
           {/* Header */}
           <div className="flex items-center justify-between border-b border-border px-6 py-6">
