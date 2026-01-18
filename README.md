@@ -1,130 +1,316 @@
-# Property Management Application
+<div align="center">
 
-[PLACEHOLDER: Dashboard overview showing property analytics and tenant status]
+# 🏠 Rentra
 
-## Project Overview
+**The open-source property management platform for independent landlords.**
 
-This is a production-grade, full-stack property management platform designed to close the gap between basic spreadsheets and complex enterprise software. It provides a unified interface for portfolio management, multi-currency financial reporting, and secure document handling.
+Manage all your properties across multiple countries in one simple, secure place.
 
-**Engineering Team**
-This application was architected and built by a collaborative team of two (myself and my brother). It serves as a demonstration of our ability to deliver a complex, real-world product from requirements gathering through to deployment, utilizing strict version control and code review practices.
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-19-61DAFB)](https://react.dev/)
+[![Node.js](https://img.shields.io/badge/Node.js-Express-339933)](https://expressjs.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Drizzle-4169E1)](https://orm.drizzle.team/)
 
-## Technical Goals & Engineering Decisions
+[Documentation](#documentation) · [Getting Started](#getting-started) · [Features](#features) · [Contributing](#contributing)
 
-Specifically designed to demonstrate modular architecture and full-stack type safety, this project emphasizes:
+</div>
 
-- **End-to-End Type Safety**: Unifying the frontend and backend with TypeScript and shared Zod schemas. This eliminates mismatched API contracts and reduces runtime errors significantly.
-- **Separation of Concerns**: A strict monorepo structure separating the React client (SPA) from the Node.js API (Stateless), allowing for independent scaling and distinct build pipelines.
-- **Security-First Architecture**: Implementing `BetterAuth` for session management and standardizing on HTTP-only cookies to mitigate XSS risks, rather than storing tokens in local storage.
-- **Infrastructure as Code**: Fully containerized environment using Docker ensures that development, staging, and production environments are identical, eliminating "works on my machine" issues.
+---
 
-## System Architecture
+## What is Rentra?
 
-[PLACEHOLDER: High-level system architecture diagram showing Client, Server, Database, and Object Storage interactions]
+Rentra is an open-source, self-hostable property management solution designed for **small landlords** and individuals who own a few rental properties—whether in one city or across multiple countries.
 
-The system is composed of three primary blocks:
+Most property management software is either too basic (spreadsheets) or too complex (enterprise solutions with expensive subscriptions). Rentra fills the gap by offering:
 
-1.  **Client Layer (`/client`)**: Built with **React** and **Vite**. It uses **TanStack Query** for efficient server-state caching and **Zustand** for transient client-side state. The UI follows a component-driven design using **shadcn/ui** and **Tailwind CSS**.
-2.  **Service Layer (`/server`)**: A RESTful API built with **Express** and **TypeScript**. It leverages **Drizzle ORM** for high-performance SQL queries against a **PostgreSQL** database.
-3.  **Data & Storage**: **PostgreSQL** (via Supabase) serves as the primary relational store, while private buckets handle document blobs. Access to sensitive documents is brokered via short-lived signed URLs.
+- 🌍 **Multi-property, multi-currency support** — Manage properties in different countries with their respective currencies
+- 🔒 **Privacy-first** — Self-host your data, no vendor lock-in
+- 📱 **Cross-platform** — Web-first with mobile support via CapacitorJS (iOS & Android)
+- 🧩 **Simple by design** — No bloated features, just what you need
 
-## Authentication & Security Flow
+> **Why open source?** Because your property data shouldn't be locked in someone else's SaaS. Fork it, customize it, run it on your own servers.
 
-We prioritized a secure, low-maintenance auth strategy suitable for sensitive tenant data.
+---
 
-[PLACEHOLDER: Sequence diagram illustrating the secure login and session refresh flow]
+## Features
 
-- **Authentication**: Implemented via BetterAuth.
-- **Transport Security**: All sensitive data is encrypted in transit; API endpoints are rate-limited using `express-rate-limit`.
-- **Validation**: Zod schemas validate every request body and query parameter at the controller level before reaching business logic.
-- **Secrets**: Zero-trust secret management using **Doppler**; no `.env` files are tracked in git.
+### Property Management
+- ✅ Add and manage unlimited properties
+- ✅ Track property details (bedrooms, bathrooms, size, furnishing, parking)
+- ✅ Support for multiple property types (houses, apartments, villas, townhouses, duplexes, studios)
+- ✅ Property photos and documentation
 
-## Production Readiness
+### Tenant Management
+- ✅ Store tenant contact information
+- ✅ Link tenants to properties
+- ✅ Manage lease agreements (start/end dates, rent amounts, payment frequency)
 
-The application is not a prototype; it is built to run.
+### Financial Tracking
+- ✅ Record income and expenses per property
+- ✅ Multi-currency support
+- ✅ Transaction categorization
+- ✅ Loan and mortgage tracking (lender, term, interest rate, monthly payments)
 
-- **Reliability**: CI pipelines run linting and compile checks on every commit.
-- **Scalability**: The stateless backend can be horizontally scaled behind a load balancer. Support for mobile is architected via CapacitorJS.
-- **Maintainability**: Strict Eslint rules and Prettier configuration ensure code consistency across the team.
+### Document Storage
+- ✅ Secure document uploads (contracts, receipts, legal documents)
+- ✅ Documents linked to properties or tenants
+- ✅ Private storage with signed URLs for secure access
+
+### Security & Authentication
+- ✅ Email/password authentication
+- ✅ OAuth providers (Google, GitHub, Discord)
+- ✅ Two-factor authentication (2FA)
+- ✅ Passkey support
+- ✅ Email verification & password reset
+
+---
 
 ## Tech Stack
 
-### Frontend Engineering
+| Layer | Technology |
+|-------|------------|
+| **Frontend** | React 19, TypeScript, Vite, Tailwind CSS, shadcn/ui |
+| **State Management** | TanStack Query (server state), Zustand (client state) |
+| **Backend** | Node.js, Express 5, TypeScript |
+| **Database** | PostgreSQL (SupaBase) with Drizzle ORM |
+| **Authentication** | BetterAuth (sessions, OAuth, 2FA, Passkeys) |
+| **Validation** | Zod (shared schemas across frontend & backend) |
+| **File Storage** | Supabase Storage (S3-compatible) |
+| **Containerization** | Docker, Docker Compose |
 
-- **Core**: React 19, TypeScript, Vite
-- **State**: TanStack Query (Server Store), Zustand (Client Store)
-- **UI/UX**: Tailwind CSS, shadcn/ui, Recharts, Framer Motion
-- **Forms**: React Hook Form with Zod resolvers
+---
 
-### Backend Engineering
-
-- **Runtime**: Node.js ecosystem
-- **Framework**: Express (chosen for stability and middleware ecosystem)
-- **Database**: PostgreSQL, managed via Drizzle ORM
-- **Auth**: BetterAuth
-- **Validation**: Zod (shared with frontend)
-
-### DevOps & Tooling
-
-- **Containerization**: Docker, Docker Compose
-- **CI/Workflow**: Husky, Commitlint, Jira (Kanban)
-- **Secrets**: Doppler
-
-## Analytics & Reporting
-
-The platform aggregates financial data across portfolios to generate real-time performance reports.
-
-[PLACEHOLDER: Graph showing monthly revenue trends vs expenses]
-
-## Development Workflow
-
-As a two-person team, we established a professional workflow to maintain velocity and code quality:
-
-1.  **Kanban Management**: Tasks tracked via Jira sprints.
-2.  **Conventional Commits**: Enforced commit message standards for automated changelog generation.
-3.  **Feature Branching**: All code merges via Pull Request, ensuring peer review (my brother and I reviewing each other's code) before hitting the main branch.
-
-## Running Locally
-
-The project is fully containerized for a consistent development environment.
+## Getting Started
 
 ### Prerequisites
 
-- **Docker & Docker Compose**: Ensure Docker Desktop is running.
-- **Doppler CLI**: Required for injecting secrets into the containers.
-- **Node.js**: (Optional) If you wish to run outside of Docker.
+- [Docker](https://docs.docker.com/get-docker/) & Docker Compose
+- [Doppler CLI](https://docs.doppler.com/docs/install-cli) (for secret management)
+- [Node.js 20+](https://nodejs.org/) & [pnpm](https://pnpm.io/) (optional, for local development)
 
-### Steps
+### Quick Start with Docker
 
-1.  **Clone the repository**
+1. **Clone the repository**
 
-    ```bash
-    git clone https://github.com/your-username/property-management.git
-    cd property-management
-    ```
+   ```bash
+   git clone https://github.com/Abdullah73k/Rentra.git
+   cd Rentra
+   ```
 
-2.  **Configure Secrets**
-    Ensure you have access to the Doppler project and your CLI is configured.
+2. **Configure secrets**
 
-    ```bash
-    doppler setup
-    ```
+   Rentra uses [Doppler](https://doppler.com) for secret management. Set up your project:
 
-3.  **Start the Application**
-    Run the full stack (Frontend + Backend + Postgres) using Docker Compose.
+   ```bash
+   doppler setup
+   ```
 
-    ```bash
-    npm run compose:up
-    ```
+   <details>
+   <summary>Required environment variables</summary>
 
-    - **Client**: http://localhost:5173
-    - **Server**: http://localhost:4000
+   ```
+   # Database
+   SUPABASE_CONNECTION_STRING
+   SUPABASE_POSTGRES_PASSWORD
 
-4.  **Stopping the App**
-    ```bash
-    npm run compose:down
-    ```
+   # Authentication
+   BETTER_AUTH_SECRET
+   BETTER_AUTH_URL
+
+   # OAuth Providers (optional)
+   GOOGLE_CLIENT_ID
+   GOOGLE_CLIENT_SECRET
+   GITHUB_CLIENT_ID
+   GITHUB_CLIENT_SECRET
+   DISCORD_CLIENT_ID
+   DISCORD_CLIENT_SECRET
+
+   # Email
+   GMAIL_USER
+   GMAIL_APP_PASSWORD
+
+   # Supabase Storage
+   SUPABASE_URL
+   SUPABASE_API_KEY
+   SUPABASE_SERVICE_ROLE_KEY
+   SUPABASE_PUBLIC_BUCKET_NAME
+   SUPABASE_PRIVATE_BUCKET_NAME
+   ```
+
+   </details>
+
+3. **Start the application**
+
+   ```bash
+   pnpm run compose:up
+   ```
+
+4. **Access the app**
+
+   - 🌐 **Frontend**: http://localhost:5173
+   - 🔌 **API**: http://localhost:4000
+
+5. **Stop the application**
+
+   ```bash
+   pnpm run compose:down
+   ```
+
+### Local Development (without Docker)
+
+<details>
+<summary>Click to expand</summary>
+
+1. **Install dependencies**
+
+   ```bash
+   # Root
+   pnpm install
+
+   # Client
+   cd client && pnpm install
+
+   # Server
+   cd ../server && pnpm install
+   ```
+
+2. **Start the development servers**
+
+   ```bash
+   # Terminal 1 - Backend
+   cd server
+   pnpm run dev
+
+   # Terminal 2 - Frontend
+   cd client
+   pnpm run dev
+   ```
+
+3. **Database migrations**
+
+   ```bash
+   cd server
+   pnpm run drizzle
+   ```
+
+</details>
+
+---
+
+## Project Structure
+
+```
+Rentra/
+├── client/                 # React frontend (Vite)
+│   ├── src/
+│   │   ├── components/     # UI components (shadcn/ui based)
+│   │   ├── pages/          # Route pages
+│   │   ├── stores/         # Zustand stores
+│   │   ├── lib/            # Utilities, types, schemas
+│   │   └── utils/          # HTTP client, auth utilities
+│   └── Dockerfile
+│
+├── server/                 # Express backend
+│   ├── src/
+│   │   ├── controllers/    # Route handlers
+│   │   ├── db/             # Database schemas & config
+│   │   ├── middlewares/    # Auth, error handling, file upload
+│   │   ├── repositories/   # Data access layer
+│   │   ├── routes/         # API route definitions
+│   │   ├── schemas/        # Zod validation schemas
+│   │   └── services/       # Business logic
+│   └── Dockerfile
+│
+├── docker-compose.yaml     # Container orchestration
+└── package.json            # Root workspace config
+```
+
+---
+
+## API Overview
+
+| Endpoint | Description |
+|----------|-------------|
+| `POST /api/auth/*` | Authentication (login, signup, OAuth, 2FA) |
+| `GET/POST /api/properties` | Property CRUD operations |
+| `GET/POST /api/tenants` | Tenant management |
+| `GET/POST /api/transactions` | Financial transactions |
+| `GET/POST /api/documents` | Document uploads & retrieval |
+| `GET/POST /api/leases` | Lease agreements |
+| `GET/POST /api/loans` | Mortgage/loan tracking |
+
+---
+
+## Documentation
+
+- 📖 [API Documentation](./docs/api.md) *(coming soon)*
+- 🏗️ [Architecture Overview](./docs/architecture.md) *(coming soon)*
+- 🔐 [Security & Authentication](./docs/security.md) *(coming soon)*
+- 📱 [Mobile Setup (CapacitorJS)](./docs/mobile.md) *(coming soon)*
+
+---
+
+## Contributing
+
+We welcome contributions! Whether it's bug fixes, new features, or documentation improvements.
+
+### How to Contribute
+
+1. **Fork the repository**
+2. **Create a feature branch**
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+3. **Make your changes** and commit using [Conventional Commits](https://www.conventionalcommits.org/):
+   ```bash
+   git commit -m "feat: add new property export feature"
+   ```
+4. **Push and open a Pull Request**
+
+### Development Guidelines
+
+- We use **ESLint** and **Prettier** for code formatting
+- Commit messages are enforced via **Commitlint** and **Husky**
+- All PRs should pass linting and type checks
+
+---
+
+## Roadmap
+
+- [ ] Dashboard analytics & charts
+- [ ] Expense reports & financial summaries
+- [ ] Rent payment reminders (email/SMS)
+- [ ] Mobile apps (iOS & Android via CapacitorJS)
+- [ ] Multi-language support (i18n)
+- [ ] Bulk property import (CSV/Excel)
+- [ ] Tenant portal for rent payments
+
+---
 
 ## License
 
-This project is open-source and available under the **MIT License**.
+Rentra is open-source software licensed under the [MIT License](./LICENSE).
+
+---
+
+## Acknowledgments
+
+Built with amazing open-source tools:
+
+- [React](https://react.dev/)
+- [Vite](https://vitejs.dev/)
+- [Express](https://expressjs.com/)
+- [Drizzle ORM](https://orm.drizzle.team/)
+- [shadcn/ui](https://ui.shadcn.com/)
+- [BetterAuth](https://better-auth.com/)
+- [TanStack Query](https://tanstack.com/query)
+- [Tailwind CSS](https://tailwindcss.com/)
+
+---
+
+<div align="center">
+
+**[⬆ Back to Top](#-rentra)**
+
+</div>
