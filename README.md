@@ -22,7 +22,7 @@ Manage all your properties across multiple countries in one simple, secure place
 
 Rentra is an open-source, self-hostable property management solution designed for **small landlords** and individuals who own a few rental properties—whether in one city or across multiple countries.
 
-Most property management software is either too basic (spreadsheets) or too complex (enterprise solutions with expensive subscriptions). Rentra fills the gap by offering:
+Most property management software is either too basic or too complex. Rentra fills the gap by offering:
 
 - 🌍 **Multi-property, multi-currency support** — Manage properties in different countries with their respective currencies
 - 🔒 **Privacy-first** — Self-host your data, no vendor lock-in
@@ -70,12 +70,12 @@ Most property management software is either too basic (spreadsheets) or too comp
 
 | Layer | Technology |
 |-------|------------|
-| **Frontend** | React 19, TypeScript, Vite, Tailwind CSS, shadcn/ui |
-| **State Management** | TanStack Query (server state), Zustand (client state) |
+| **Frontend** | React 19, TypeScript, Vite, Tailwind CSS, shadcn/ui, TanStack Query |
+| **Global State Management** | Zustand |
 | **Backend** | Node.js, Express 5, TypeScript |
 | **Database** | PostgreSQL (SupaBase) with Drizzle ORM |
 | **Authentication** | BetterAuth (sessions, OAuth, 2FA, Passkeys) |
-| **Validation** | Zod (shared schemas across frontend & backend) |
+| **Validation** | Zod |
 | **File Storage** | Supabase Storage (S3-compatible) |
 | **Containerization** | Docker, Docker Compose |
 
@@ -110,32 +110,42 @@ Most property management software is either too basic (spreadsheets) or too comp
    <summary>Required environment variables</summary>
 
    ```
-   # Database
-   SUPABASE_CONNECTION_STRING
-   SUPABASE_POSTGRES_PASSWORD
-
    # Authentication
    BETTER_AUTH_SECRET
    BETTER_AUTH_URL
 
+   # Domains
+   DEVELOPMENT_DOMAIN
+   PRODUCTION_DOMAIN
+
    # OAuth Providers (optional)
-   GOOGLE_CLIENT_ID
-   GOOGLE_CLIENT_SECRET
-   GITHUB_CLIENT_ID
-   GITHUB_CLIENT_SECRET
    DISCORD_CLIENT_ID
    DISCORD_CLIENT_SECRET
+   GITHUB_CLIENT_ID
+   GITHUB_CLIENT_SECRET
+   GOOGLE_CLIENT_ID
+   GOOGLE_CLIENT_SECRET
 
    # Email
-   GMAIL_USER
    GMAIL_APP_PASSWORD
+   GMAIL_USER
 
-   # Supabase Storage
-   SUPABASE_URL
+   # Server
+   PORT
+
+   # Supabase
    SUPABASE_API_KEY
-   SUPABASE_SERVICE_ROLE_KEY
-   SUPABASE_PUBLIC_BUCKET_NAME
+   SUPABASE_CONNECTION_STRING
+   SUPABASE_POSTGRES_PASSWORD
    SUPABASE_PRIVATE_BUCKET_NAME
+   SUPABASE_PUBLIC_BUCKET_NAME
+   SUPABASE_SERVICE_ROLE_KEY
+   SUPABASE_URL
+
+   # Doppler (auto-injected)
+   DOPPLER_CONFIG
+   DOPPLER_ENVIRONMENT
+   DOPPLER_PROJECT
    ```
 
    </details>
@@ -228,20 +238,6 @@ Rentra/
 
 ---
 
-## API Overview
-
-| Endpoint | Description |
-|----------|-------------|
-| `POST /api/auth/*` | Authentication (login, signup, OAuth, 2FA) |
-| `GET/POST /api/properties` | Property CRUD operations |
-| `GET/POST /api/tenants` | Tenant management |
-| `GET/POST /api/transactions` | Financial transactions |
-| `GET/POST /api/documents` | Document uploads & retrieval |
-| `GET/POST /api/leases` | Lease agreements |
-| `GET/POST /api/loans` | Mortgage/loan tracking |
-
----
-
 ## Documentation
 
 - 📖 [API Documentation](./docs/api.md) *(coming soon)*
@@ -258,14 +254,23 @@ We welcome contributions! Whether it's bug fixes, new features, or documentation
 ### How to Contribute
 
 1. **Fork the repository**
+
 2. **Create a feature branch**
    ```bash
-   git checkout -b feature/your-feature-name
+   git checkout -b PM-00-Epic-Name-task/short-summary
    ```
-3. **Make your changes** and commit using [Conventional Commits](https://www.conventionalcommits.org/):
+   
+   Branch format: `<JIRA-KEY>-<Epic-Name>-<task or bug>/<short-summary>`
+   
+   > For external contributors, always use `PM-00` as the Jira key.
+
+3. **Make your changes** and commit using our commit format:
    ```bash
-   git commit -m "feat: add new property export feature"
+   git commit -m "PM-00[Epic-Name][task]: add new property export feature"
    ```
+   
+   Commit format: `<Jira-Key>[Epic-Name][task or bug]: <Concise explanation of what you did>`
+
 4. **Push and open a Pull Request**
 
 ### Development Guidelines
@@ -276,15 +281,9 @@ We welcome contributions! Whether it's bug fixes, new features, or documentation
 
 ---
 
-## Roadmap
+## Current Status
 
-- [ ] Dashboard analytics & charts
-- [ ] Expense reports & financial summaries
-- [ ] Rent payment reminders (email/SMS)
-- [ ] Mobile apps (iOS & Android via CapacitorJS)
-- [ ] Multi-language support (i18n)
-- [ ] Bulk property import (CSV/Excel)
-- [ ] Tenant portal for rent payments
+🚧 **Currently working on:** Finishing iOS and Android mobile integration via CapacitorJS.
 
 ---
 
