@@ -72,7 +72,7 @@ const SignInPage: React.FC = () => {
       <div className="h-fit bg-[#f8f8f8]">
         <main className="relative flex min-h-[calc(100vh-88px)] items-center justify-center px-6">
           <div
-            className="absolute right-[10%] top-[20%] h-[300px] w-[300px] animate-pulse rounded-full bg-linear-to-br from-pink-400 via-orange-300 to-yellow-200 opacity-70 blur-3xl"
+            className="absolute right-[10%] top-[20%] h-75 w-75 animate-pulse rounded-full bg-linear-to-br from-pink-400 via-orange-300 to-yellow-200 opacity-70 blur-3xl"
             aria-hidden="true"
           />
 

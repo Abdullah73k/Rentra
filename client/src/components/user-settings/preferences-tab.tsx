@@ -24,7 +24,7 @@ const PreferencesTab = () => {
             variant="destructive"
             className="w-full"
             successMessage="Account deletion initiated. Please check your email to confirm."
-            action={() => authClient.deleteUser({ callbackURL: "/" })}
+            action={() => authClient.deleteUser({ callbackURL: "http://localhost:5173" })}
           >
             Delete Account Permanently
           </BetterAuthActionButton>

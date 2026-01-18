@@ -18,7 +18,7 @@ const transporter = nodemailer.createTransport({
 export async function sendEmail({ to: email, subject, text }: SendEmail) {
 	try {
 		const info = await transporter.sendMail({
-			from: `"Property Management" <${GMAIL_USER}>`,
+			from: `"Rentra" <${GMAIL_USER}>`,
 			to: email,
 			subject: subject,
 			text: text,
