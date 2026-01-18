@@ -69,7 +69,7 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 			sendDeleteAccountVerification: async ({ user, url }) => {
 				await sendEmail({
 					to: user.email,
-					subject: "Property Management App account deletion",
+					subject: "Rentra account deletion",
 					text: `click this link: ${url} to delete your account permanently`,
 				});
 			},

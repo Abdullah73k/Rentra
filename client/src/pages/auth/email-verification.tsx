@@ -68,7 +68,7 @@ const EmailVerification = () => {
               startEmailVerificationCountdown();
               return authClient.sendVerificationEmail({
                 email,
-                callbackURL: "/",
+                callbackURL: "http://localhost:5173/properties/dashboard",
               });
             }}
           >
