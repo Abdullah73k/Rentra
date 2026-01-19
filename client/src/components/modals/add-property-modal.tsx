@@ -19,8 +19,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ADD_PROPERTY_DEFAULT_VALUES } from "@/constants/form.constants";
 import { useMutation } from "@tanstack/react-query";
-import { createNewProperty } from "@/utils/http";
+import { createNewProperty, queryClient } from "@/utils/http";
 import { useAuthStore } from "@/stores/auth.store";
+import { toast } from "sonner";
 
 export type FormFields = z.input<typeof schema>;
 interface AddPropertyModalProps {
@@ -49,31 +50,33 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
     }
   }, [session?.user.id, form]);
 
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: createNewProperty,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["properties"] });
+      toast.success("Property added successfully");
+      onClose();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to add property");
+    },
   });
 
   const handleSave = async () => {
     const isValid = await form.trigger();
-    console.log(form.getValues());
-
     console.log(isValid);
-
-    if (!isValid) return;
+    if (!isValid) {
+      toast.error("Please fix the errors in the form");
+      return;
+    }
 
     const values = form.getValues();
     try {
       const property = buildPropertyFromForm(values);
-      console.log(property); // TODO: remove when getting ready for production
-
       mutate(property);
     } catch (error) {
-      console.error(error);
-      window.alert(
-        "An unexpected error occurred while saving the property. Please try again." // TODO: switch to toast component
-      );
+      toast.error("An unexpected error occurred");
     }
-    onClose();
   };
 
   const watchedProperty = form.watch("property");
@@ -86,7 +89,8 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
     watchedProperty?.purchasePrice !== undefined &&
     watchedProperty?.closingCosts !== undefined &&
     watchedProperty?.currentValue !== undefined &&
-    !!watchedProperty?.acquisitionDate;
+    !!watchedProperty?.acquisitionDate &&
+    !!watchedProperty?.valuationDate;
 
   const watchedPropertyInfo = form.watch("propertyInfo");
   const isStep2Valid =
@@ -145,9 +149,9 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
             {step === 3 && (
               <Button
                 onClick={handleSave}
-                disabled={!isStep1Valid || !isStep2Valid}
+                disabled={!isStep1Valid || !isStep2Valid || isPending}
               >
-                Save Property
+                {isPending ? "Saving..." : "Save Property"}
               </Button>
             )}
             <Button variant="outline" onClick={onClose}>
