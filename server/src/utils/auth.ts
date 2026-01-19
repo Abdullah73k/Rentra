@@ -22,7 +22,7 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 		provider: "pg",
 		schema: schema,
 	}),
-	trustedOrigins: ["http://localhost:5000", "http://localhost:5173"],
+	trustedOrigins: ["http://localhost:4000", "http://localhost:5173"],
 	advanced: {
 		database: {
 			generateId: () => crypto.randomUUID(),

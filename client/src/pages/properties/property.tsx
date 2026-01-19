@@ -17,6 +17,7 @@ import AddTenantModal from "@/components/modals/add-tenant-modal";
 import AddLoanModal from "@/components/modals/add-loan-modal";
 import AddLeaseModal from "@/components/modals/add-lease-modal";
 import { ActionButton } from "@/components/ui/action-button";
+import PropertyDocumentsTab from "@/components/property-overview/property-documents-tab";
 import PropertyPhotos from "@/components/property-photos";
 
 export default function PropertyDetailPage() {
@@ -177,6 +178,12 @@ export default function PropertyDetailPage() {
                   >
                     Dashboard
                   </TabsTrigger>
+                  <TabsTrigger
+                    value="documents"
+                    className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-2 py-3"
+                  >
+                    Documents
+                  </TabsTrigger>
                 </TabsList>
                 <div className="flex items-center gap-2">
                   <Button
@@ -258,6 +265,15 @@ export default function PropertyDetailPage() {
                   transactions={transactions}
                   lease={lease}
                   tenant={tenant}
+                />
+              </TabsContent>
+
+              <TabsContent value="documents">
+                <PropertyDocumentsTab
+                  propertyId={propertyId!}
+                  lease={data?.lease?.filter((item) => item !== undefined) as any}
+                  loan={data?.loan?.filter((item) => item !== undefined) as any}
+                  tenant={data?.tenant?.filter((item) => item !== undefined) as any}
                 />
               </TabsContent>
             </Tabs>

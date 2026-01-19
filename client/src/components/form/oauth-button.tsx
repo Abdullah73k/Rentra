@@ -14,7 +14,7 @@ const OauthButton = ({
       action={() => {
         return authClient.signIn.social({
           provider,
-          callbackURL: "/properties/dashboard",
+          callbackURL: "http://localhost:5173/properties/dashboard",
         });
       }}
       type="button"
