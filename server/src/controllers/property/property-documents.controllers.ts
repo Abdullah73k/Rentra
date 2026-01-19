@@ -13,7 +13,7 @@ import * as API from "../../types/api.types.js";
  */
 export const postPropertyPhotos = async (
 	req: Request<{ propertyId: string }, {}, {}, { type: "photo" | "document" }>,
-	res: Response
+	res: Response,
 ) => {
 	const { type } = req.query;
 	const { propertyId } = req.params;
@@ -54,7 +54,7 @@ export const postPropertyPhotos = async (
 
 export const deletePropertyDoc = async (
 	req: Request<{}, {}, { documentIds: string[] }, {}>,
-	res: Response
+	res: Response,
 ) => {
 	const { documentIds } = req.body;
 
@@ -74,8 +74,13 @@ export const deletePropertyDoc = async (
 };
 
 export const getPropertyPrivateDocs = async (
-	req: Request<{}, {}, API.PropertyPrivateDocsIds, API.PropertyPrivateDocsLabel>,
-	res: Response
+	req: Request<
+		{},
+		{},
+		API.PropertyPrivateDocsIds,
+		API.PropertyPrivateDocsLabel
+	>,
+	res: Response,
 ) => {
 	const result = propertyPrivateDocsSchema.safeParse({
 		...req.body,
@@ -86,11 +91,11 @@ export const getPropertyPrivateDocs = async (
 		throw new ValidationError("Invalid Ids or label");
 	}
 
-	const { label, leaseId, loanId, tenantId } = result.data;
+	const { label, leaseId, loanId, tenantId, propertyId } = result.data;
 
-	const id = leaseId || loanId || tenantId;
+	const id = leaseId || loanId || tenantId || propertyId;
 
-	const documents = await DocumentService.getPrivateDocs({ label, id: id! });
+	const documents = await DocumentService.getPrivateDocs({ label, id });
 
 	return res.status(StatusCodes.SUCCESS).json({
 		error: false,
@@ -100,8 +105,13 @@ export const getPropertyPrivateDocs = async (
 };
 
 export const postPropertyPrivateDocs = async (
-	req: Request<{}, {}, API.PropertyPrivateDocsIds, API.PropertyPrivateDocOptions>,
-	res: Response
+	req: Request<
+		{},
+		{},
+		API.PropertyPrivateDocsIds,
+		API.PropertyPrivateDocOptions
+	>,
+	res: Response,
 ) => {
 	const files = req.files;
 
@@ -134,8 +144,8 @@ export const postPropertyPrivateDocs = async (
 				file,
 				type,
 				label,
-			})
-		)
+			}),
+		),
 	);
 
 	return res.status(StatusCodes.SUCCESS).json({
