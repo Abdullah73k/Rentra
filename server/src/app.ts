@@ -24,7 +24,7 @@ app.use(
 );
 app.use(
   cors({
-    origin: [PRODUCTION_DOMAIN, DEVELOPMENT_DOMAIN, "http://localhost:5173"],
+    origin: [PRODUCTION_DOMAIN, DEVELOPMENT_DOMAIN],
     methods: ["GET", "POST", "PATCH", "DELETE", "PUT", "OPTIONS"],
     credentials: true,
   }),
