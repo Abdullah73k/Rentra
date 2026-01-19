@@ -10,30 +10,30 @@ import { authenticate } from "./middlewares/authenticate.middleware.js";
 import userRouter from "./routes/user.routes.js";
 import helmet from "helmet";
 import {
-	DEVELOPMENT_DOMAIN,
-	PRODUCTION_DOMAIN,
+  DEVELOPMENT_DOMAIN,
+  PRODUCTION_DOMAIN,
 } from "./constants/domain.constants.js";
 
 const app: Express = express();
 
 app.use(
-	helmet({
-		contentSecurityPolicy: false,
-		crossOriginEmbedderPolicy: false,
-	})
+  helmet({
+    contentSecurityPolicy: false,
+    crossOriginEmbedderPolicy: false,
+  }),
 );
 app.use(
-	cors({
-		origin: [PRODUCTION_DOMAIN, DEVELOPMENT_DOMAIN],
-		methods: ["GET", "POST", "PATCH", "DELETE"],
-		credentials: true,
-	})
+  cors({
+    origin: [PRODUCTION_DOMAIN, DEVELOPMENT_DOMAIN, "http://localhost:5173"],
+    methods: ["GET", "POST", "PATCH", "DELETE", "PUT", "OPTIONS"],
+    credentials: true,
+  }),
 );
 app.use(express.json({ limit: "5mb" }));
 
 const rateLimiter = rateLimit({
-	windowMs: 1 * 60 * 1000,
-	limit: 50,
+  windowMs: 1 * 60 * 1000,
+  limit: 50,
 });
 
 app.all("/api/auth/*splat", toNodeHandler(auth));
@@ -41,10 +41,10 @@ app.all("/api/auth/*splat", toNodeHandler(auth));
 app.use(rateLimiter);
 
 app.get("/api/me", async (req, res) => {
-	const session = await auth.api.getSession({
-		headers: fromNodeHeaders(req.headers),
-	});
-	return res.json(session);
+  const session = await auth.api.getSession({
+    headers: fromNodeHeaders(req.headers),
+  });
+  return res.json(session);
 });
 
 /**
@@ -52,7 +52,7 @@ app.get("/api/me", async (req, res) => {
  * ensures server is running
  */
 app.get("/api/ping", (req: Request, res: Response) => {
-	res.status(StatusCodes.SUCCESS).json({ message: "pong" });
+  res.status(StatusCodes.SUCCESS).json({ message: "pong" });
 });
 
 app.use("/api/properties", authenticate, propertiesRouter);
