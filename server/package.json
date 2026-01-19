@@ -7,6 +7,7 @@
 	"scripts": {
 		"test": "doppler run -- vitest",
 		"dev": "doppler run -- nodemon ",
+		"dev:container": "nodemon",
 		"build": "tsc",
 		"start": "doppler run -- node dist/index.js",
 		"drizzle": "doppler run -- npx tsx node_modules/drizzle-kit/bin.cjs push"

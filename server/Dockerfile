@@ -1,10 +1,28 @@
-FROM node:24.11.1-slim AS builder
+FROM node:24.11.1-slim AS base
+
+RUN corepack enable && corepack enable npm
+
+FROM base AS dep
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm*.yaml
 
-RUN corepack enable && corepack enable npm && pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --prod
+
+
+FROM base AS dev
+
+WORKDIR /app
+
+CMD [ "sh", "-lc", "[ -f node_modules/.modules.yaml ] && [ -f node_modules/express/package.json ] || pnpm install; pnpm run dev:container" ]
+
+
+FROM base AS builder
+
+WORKDIR /app
+
+COPY --from=dep /app/node_modules ./node_modules
 
 COPY . .
 
@@ -15,23 +33,22 @@ RUN pnpm run build
 # Using Debian slim as the base OS for container since Alpine uses Musl instead of
 # GLIBC which can cause some native module issues. I'm no pro yet, so Debian 
 # which is used a lot will do
-FROM node:24.11.1-slim
+FROM base AS runner
 
 WORKDIR /app
 
 # Only non-secret ENV vars go here as Dockerfile is pushed to Github and shared with others
 # You inject secret ENV vars at runtime when running 'docker container run ... -e envvar=...'
 
+RUN groupadd --system --gid 1001 nodejs && \
+    useradd --system --uid 10001 --gid nodejs --shell /bin/false express
+
 ENV NODE_ENV=production
 
 EXPOSE 4000
 
-COPY package.json pnpm-lock.yaml ./
+COPY --from=builder --chown=express:nodejs /app/dist ./dist
 
-RUN corepack enable && corepack enable npm && pnpm install --frozen-lockfile --prod
-
-COPY --from=builder /app/dist ./dist
-
-USER node
+USER express
 
 CMD [ "node", "dist/index.js" ]
