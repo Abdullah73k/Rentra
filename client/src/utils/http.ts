@@ -178,7 +178,7 @@ export async function fetchPrivateDocs(
     };
 
     const res = await axios.post(
-      `${API_URL}/api/properties/docs/private?label=${label}`,
+      `${API_URL}/api/properties/docs/private/fetch?label=${label}`,
       body,
       {
         withCredentials: true,
