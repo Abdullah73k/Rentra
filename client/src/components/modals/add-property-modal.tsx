@@ -75,6 +75,7 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
       const property = buildPropertyFromForm(values);
       mutate(property);
     } catch (error) {
+      console.error("Error building property:", error);
       toast.error("An unexpected error occurred");
     }
   };

@@ -9,5 +9,6 @@ export default defineConfig({
 	strict: true,
 	dbCredentials: {
 		url: SUPABASE_CONNECTION_STRING,
+		ssl: true,
 	},
 });
