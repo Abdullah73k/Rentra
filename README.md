@@ -285,7 +285,7 @@ We welcome contributions! Whether it's bug fixes, new features, or documentation
 
 🚧 **Currently working on:** 
    - Finishing iOS and Android mobile integration via CapacitorJS.
-   - Resolving existing bugs
+   - Resolving existing bugs and working towards 100% functionality in production.
 
 
 ---
