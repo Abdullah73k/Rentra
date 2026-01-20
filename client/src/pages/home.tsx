@@ -1,9 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { motion } from "motion/react"
+import { useEffect } from "react";
+import { motion } from "motion/react";
 
 export default function Page() {
   const navigate = useNavigate();
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, []);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -11,7 +19,7 @@ export default function Page() {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="min-h-screen bg-[#f8f8f8]">
+      <div className="bg-[#f8f8f8]">
         <main className="relative px-6 pt-12">
           {/* Gradient blob */}
           <div
@@ -50,13 +58,6 @@ export default function Page() {
                   <br />
                   THEIR REAL ESTATE — ALL IN ONE PLACE.
                 </p>
-              </div>
-
-              <div className="flex items-end">
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm">WHO WE ARE</span>
-                  <span className="h-px w-12 bg-black"></span>
-                </div>
               </div>
             </div>
 

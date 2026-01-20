@@ -61,20 +61,18 @@ const SignInPage: React.FC = () => {
     }
   }
 
-  // TODO: add check to see if user is already logged in and redirect if needed
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="w-full"
+      className="w-full h-fit"
     >
-      <div className="min-h-screen bg-[#f8f8f8]">
+      <div className="h-fit bg-[#f8f8f8]">
         <main className="relative flex min-h-[calc(100vh-88px)] items-center justify-center px-6">
           <div
-            className="absolute right-[10%] top-[20%] h-[300px] w-[300px] animate-pulse rounded-full bg-linear-to-br from-pink-400 via-orange-300 to-yellow-200 opacity-70 blur-3xl"
+            className="absolute right-[10%] top-[20%] h-75 w-75 animate-pulse rounded-full bg-linear-to-br from-pink-400 via-orange-300 to-yellow-200 opacity-70 blur-3xl"
             aria-hidden="true"
           />
 

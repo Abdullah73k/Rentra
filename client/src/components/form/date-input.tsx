@@ -38,8 +38,8 @@ const DateInput = <T extends FieldValues>({
           value instanceof Date
             ? value
             : typeof value === "string" && value
-            ? new Date(value)
-            : undefined;
+              ? new Date(value)
+              : undefined;
 
         const isValidDate =
           dateValue instanceof Date && !isNaN(dateValue.getTime());
@@ -51,7 +51,7 @@ const DateInput = <T extends FieldValues>({
                 <FormControl>
                   <Button
                     variant="outline"
-                    className="w-full justify-start text-left font-normal"
+                    className="h-12! w-full justify-start text-left font-normal rounded-lg border-gray-300 bg-white text-sm focus-visible:ring-1 focus-visible:ring-black"
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {field.value

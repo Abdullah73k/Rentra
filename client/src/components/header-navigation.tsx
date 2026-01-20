@@ -74,10 +74,15 @@ const HeaderNavigation = () => {
         </div>
       </div>
 
-      <NavigationMenu className="relative right-6 top-6">
-        <NavigationMenuList className="justify-end ml-110">
+      <NavigationMenu className="absolute right-6 top-6">
+        <NavigationMenuList className="justify-end ml-60 md:ml-110">
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="flex items-center justify-between gap-3 rounded-2xl border border-grey-500/60 bg-white px-4 py-3 font-semibold uppercase tracking-wide text-[#2e1c17] shadow-sm transition hover:bg-[#ffffff] focus-visible:ring-grey-600/50 focus-visible:ring-offset-0 [&_svg]:hidden">
+            <NavigationMenuTrigger
+              className="flex items-center justify-between gap-3 rounded-2xl
+              border border-grey-500/60 bg-white px-4 py-3 font-semibold uppercase tracking-wide
+              text-[#2e1c17] shadow-sm transition hover:bg-[#ffffff] focus-visible:ring-grey-600/50 
+              focus-visible:ring-offset-0 [&_svg]:hidden"
+            >
               <span className="sr-only">Toggle site navigation</span>
               <div className="flex items-center gap-3">
                 <div className="flex flex-col space-y-1">
@@ -93,9 +98,7 @@ const HeaderNavigation = () => {
               <div className="grid gap-5 p-6 md:w-[460px] lg:w-[580px] lg:grid-cols-[0.65fr_1fr]">
                 <NavigationMenuLink asChild>
                   <NavLink
-                    to={
-                      isAuthenticated ? "/properties/dashboard" : "/auth/login"
-                    }
+                    to={"/properties/dashboard"}
                     className="flex h-full flex-col justify-between rounded-2xl bg-linear-to-br from-[#ff9770] via-[#fe7e6d] to-[#f04d64] p-6 text-left shadow-lg transition hover:shadow-2xl"
                   >
                     <div>

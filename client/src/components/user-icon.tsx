@@ -25,12 +25,12 @@ const UserIcon = () => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>
         <Avatar className="w-16 h-16 bg-blue-400 bottom-10 left-10 fixed rounded-full z-10 cursor-pointer">
           <AvatarImage src={profilePicture} />
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="fixed top-110 left-3">
+      <DropdownMenuContent side="top" align="start">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={() => navigate("/auth/settings")}>
