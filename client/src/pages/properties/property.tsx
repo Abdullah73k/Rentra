@@ -5,7 +5,6 @@ import TransactionsTable from "@/components/property-overview/transaction-table"
 import AddTransactionModal from "@/components/modals/add-transaction-modal";
 import { motion } from "motion/react";
 import PropertyOverview from "@/components/property-overview/property-overview";
-import watercolorHouse from "@/assets/pictures/watercolorHouse.png";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PropertyDashboard from "@/components/property-dashboard";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -21,20 +20,20 @@ import PropertyDocumentsTab from "@/components/property-overview/property-docume
 import PropertyPhotos from "@/components/property-photos";
 
 export default function PropertyDetailPage() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const isAddTransactionOpen = usePropertyStore((s) => s.isAddTransactionOpen);
   const setIsAddTransactionOpen = usePropertyStore(
-    (s) => s.setIsAddTransactionOpen
+    (s) => s.setIsAddTransactionOpen,
   );
   const isEditTransactionOpen = usePropertyStore(
-    (s) => s.isEditTransactionOpen
+    (s) => s.isEditTransactionOpen,
   );
   const setIsEditTransactionOpen = usePropertyStore(
-    (s) => s.setIsEditTransactionOpen
+    (s) => s.setIsEditTransactionOpen,
   );
   const setIsEditPropertyOpen = usePropertyStore(
-    (s) => s.setIsEditPropertyOpen
+    (s) => s.setIsEditPropertyOpen,
   );
 
   const { propertyId } = useParams();
@@ -47,7 +46,6 @@ export default function PropertyDetailPage() {
   });
 
   console.log(data);
-  
 
   const { mutateAsync, isPending: isDeleting } = useMutation({
     mutationKey: ["delete-property"],
@@ -87,16 +85,6 @@ export default function PropertyDetailPage() {
       transition={{ duration: 0.5 }}
       className="w-full"
     >
-      <div
-        aria-hidden="true"
-        className="relative min-h-full h-360"
-        style={{
-          backgroundImage: `url(${watercolorHouse})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-        }}
-      />
       <div className="absolute inset-0 bg-[#f8f8f8]/40 h-360 w-full">
         {isError && (
           <div
@@ -129,13 +117,13 @@ export default function PropertyDetailPage() {
                   <span className="inline-block px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm">
                     {property?.purpose &&
                       property?.purpose.charAt(0).toUpperCase() +
-                      property?.purpose.slice(1)}
+                        property?.purpose.slice(1)}
                   </span>
 
                   <span className="inline-block px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm">
                     {property?.type &&
                       property?.type.charAt(0).toUpperCase() +
-                      property?.type.slice(1)}
+                        property?.type.slice(1)}
                   </span>
 
                   <span className="inline-block px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm">
@@ -209,7 +197,8 @@ export default function PropertyDetailPage() {
                       } catch (error) {
                         return {
                           error: true,
-                          message: "An error occurred while deleting the property",
+                          message:
+                            "An error occurred while deleting the property",
                         };
                       }
                     }}
@@ -251,9 +240,14 @@ export default function PropertyDetailPage() {
                     </Button>
                   </div>
 
-
-                  <TransactionsTable transactions={transactions} propertyId={propertyId!} />
-                  <PropertyPhotos propertyId={propertyId!} photos={property.photos} />
+                  <TransactionsTable
+                    transactions={transactions}
+                    propertyId={propertyId!}
+                  />
+                  <PropertyPhotos
+                    propertyId={propertyId!}
+                    photos={property.photos}
+                  />
                 </div>
               </TabsContent>
 
@@ -271,9 +265,13 @@ export default function PropertyDetailPage() {
               <TabsContent value="documents">
                 <PropertyDocumentsTab
                   propertyId={propertyId!}
-                  lease={data?.lease?.filter((item) => item !== undefined) as any}
+                  lease={
+                    data?.lease?.filter((item) => item !== undefined) as any
+                  }
                   loan={data?.loan?.filter((item) => item !== undefined) as any}
-                  tenant={data?.tenant?.filter((item) => item !== undefined) as any}
+                  tenant={
+                    data?.tenant?.filter((item) => item !== undefined) as any
+                  }
                 />
               </TabsContent>
             </Tabs>
