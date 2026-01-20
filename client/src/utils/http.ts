@@ -178,26 +178,21 @@ export async function fetchPrivateDocs(
     };
 
     const res = await axios.post(
-      `${API_URL}/api/properties/docs/private?label=${label}`,
+      `${API_URL}/api/properties/docs/private/fetch?label=${label}`,
       body,
       {
         withCredentials: true,
       }
     );
-    console.log("fetch Private Docs response");
-    console.log(res);
     return res.data.data as string[];
   } catch (error) {
-    console.log("fetch Private Docs error");
-    console.error(error)
     throw new Error("An error occurred while fetching private documents");
   }
 }
-
 export async function uploadPrivateDocs(
   propertyId: string,
   referenceId: string,
-  label: "leaseDocs" | "loanDocs" | "tenantDocs",
+  label: "leaseDocs" | "loanDocs" | "tenantDocs" | "propertyDocs",
   files: File[]
 ) {
   try {
@@ -221,10 +216,10 @@ export async function uploadPrivateDocs(
     );
     return res.data;
   } catch (error) {
+    console.error(error);
     throw new Error("An error occurred while uploading documents");
   }
 }
-
 export async function deletePropertyDoc(documentId: string) {
   try {
     const res = await axios.delete(
@@ -239,7 +234,6 @@ export async function deletePropertyDoc(documentId: string) {
     throw new Error("An error occurred while deleting the document");
   }
 }
-
 export async function addPropertyPicture(propertyId: string, data: File) {
   try {
     const formData = new FormData();
