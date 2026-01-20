@@ -30,7 +30,7 @@ const SettingsPage: React.FC = () => {
       <div className="min-h-screen bg-[#f8f8f8]">
         <div className="mx-auto">
           {/* Header */}
-          <div className="border-b border-border px-6 py-6 bg-[#f8f8f8]">
+          <div className="border-b border-border px-4 py-4 md:px-6 md:py-6 bg-[#f8f8f8]">
             <Link to="/properties/dashboard">
               <Button variant="ghost" className="mb-4 gap-2">
                 <ArrowLeft className="h-4 w-4" />
@@ -50,7 +50,7 @@ const SettingsPage: React.FC = () => {
             {/* Left Sidebar Tabs */}
             <LeftSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
-            <div className="relative flex-1 p-6 overflow-hidden">
+            <div className="relative flex-1 p-4 md:p-6 overflow-hidden">
               {/* Background image layer */}
               <div
                 aria-hidden="true"

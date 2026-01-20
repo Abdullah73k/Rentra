@@ -248,7 +248,7 @@ const PropertyDashboard: React.FC<PropertyDashboardProps> = ({
 
     return (
         <motion.div
-            className="space-y-6 pt-6"
+            className="space-y-6 pt-6 mb-20"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
@@ -326,7 +326,7 @@ const PropertyDashboard: React.FC<PropertyDashboardProps> = ({
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="pl-0">
-                            <div className="h-[300px] w-full">
+                            <div className="h-75 w-full">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <AreaChart
                                         data={monthlyChartData}
@@ -391,7 +391,7 @@ const PropertyDashboard: React.FC<PropertyDashboardProps> = ({
                             <CardTitle>Expense Breakdown</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div className="h-[300px] w-full relative">
+                            <div className="h-75 w-full relative">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <PieChart>
                                         <Pie
@@ -439,7 +439,7 @@ const PropertyDashboard: React.FC<PropertyDashboardProps> = ({
                         <CardTitle>Net Cash Flow Trend</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="h-[250px] w-full">
+                        <div className="h-62.5 w-full">
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart
                                     data={monthlyChartData}
