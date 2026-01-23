@@ -197,7 +197,7 @@ export async function fetchPrivateDocs(
 export async function uploadPrivateDocs(
   propertyId: string,
   referenceId: string,
-  label: "leaseDocs" | "loanDocs" | "tenantDocs",
+  label: "leaseDocs" | "loanDocs" | "tenantDocs" | "propertyDocs",
   files: File[]
 ) {
   try {

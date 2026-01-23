@@ -37,7 +37,7 @@ import {
 import { toast } from "sonner";
 import { ActionButton } from "@/components/ui/action-button";
 
-type DocType = "leaseDocs" | "loanDocs" | "tenantDocs";
+type DocType = "leaseDocs" | "loanDocs" | "tenantDocs" | "propertyDocs";
 
 const DocumentSection = ({
     title,

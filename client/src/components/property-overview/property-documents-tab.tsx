@@ -22,7 +22,7 @@ function PropertyDocumentsTab({
 
     if (!hasLease && !hasLoan && !hasTenant) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[400px] text-muted-foreground">
+            <div className="flex flex-col items-center justify-center min-h-100 text-muted-foreground">
                 <FileText className="h-12 w-12 mb-4 opacity-20" />
                 <p className="text-lg font-medium">No Entities Found</p>
                 <p className="text-sm text-center max-w-md mt-2">
@@ -35,6 +35,12 @@ function PropertyDocumentsTab({
 
     return (
         <div className="space-y-6 pt-4">
+            <DocumentSection
+            title="Property Docs"
+            type="propertyDocs"
+            referenceId={propertyId}
+            propertyId={propertyId}
+            />
             {hasLease && (
                 <DocumentSection
                     title="Lease Documents"
