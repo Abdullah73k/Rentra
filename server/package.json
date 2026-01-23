@@ -9,7 +9,11 @@
 		"dev": "doppler run -- nodemon ",
 		"build": "tsc",
 		"start": "doppler run -- node dist/index.js",
-		"drizzle": "doppler run -- npx tsx node_modules/drizzle-kit/bin.cjs push"
+		"drizzle-kit": "doppler run --command \"NODE_OPTIONS='--import tsx' drizzle-kit up\"",
+		"drizzle:push": "doppler run --command \"NODE_OPTIONS='--import tsx' drizzle-kit push\"",
+		"drizzle:pull": "doppler run --command \"NODE_OPTIONS='--import tsx' drizzle-kit pull\"",
+		"drizzle:generate": "doppler run --command \"NODE_OPTIONS='--import tsx' drizzle-kit generate\"",
+		"drizzle:migrate": "doppler run --command \"NODE_OPTIONS='--import tsx' drizzle-kit migrate\""
 	},
 	"keywords": [],
 	"author": "",
