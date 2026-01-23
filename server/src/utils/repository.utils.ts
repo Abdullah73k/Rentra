@@ -17,7 +17,7 @@ import { user } from "../db/schemas/auth-schema.db.js";
 export async function executeDataBaseOperation<T>(
 	dataBaseFn: () => Promise<T>,
 	statusCode: StatusCodes,
-	message: string
+	message: string,
 ) {
 	try {
 		const query = await dataBaseFn();
@@ -30,7 +30,7 @@ export async function executeDataBaseOperation<T>(
 export async function insertIntoTable<T extends PgTable>(
 	table: T,
 	data: InferInsertModel<T>,
-	client: PoolClient | undefined
+	client: PoolClient | undefined,
 ) {
 	const pool = dbConnection(client);
 	const query = await pool.insert(table).values(data).returning();
@@ -136,8 +136,9 @@ export const getRowsFromTableWithId = {
 					eq(documents.propertyId, propertyId),
 					isNull(documents.loanId),
 					isNull(documents.leaseId),
-					isNull(documents.tenantId)
-				)
+					isNull(documents.tenantId),
+					eq(documents.type, "document"),
+				),
 			);
 	},
 	async loanDocs(loanId: string, client: PoolClient | undefined) {
@@ -164,7 +165,7 @@ export const getRowsFromTableWithId = {
 };
 
 export async function deleteRowFromTableWithId<
-	T extends PgTableWithColumns<any>
+	T extends PgTableWithColumns<any>,
 >(table: T, id: string, client: PoolClient | undefined) {
 	const pool = dbConnection(client);
 	const query = await pool.delete(table).where(eq(table.id, id));
@@ -173,7 +174,7 @@ export async function deleteRowFromTableWithId<
 
 export async function deleteDocumentsFromTable(
 	ids: string[],
-	client: PoolClient | undefined
+	client: PoolClient | undefined,
 ) {
 	const pool = dbConnection(client);
 	const query = await pool.delete(documents).where(inArray(documents.id, ids));
@@ -192,7 +193,7 @@ export const updateRowFromTableWithId = {
 	async property(
 		id: string,
 		values: DB.Property,
-		client: PoolClient | undefined
+		client: PoolClient | undefined,
 	) {
 		const pool = dbConnection(client);
 		return await pool
@@ -204,7 +205,7 @@ export const updateRowFromTableWithId = {
 	async propertyInfo(
 		id: string,
 		values: DB.PropertyInfo,
-		client: PoolClient | undefined
+		client: PoolClient | undefined,
 	) {
 		const pool = dbConnection(client);
 		return await pool
@@ -240,7 +241,7 @@ export const updateRowFromTableWithId = {
 	async transaction(
 		id: string,
 		values: DB.Transaction,
-		client: PoolClient | undefined
+		client: PoolClient | undefined,
 	) {
 		const pool = dbConnection(client);
 		return await pool
@@ -252,7 +253,7 @@ export const updateRowFromTableWithId = {
 	async document(
 		id: string,
 		values: DB.Document,
-		client: PoolClient | undefined
+		client: PoolClient | undefined,
 	) {
 		const pool = dbConnection(client);
 		return await pool
