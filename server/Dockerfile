@@ -6,9 +6,9 @@ FROM base AS dep
 
 WORKDIR /app
 
-COPY package.json pnpm*.yaml
+COPY package.json pnpm*.yaml ./
 
-RUN pnpm install --frozen-lockfile --prod
+RUN pnpm install --frozen-lockfile
 
 
 FROM base AS dev
@@ -31,23 +31,27 @@ RUN pnpm run build
 
 # Using node version 24.11.1 because it is the current LTS version
 # Using Debian slim as the base OS for container since Alpine uses Musl instead of
-# GLIBC which can cause some native module issues. I'm no pro yet, so Debian 
-# which is used a lot will do
+# GLIBC which can cause some native module issues.
 FROM base AS runner
 
 WORKDIR /app
 
 # Only non-secret ENV vars go here as Dockerfile is pushed to Github and shared with others
 # You inject secret ENV vars at runtime when running 'docker container run ... -e envvar=...'
-
 RUN groupadd --system --gid 1001 nodejs && \
     useradd --system --uid 10001 --gid nodejs --shell /bin/false express
 
+RUN chown express:nodejs /app
+
 ENV NODE_ENV=production
 
-EXPOSE 4000
+COPY package.json pnpm*.yaml ./
+
+RUN pnpm install --frozen-lockfile --prod
 
 COPY --from=builder --chown=express:nodejs /app/dist ./dist
+
+EXPOSE 4000
 
 USER express
 
