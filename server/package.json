@@ -7,6 +7,8 @@
 	"scripts": {
 		"test": "doppler run -- vitest",
 		"dev": "doppler run -- nodemon ",
+		"i": "docker container exec -it pm-server pnpm i",
+		"dev:container": "nodemon",
 		"build": "tsc",
 		"start": "doppler run -- node dist/index.js",
 		"drizzle-kit": "doppler run --command \"NODE_OPTIONS='--import tsx' drizzle-kit up\"",
