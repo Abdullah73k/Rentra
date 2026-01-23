@@ -57,7 +57,11 @@ export const documents = pgTable(
 	(t) => [
 		check(
 			"Documents_exactly_one_owner_check",
-			sql`num_nonnulls(${t.propertyId}, ${t.tenantId}, ${t.leaseId}, ${t.loanId}) = 1`
+			sql`
+			${t.propertyId} IS NOT NULL 
+			AND
+			num_nonnulls(${t.tenantId}, ${t.leaseId}, ${t.loanId}) <= 1
+			`,
 		),
-	]
+	],
 );
