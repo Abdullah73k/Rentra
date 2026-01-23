@@ -13,11 +13,14 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
+      target: dev
     image: pm-server
     container_name: pm-server
     ports:
       - "4000:4000"
-      - "4001:5000"
+    volumes:
+      - ./server:/app
+      - node_modules_rentra:/app/node_modules
     environment:
       - BETTER_AUTH_SECRET
       - BETTER_AUTH_URL
@@ -37,3 +40,5 @@ services:
       - SUPABASE_PUBLIC_BUCKET_NAME
       - SUPABASE_PRIVATE_BUCKET_NAME
       - SUPABASE_URL
+volumes:
+  node_modules_rentra:
