@@ -9,14 +9,26 @@ import { usePropertyStore } from "@/stores/property.store";
 import TextInput from "../form/text-input";
 import SelectField from "../form/select-field";
 import DateInput from "../form/date-input";
-import { useMutation } from "@tanstack/react-query";
-import { addOptionalData, queryClient } from "@/utils/http";
+import { addOptionalData, fetchPropertyInfo, queryClient } from "@/utils/http";
+import { CURRENCY_OPTIONS } from "@/constants/auth.constants";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 type FormType = z.input<typeof leaseSchema>;
 
 const AddLeaseModal = ({ propertyId }: { propertyId: string }) => {
     const isAddLeaseOpen = usePropertyStore(s => s.isAddLeaseOpen);
     const setIsAddLeaseOpen = usePropertyStore(s => s.setIsAddLeaseOpen);
+
+    const { data: propertyData } = useQuery({
+        queryKey: ["property", propertyId],
+        queryFn: () => fetchPropertyInfo(propertyId),
+        enabled: isAddLeaseOpen
+    });
+
+    const tenantOptions = propertyData?.tenant.filter(t => !!t).map(t => ({
+        label: t!.name,
+        value: t!.id
+    })) || [];
 
     const form = useForm<FormType>({
         resolver: zodResolver(leaseSchema),
@@ -35,6 +47,13 @@ const AddLeaseModal = ({ propertyId }: { propertyId: string }) => {
     });
 
     function handleAddLease(data: FormType) {
+        if (!data.tenantId) {
+            form.setError("tenantId", {
+                type: "manual",
+                message: "Tenant is required",
+            });
+            return;
+        }
         mutate(data as z.infer<typeof leaseSchema>);
     }
 
@@ -49,6 +68,15 @@ const AddLeaseModal = ({ propertyId }: { propertyId: string }) => {
                     <h3 className="font-semibold text-foreground">Lease Information</h3>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(handleAddLease)} className="space-y-4">
+                            {tenantOptions.length > 0 && (
+                                <SelectField
+                                    form={form}
+                                    name="tenantId"
+                                    label="Tenant *"
+                                    placeholder="Select Tenant"
+                                    options={tenantOptions}
+                                />
+                            )}
                             <div className="grid grid-cols-2 gap-4">
                                 <DateInput
                                     form={form}
@@ -69,11 +97,12 @@ const AddLeaseModal = ({ propertyId }: { propertyId: string }) => {
                                     label="Rent Amount *"
                                     type="number"
                                 />
-                                <TextInput
+                                <SelectField
                                     form={form}
                                     name="currency"
-                                    label="Currency (3 chars) *"
-                                    placeholder="USD"
+                                    label="Currency *"
+                                    placeholder="Select Currency"
+                                    options={CURRENCY_OPTIONS}
                                 />
                             </div>
 

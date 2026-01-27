@@ -4,6 +4,7 @@ import type { FormFields } from "../modals/add-property-modal";
 import type { Path, UseFormReturn } from "react-hook-form";
 import DateInput from "../form/date-input";
 import SelectField from "../form/select-field";
+import { CURRENCY_OPTIONS } from "@/constants/auth.constants";
 
 type LeaseProps<T extends FormFields> = {
   form: UseFormReturn<T>;
@@ -25,6 +26,7 @@ const Lease = <T extends FormFields>({ form }: LeaseProps<T>) => {
           label="End Date *"
         />
       </div>
+
       <div className="grid grid-cols-2 gap-4">
         <TextInput
           form={form}
@@ -34,25 +36,35 @@ const Lease = <T extends FormFields>({ form }: LeaseProps<T>) => {
         />
         <SelectField
           form={form}
-          name={"lease.frequency" as Path<T>}
-          label="Frequency *"
-          options={LEASE_FREQUENCIES}
+          name={"lease.currency" as Path<T>}
+          label="Currency *"
+          placeholder="Select Currency"
+          options={CURRENCY_OPTIONS}
         />
       </div>
+
       <div className="grid grid-cols-2 gap-4">
+        <SelectField
+          form={form}
+          name={"lease.frequency" as Path<T>}
+          label="Frequency *"
+          placeholder="Select Frequency"
+          options={LEASE_FREQUENCIES}
+        />
         <TextInput
           form={form}
           name={"lease.paymentDay" as Path<T>}
           label="Payment Day (1-31) *"
           type="number"
         />
-        <TextInput
-          form={form}
-          name={"lease.deposit" as Path<T>}
-          label="Deposit *"
-          type="number"
-        />
       </div>
+
+      <TextInput
+        form={form}
+        name={"lease.deposit" as Path<T>}
+        label="Deposit Amount *"
+        type="number"
+      />
     </div>
   );
 };

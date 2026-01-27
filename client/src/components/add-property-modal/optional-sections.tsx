@@ -12,6 +12,7 @@ import Tenant from "./tenant";
 import type { UseFormReturn, Path } from "react-hook-form";
 import { type z } from "zod";
 import { propertyDataSchema } from "@/lib/schemas";
+import { toast } from "sonner";
 
 type FormFields = z.input<typeof propertyDataSchema>;
 
@@ -68,8 +69,14 @@ const OptionalSections = <T extends FormFields>({
 							<FormItem className="flex items-center space-x-2">
 								<FormControl>
 									<Checkbox
+										onCheckedChange={(checked) => {
+											if (checked && !watchedOptionalSections?.addTenant) {
+												toast.warning("You must have a tenant to add a lease");
+												return;
+											}
+											field.onChange(checked);
+										}}
 										checked={!!field.value}
-										onCheckedChange={field.onChange}
 										disabled={disabledOptions?.addLease}
 									/>
 								</FormControl>
