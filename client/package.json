@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0 --port 5173",
+    "dev": "doppler run -- vite --host 0.0.0.0 --port 5173",
     "i": "docker container exec -it pm-client pnpm i",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
