@@ -46,10 +46,10 @@ const ProfileTab = ({ user }: { user: Session }) => {
   const form = useForm<ProfileSchema>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      fullName: userInfo.name,
-      currency: userInfo.currency,
-      country: userInfo.country,
-      vatProfile: userInfo.vatProfile,
+      fullName: userInfo?.name,
+      currency: userInfo?.currency,
+      country: userInfo?.country,
+      vatProfile: userInfo?.vatProfile,
     },
   });
 
