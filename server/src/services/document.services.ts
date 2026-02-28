@@ -128,13 +128,41 @@ export const DocumentService = {
 					userThread = { ...newRow, createdAt: new Date() };
 				}
 
-				await BackboardService.uploadDocument(
+				// Check existing Backboard docs to avoid duplicate/stuck uploads
+				const existingDocs = await BackboardService.listDocuments(
 					userThread.assistantId,
-					file.buffer,
-					file.originalname,
-					file.mimetype,
 				);
-				console.log(`[Backboard] Document synced: ${file.originalname}`);
+
+				const sameNameDocs = existingDocs.filter(
+					(d) => d.filename === file.originalname,
+				);
+
+				// Skip upload if already successfully indexed
+				const alreadyIndexed = sameNameDocs.some((d) => d.status === "indexed");
+				if (alreadyIndexed) {
+					console.log(
+						`[Backboard] Skipping upload, already indexed: ${file.originalname}`,
+					);
+				} else {
+					// Delete any stuck processing copies before re-uploading
+					const stuckDocs = sameNameDocs.filter(
+						(d) => d.status === "processing",
+					);
+					for (const stuck of stuckDocs) {
+						await BackboardService.deleteDocument(stuck.document_id);
+						console.log(
+							`[Backboard] Deleted stuck document: ${stuck.document_id}`,
+						);
+					}
+
+					await BackboardService.uploadDocument(
+						userThread.assistantId,
+						file.buffer,
+						file.originalname,
+						file.mimetype,
+					);
+					console.log(`[Backboard] Document synced: ${file.originalname}`);
+				}
 			} catch (backboardError) {
 				// Don't fail the upload if Backboard sync fails
 				console.error("[Backboard] Document sync failed:", backboardError);

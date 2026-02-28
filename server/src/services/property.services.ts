@@ -15,38 +15,38 @@ export const PropertyService = {
 	async create(data: API.POSTPropertyData) {
 		const queryFn = async (
 			propertyData: API.POSTPropertyData,
-			client: PoolClient
+			client: PoolClient,
 		) => {
 			const property = await PropertyRepository.createProperty(
 				propertyData.property,
-				client
+				client,
 			);
 			const propertyInfo = await PropertyInfoRepository.createPropertyInfo(
 				propertyData.propertyInfo,
 				property[0]!.id,
-				client
+				client,
 			);
 			const loan = propertyData.loan
 				? await LoanRepository.createLoan(
 						propertyData.loan,
 						property[0]!.id,
-						client
-				  )
+						client,
+					)
 				: undefined;
 			const tenant = propertyData.tenant
 				? await TenantRepository.createTenant(
 						propertyData.tenant,
 						property[0]!.id,
-						client
-				  )
+						client,
+					)
 				: undefined;
 			const lease = propertyData.lease
 				? await LeaseRepository.createLease(
 						propertyData.lease,
 						property[0]!.id,
 						tenant![0]!.id,
-						client
-				  )
+						client,
+					)
 				: undefined;
 			return {
 				property,
@@ -60,7 +60,7 @@ export const PropertyService = {
 		const query = await queryInTransaction(
 			queryFn,
 			data,
-			"Insert property data failed transaction"
+			"Insert property data failed transaction",
 		);
 
 		return query;
@@ -69,9 +69,13 @@ export const PropertyService = {
 		const properties = await PropertyRepository.getProperties(userId);
 
 		const documents = await DocumentRepository.getAllDocuments(
-			properties.map((p) => p.id)
+			properties.map((p) => p.id),
 		);
-		const paths = documents.map((doc) => {
+
+		// Only include photo-type documents (not private docs)
+		const photoDocuments = documents.filter((doc) => doc.type === "photo");
+
+		const paths = photoDocuments.map((doc) => {
 			return getFilePublicURL({
 				path: doc.path,
 				bucket: SUPABASE_PUBLIC_BUCKET_NAME,
@@ -99,19 +103,19 @@ export const PropertyService = {
 
 			const documents = await DocumentRepository.getAllDocuments(
 				propertyId,
-				client
+				client,
 			);
 
 			const propertyInfo = await PropertyInfoRepository.getPropertyInfo(
 				propertyId,
-				client
+				client,
 			);
 			const loan = await LoanRepository.getLoan(propertyId, client);
 			const tenant = await TenantRepository.getTenant(propertyId, client);
 			const lease = await LeaseRepository.getLease(propertyId, client);
 			const transaction = await TransactionRepository.getTransaction(
 				propertyId,
-				client
+				client,
 			);
 
 			return {
@@ -128,10 +132,13 @@ export const PropertyService = {
 		const { documents, property, ...rest } = await queryInTransaction(
 			queryFn,
 			propertyId,
-			"Could not fetch all property data"
+			"Could not fetch all property data",
 		);
 
-		const paths = documents.map((doc) => {
+		// Only include photo-type documents (not private docs)
+		const photoDocuments = documents.filter((doc) => doc.type === "photo");
+
+		const paths = photoDocuments.map((doc) => {
 			return getFilePublicURL({
 				path: doc.path,
 				bucket: SUPABASE_PUBLIC_BUCKET_NAME,
@@ -149,12 +156,12 @@ export const PropertyService = {
 			const property = await PropertyRepository.updateProperty(
 				propertyId,
 				data.property,
-				client
+				client,
 			);
 			const propertyInfo = await PropertyInfoRepository.updatePropertyInfo(
 				propertyId,
 				data.propertyInfo,
-				client
+				client,
 			);
 			const loan = data.loan
 				? await LoanRepository.updateLoan(propertyId, data.loan, client)
@@ -177,13 +184,13 @@ export const PropertyService = {
 		const query = await queryInTransaction(
 			queryFn,
 			data,
-			"Update property failed transaction"
+			"Update property failed transaction",
 		);
 		return query;
 	},
 	async createOptionalData(
 		option: "loan" | "lease" | "tenant",
-		data: DB.Optional
+		data: DB.Optional,
 	) {
 		const response = await PropertyRepository.createOptionalData(option, data);
 
@@ -191,11 +198,11 @@ export const PropertyService = {
 	},
 	async deleteOptionalData(
 		option: "loan" | "lease" | "tenant",
-		referenceId: string
+		referenceId: string,
 	) {
 		const response = await PropertyRepository.deleteOptionalData(
 			option,
-			referenceId
+			referenceId,
 		);
 
 		return response;

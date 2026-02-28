@@ -38,6 +38,28 @@ export const BackboardService = {
 	},
 
 	/**
+	 * List all documents for a given assistant.
+	 */
+	async listDocuments(
+		assistantId: string,
+	): Promise<{ document_id: string; filename: string; status: string }[]> {
+		const res = await axios.get(
+			`${BASE_URL}/assistants/${assistantId}/documents`,
+			{ headers: backboardHeaders() },
+		);
+		return res.data;
+	},
+
+	/**
+	 * Delete a document from Backboard (e.g. stuck in processing).
+	 */
+	async deleteDocument(documentId: string): Promise<void> {
+		await axios.delete(`${BASE_URL}/documents/${documentId}`, {
+			headers: backboardHeaders(),
+		});
+	},
+
+	/**
 	 * Upload a document to a Backboard assistant.
 	 * The file is sent as multipart/form-data.
 	 */
