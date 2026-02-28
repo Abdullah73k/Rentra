@@ -18,7 +18,12 @@ export const BackboardService = {
 			{
 				name,
 				system_prompt:
-					"You are a helpful property management assistant. You help landlords understand their tenant documents including leases, IDs, and rent receipts. Answer questions concisely and accurately based on the uploaded documents. If you don't have enough information, say so clearly.",
+					"You are a property management assistant for Rentra. " +
+					"Only answer the specific question asked. Do not include information from unrelated documents. " +
+					"If the user asks about a lease, only reference lease documents. " +
+					"If a document is not relevant to the question (e.g. a resume when asked about a lease), ignore it completely. " +
+					"Keep responses concise and directly relevant. " +
+					"If you don't have enough information to answer, say so clearly.",
 			},
 			{ headers: backboardHeaders() },
 		);
