@@ -8,6 +8,7 @@ import { errorHandler } from "./middlewares/error-handler.middlewares.js";
 import { StatusCodes } from "./constants/status-codes.constants.js";
 import { authenticate } from "./middlewares/authenticate.middleware.js";
 import userRouter from "./routes/user.routes.js";
+import aiRouter from "./routes/ai.routes.js";
 import helmet from "helmet";
 import {
 	DEVELOPMENT_DOMAIN,
@@ -58,6 +59,7 @@ app.get("/api/ping", (req: Request, res: Response) => {
 
 app.use("/api/properties", authenticate, propertiesRouter);
 app.use("/api/user", authenticate, userRouter);
+app.use("/api/ai", authenticate, aiRouter);
 
 app.use(errorHandler);
 

@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { eq } from "drizzle-orm";
 import { DocumentRepository } from "../repositories/document.repositories.js";
 import {
 	createSignedURLs,
@@ -18,6 +19,9 @@ import {
 	photoPathBuilder,
 	privateDocsPathBuilder,
 } from "../utils/doc-path-builder.utils.js";
+import { BackboardService } from "./backboard.service.js";
+import { dbConnection } from "../utils/db-connects.utils.js";
+import { aiThreads } from "../db/schemas/ai-thread.db.js";
 
 export const DocumentService = {
 	async create({
@@ -41,10 +45,10 @@ export const DocumentService = {
 			label === "leaseDocs"
 				? "leases"
 				: label === "loanDocs"
-				? "loans"
-				: label === "tenantDocs"
-				? "tenants"
-				: undefined;
+					? "loans"
+					: label === "tenantDocs"
+						? "tenants"
+						: undefined;
 		const id = labelName?.slice(0, -1) + "Id";
 
 		const bucketName =
@@ -59,7 +63,7 @@ export const DocumentService = {
 						documentId,
 						documentName: file.originalname,
 						userId,
-				  })
+					})
 				: privateDocsPathBuilder({
 						userId,
 						referenceId: referenceId!,
@@ -67,7 +71,7 @@ export const DocumentService = {
 						documentName: file.originalname,
 						propertyId,
 						label: labelName,
-				  });
+					});
 
 		const response = await insertFileInBucket({
 			path,
@@ -94,6 +98,49 @@ export const DocumentService = {
 		}
 
 		const query = await DocumentRepository.createDocument(zodDocumentData.data);
+
+		// Mirror document to Backboard for AI querying (fire-and-forget, only for documents)
+		if (type === "document" && file.buffer) {
+			try {
+				const db = dbConnection();
+				let userThread = await db
+					.select()
+					.from(aiThreads)
+					.where(eq(aiThreads.userId, userId))
+					.limit(1)
+					.then((rows) => rows[0] ?? null);
+
+				// Lazily create assistant if user doesn't have one
+				if (!userThread) {
+					const assistant = await BackboardService.createAssistant(
+						`Rentra Assistant - ${userId}`,
+					);
+					const thread = await BackboardService.createThread(
+						assistant.assistant_id,
+					);
+					const newRow = {
+						id: randomUUID(),
+						userId,
+						assistantId: assistant.assistant_id,
+						threadId: thread.thread_id,
+					};
+					await db.insert(aiThreads).values(newRow);
+					userThread = { ...newRow, createdAt: new Date() };
+				}
+
+				await BackboardService.uploadDocument(
+					userThread.assistantId,
+					file.buffer,
+					file.originalname,
+					file.mimetype,
+				);
+				console.log(`[Backboard] Document synced: ${file.originalname}`);
+			} catch (backboardError) {
+				// Don't fail the upload if Backboard sync fails
+				console.error("[Backboard] Document sync failed:", backboardError);
+			}
+		}
+
 		return response.publicUrl;
 	},
 	async delete({ documentIds }: { documentIds: string[] }) {
